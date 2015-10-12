@@ -2,9 +2,9 @@
 
 if(isset($_POST['email'])) {
 
-    $email_to = "joash.pereira@gmail.com";
+    $email_to = "evivanco@telmex.com";
  
-    $email_subject = "Website Contact";
+    $email_subject = "C4 Contact";
 
  
     function died($error) {

@@ -101,17 +101,66 @@
                             }
                         );
                     });
-        </script>
+           var message="This function is not allowed here.";
+                   function clickIE4(){
+
+                                 if (event.button==2){
+                                 return false;
+                                 }
+                   }
+
+                   function clickNS4(e){
+                                 if (document.layers||document.getElementById&&!document.all){
+                                                if (e.which==2||e.which==3){
+                                                          return false;
+                                                }
+                                        }
+                   }
+
+                   if (document.layers){
+                                 document.captureEvents(Event.MOUSEDOWN);
+                                 document.onmousedown=clickNS4;
+                   }
+
+                   else if (document.all&&!document.getElementById){
+                                 document.onmousedown=clickIE4;
+                   }
+
+                   document.oncontextmenu=new Function("return false;")
+
+	</script>
 </head>
 <body id="top" class="scrollspy">
        <?php
         include_once 'db_functions.php';
         $db = new DB_Functions();
         $users = $db->getAllUsers();
+	$gcms = $db->getAllGcmIds();
+        $channels = $db->getAllChannels();
+
+
         if ($users != false)
             $no_of_users = mysql_num_rows($users);
         else
             $no_of_users = 0;
+
+	if ($channels != false)
+            $no_of_channels = mysql_num_rows($channels);
+        else
+            $no_of_channels = 0;
+
+	$gcmRegIds = array();
+        while ($row = mysql_fetch_array($gcms)){
+        array_push($gcmRegIds, $row['gcm_regid']);
+}
+        include_once './GCM.php';
+        $gcm = new GCM();
+        $pushMessage = $_POST['message'];
+        if(isset($gcmRegIds) && isset($pushMessage)) {
+
+        $message = array('mensaje' => $pushMessage);
+        $gcm->send_notification($gcmRegIds, $message);
+	}
         ?>
 
 <!-- Pre Loader -->
@@ -130,10 +179,9 @@
             <div class="nav-wrapper"><a id="logo-container" href="#top" class="brand-logo">Telmex C4</a>
             <ul id="nav-mobile" class="right side-nav">
                 <li><a href="#intro">Fielders</a></li>
-                <li><a href="#work">Canales</a></li>
+                <li><a href="#work">Proyectos</a></li>
                 <li><a href="#team">Team</a></li>
                 <li><a href="#contact">Contacto</a></li>
-                <li><a href="" target="_blank">Acerca de</a></li>
             </ul><a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
             </div>
         </div>
@@ -157,16 +205,30 @@
 <div id="intro" class="section scrollspy">
     <div class="container">
         <div class="row">
-            <div  class="col s12">
+<!--            <div  class="col s12">
                 <h2 class="center header text_h2"> "Hay que imponer nuestra voluntad a nuestras debilidades” <span class="span_h2"> Carlos Slim  </span>
+            </div>-->
+
+<div  class="col s12">
+                <h3 class="header text_h2"> Enviar a todos en el canal: <span class="span_h2"> Carlos Slim  </span>
             </div>
 
+<form name="" class="broad" method="post" onsubmit="return sendBroadcast()">                            
+                                <div class="send_container">
+                                    <textarea rows="3" name="message" cols="25" class="materialize-textarea black-text" placeholder="Mensaje"></textarea>
+                                    <input type="hidden" name="regId" value="<?php echo $gcmRegIds ?>"/>
+                                     <button class="btn waves-effect waves-light red darken-1" type="submit">Enviar
+                                <i class="mdi-content-send right white-text"></i>
+                            </button>
+
+                                </div>
+                            </form>
 <!--Bloque de envios-->
             <div  class="col s12">
                 <h2 class="center header text_h2">Dispositivos Registrados: <?php echo $no_of_users; ?>
             </div>
 
-            <ul class="devices">
+ <ul class="devices">
 	<?php
                 if ($no_of_users > 0) {
                     ?>
@@ -176,16 +238,23 @@
 
  <li>
                             <form id="<?php echo $row["id"] ?>" name="" method="post" onsubmit="return sendPushNotification('<?php echo $row["id"] ?>')">
-                                <label>Nombre: </label> <span><?php echo $row["name"] ?></span>
+
+<label class="blue-text">Nombre: </label><span class="black-text"><?php echo $row["name"] ?></span>                                
                                 <div class="clear"></div>
-                                <label>Email:</label> <span><?php echo $row["email"] ?></span>
+                                <label class="blue-text">Exp:</label> <span  class="black-text"><?php echo $row["exp"] ?></span>
+                                <div class="clear"></div>
+<label class="blue-text">Distrito: </label><span class="black-text"><?php echo $row["distrito"] ?></span> 
                                 <div class="send_container">
-                                    <textarea rows="3" name="message" cols="25" class="materialize-textarea black-text" placeholder="Mensaje"></textarea>
+                                    <textarea rows="3" id="mensaje" name="message" cols="5" class="materialize-textarea black-text" placeholder="Mensaje"></textarea>
                                     <input type="hidden" name="regId" value="<?php echo $row["gcm_regid"] ?>"/>
 
  <button class="btn waves-effect waves-light red darken-1" type="submit">Enviar
                                 <i class="mdi-content-send right white-text"></i>
                             </button>
+<button class="btn waves-effect waves-light green accent-4" type="submit" onclick="myFunction()">Editar
+                                <i class="mdi-content-create right white-text"></i>
+                            </button>
+
                                 </div>
                             </form>
                         </li>
@@ -193,30 +262,31 @@
                 } else { ?>
                     <li>
                         No existen registros!
-                    </li>
+	 	 </li>
                 <?php } ?>
             </ul>
 
             <div  class="col s12 m4 l4">
                 <div class="center promo promo-example">
                     <i class="mdi-image-flash-on"></i>
-                    <h5 class="promo-caption">Speeds up development</h5>
-                    <p class="light center">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Cum sociis natoque penatibus et magnis dis parturient montes.</p>
+                    <h5 class="promo-caption">PDM</h5>
+                    <p class="light center">Atacar zonas con mayor foco.</p>
                 </div>
             </div>
             <div class="col s12 m4 l4">
                 <div class="center promo promo-example">
                     <i class="mdi-social-group"></i>
-                    <h5 class="promo-caption">User Experience Focused</h5>
-                    <p class="light center">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                    <h5 class="promo-caption">Fielders</h5>
+                    <p class="light center">Cuadrillas de trabajo dedicadas a difundir ofertas comerciales de Telmex.</p>
                 </div>
             </div>
             <div class="col s12 m4 l4">
                 <div class="center promo promo-example">
                     <i class="mdi-hardware-desktop-windows"></i>
-                    <h5 class="promo-caption">Fully responsive</h5>
-                    <p class="light center">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>
-                </div>
+                    <h5 class="promo-caption">Canales</h5>
+	<p class="light center">Canales disponibles de los usuarios</p>
+
+</div>
             </div>
         </div>
     </div>
@@ -225,16 +295,46 @@
 <!--Work-->
 <div class="section scrollspy" id="work">
     <div class="container">
-        <h2 class="header text_b">Work </h2>
+        <h2 class="header text_b">Proyectos </h2>
         <div class="row">
             <div class="col s12 m4 l4">
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" src="img/project1.jpg">
+                        <img class="activator" src="img/sandiegoday.png">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4">Mapas Telmex<i class="mdi-navigation-more-vert right"></i></span>
+                        <p><a href="http://10.105.116.58/mapa" target="_blank">Mapas Telmex</a></p>
+                    </div>
+                    <div class="card-reveal">
+                        <span class="card-title grey-text text-darken-4">Mapas Telmex <i class="mdi-navigation-close right"></i></span>
+                        <p>Sistema de monitoreo de cajas y cajeros.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m4 l4">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <img class="activator" src="img/sandiegonight.png">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4">Cajas y Cajeros <i class="mdi-navigation-more-vert right"></i></span>
+                        <p><a href="http://cajasycajeros.telmex.com/" target="_blank">Cajas y Cajeros</a></p>
+                    </div>
+                    <div class="card-reveal">
+                        <span class="card-title grey-text text-darken-4">Cajas y Cajeros <i class="mdi-navigation-close right"></i></span>
+                        <p>Sistema de monitoreo de cajas y cajeros.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m4 l4">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <img class="activator" src="img/montaña.png">
                     </div>
                     <div class="card-content">
                         <span class="card-title activator grey-text text-darken-4">Project Title <i class="mdi-navigation-more-vert right"></i></span>
-                        <p><a href="#">Project link</a></p>
+                        <p><a href="#" target="_blank">Project link</a></p>
                     </div>
                     <div class="card-reveal">
                         <span class="card-title grey-text text-darken-4">Project Title <i class="mdi-navigation-close right"></i></span>
@@ -245,11 +345,11 @@
             <div class="col s12 m4 l4">
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" src="img/project2.jpeg">
+                        <img class="activator" src="img/playa.png">
                     </div>
                     <div class="card-content">
                         <span class="card-title activator grey-text text-darken-4">Project Title <i class="mdi-navigation-more-vert right"></i></span>
-                        <p><a href="#">Project link</a></p>
+                        <p><a href="#" target="_blank">Project link</a></p>
                     </div>
                     <div class="card-reveal">
                         <span class="card-title grey-text text-darken-4">Project Title <i class="mdi-navigation-close right"></i></span>
@@ -260,11 +360,11 @@
             <div class="col s12 m4 l4">
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" src="img/project3.png">
+                        <img class="activator" src="img/parque.png">
                     </div>
                     <div class="card-content">
                         <span class="card-title activator grey-text text-darken-4">Project Title <i class="mdi-navigation-more-vert right"></i></span>
-                        <p><a href="#">Project link</a></p>
+                        <p><a href="#" target="_blank">Project link</a></p>
                     </div>
                     <div class="card-reveal">
                         <span class="card-title grey-text text-darken-4">Project Title <i class="mdi-navigation-close right"></i></span>
@@ -275,41 +375,11 @@
             <div class="col s12 m4 l4">
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" src="img/project4.jpg">
+                        <img class="activator" src="img/puente.png">
                     </div>
                     <div class="card-content">
                         <span class="card-title activator grey-text text-darken-4">Project Title <i class="mdi-navigation-more-vert right"></i></span>
-                        <p><a href="#">Project link</a></p>
-                    </div>
-                    <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4">Project Title <i class="mdi-navigation-close right"></i></span>
-                        <p>Here is some more information about this project that is only revealed once clicked on.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 m4 l4">
-                <div class="card">
-                    <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" src="img/project5.png">
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title activator grey-text text-darken-4">Project Title <i class="mdi-navigation-more-vert right"></i></span>
-                        <p><a href="#">Project link</a></p>
-                    </div>
-                    <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4">Project Title <i class="mdi-navigation-close right"></i></span>
-                        <p>Here is some more information about this project that is only revealed once clicked on.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 m4 l4">
-                <div class="card">
-                    <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" src="img/project6.jpeg">
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title activator grey-text text-darken-4">Project Title <i class="mdi-navigation-more-vert right"></i></span>
-                        <p><a href="#">Project link</a></p>
+                        <p><a href="#" target="_blank">Project link</a></p>
                     </div>
                     <div class="card-reveal">
                         <span class="card-title grey-text text-darken-4">Project Title <i class="mdi-navigation-close right"></i></span>
@@ -329,7 +399,7 @@
 <!--Team-->
 <div class="section scrollspy" id="team">
     <div class="container">
-        <h2 class="header text_b"> Our Team </h2>
+        <h2 class="header text_b"> Team </h2>
         <div class="row">
             <div class="col s12 m3">
                 <div class="card card-avatar">
@@ -348,9 +418,6 @@
                             </a>
                             <a class="blue-text text-lighten-2" href="https://plus.google.com/u/0/+JoashPereira">
                                 <i class="fa fa-google-plus-square"></i>
-                            </a>
-                            <a class="blue-text text-lighten-2" href="https://www.linkedin.com/in/joashp">
-                                <i class="fa fa-linkedin-square"></i>
                             </a>
                         </p>
                     </div>
@@ -470,31 +537,26 @@
             <div class="col l3 s12">
                 <h5 class="white-text">telmex.com</h5>
                 <ul>
-                    <li><a class="white-text" href="http://www.joashpereira.com/">Home</a></li>
-                    <li><a class="white-text" href="http://www.joashpereira.com/blog">Blog</a></li>
+                    <li><a class="white-text" href="http://www.telmex.com/">Home</a></li>
+                    <li><a class="white-text" href="http://blog.telmex.com/">Blog</a></li>
                 </ul>
             </div>
             <div class="col l3 s12">
                 <h5 class="white-text">Social</h5>
                 <ul>
                     <li>
-                        <a class="white-text" href="https://www.behance.net/joashp">
-                            <i class="small fa fa-behance-square white-text"></i> Behance
+                        <a class="white-text" href="https://twitter.com/TELMEXSoluciona?lang=es">
+                            <i class="small fa fa-twitter-square white-text"></i> Twitter
                         </a>
                     </li>
                     <li>
-                        <a class="white-text" href="https://www.facebook.com/joash.c.pereira">
+                        <a class="white-text" href="https://www.facebook.com/telmex?fref=ts">
                             <i class="small fa fa-facebook-square white-text"></i> Facebook
                         </a>
                     </li>
                     <li>
-                        <a class="white-text" href="https://github.com/joashp">
-                            <i class="small fa fa-github-square white-text"></i> Github
-                        </a>
-                    </li>
-                    <li>
-                        <a class="white-text" href="https://www.linkedin.com/in/joashp">
-                            <i class="small fa fa-linkedin-square white-text"></i> Linkedin
+                        <a class="white-text" href="https://plus.google.com/u/0/116694533553464118545/posts">
+                            <i class="small fa fa-google-plus-square white-text"></i> Google Plus
                         </a>
                     </li>
                 </ul>
@@ -503,7 +565,7 @@
     </div>
     <div class="footer-copyright default_color">
         <div class="container">
-            Hecho por <a class="white-text" href="http://joashpereira.com">Erick Vivanco</a>.
+            Made by <a class="white-text" href="http://joashpereira.com">Erick Vivanco</a>.
         </div>
     </div>
 </footer>
@@ -512,7 +574,12 @@
     <!--  Scripts-->
     <script src="min/plugin-min.js"></script>
     <script src="min/custom-min.js"></script>
-
+    <script src="js/materialize-min.js"></script>
+<script>
+function myFunction() {
+    var myWindow = window.open("edit.php", "", "width=600, height=350");
+}
+</script>
     </body>
 </html>
 
