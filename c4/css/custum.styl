@@ -1,0 +1,314 @@
+@import 'nib'
+telmexBlue = #2196F3;
+#overlay 
+	display none
+	top 0 
+	left 0
+	position fixed
+	width 100% 
+	height 100%  
+	background rgba(0,0,0, .9)
+	z-index 999
+	.inner 		
+		width 50% 
+		height auto
+		position relative 
+		top 50% 
+		transform translateY(-50%)
+		margin 0 auto
+		z-index 999
+		#close-overlay 
+			color #fff
+			width 100% 
+			text-align right 
+			color #ffff
+			font-size 20px
+			cursor pointer
+			transition all .3s ease
+			&:hover 
+				color red
+		#load
+			color telmexBlue
+			width 100% 
+			height 100% 
+.logo-box
+	width 100% 
+	height 100px 
+	background telmexBlue
+	animation: bind 0.7s ease
+	text-align center
+	h3 
+		color #fff 
+		margin 0 
+		padding 0 
+		position relative 
+		top 50% 
+		margion 0 auto 
+		transform translateY(-50%)
+		span 
+			font-weight 100		
+.holder
+	width 100% 
+	text-align center
+	background telmexBlue
+	height auto 
+	color #fff
+	min-height 250px
+	i
+		font-size 30px
+	input 
+		width 30% 
+		color #fff 
+	.block 
+		display block 
+		width 80% 
+		margin 0 auto
+		color #fff !important
+		text-align center
+		select, option 
+			color #fff !important
+		i 
+			float left
+	.select-wrapper
+		.select-dropdown 
+			color #fff !important
+	.distritosText 
+		p 
+			text-align center
+		small		
+			background-color #fff
+			padding 5px 
+			display inline-block 
+			vertical-align center 
+			color telmexBlue
+			font-size 14px 
+			margin-left 5px
+			transition all .3s ease
+			&:hover 
+				cursor pointer
+				color black
+				border-radius 5px
+				box-shadow -3px -3px -3px 15px black
+.listaDist
+	position relative
+	min-height 50px
+	width 100% !important
+	text-align center
+	li 
+		min-width 100px
+		display inline-block
+		vertical-align middle
+		padding 5px
+		color telmexBlue
+		transition all .3s ease
+		position relative
+		&:after 
+			content ('')
+		&:hover 
+			color red
+			cursor pointer
+			&:after
+				position after
+				right 13px
+				content ('-')
+				position absolute
+#login-c4 
+	width 80% 
+	padding 15px 10px 
+	margin 20px auto
+	input[type="text"]
+		background url(img/usr.png) no-repeat center left
+		padding-left 40px
+	input[type="password"]
+		background url(img/lock.png) no-repeat center left
+		padding-left 40px
+
+.select-wrapper 
+span.select-dropdown
+	width 90% 
+	margin 0 auto
+#filter-box
+	margin-top -60px
+	width 100% 
+	height auto
+	display block
+	text-align center
+	padding 20px
+	background-color #F7F7F7
+	.box 
+		width 33.33%
+		float left
+		select 
+			width 100%
+	.sendbtn 
+		width 100% 
+		float none 
+		display block
+		clear both
+	h4
+		font-weight 100
+	.distritosText 
+		small		
+			background-color telmexBlue
+			padding 5px 
+			display inline-block 
+			vertical-align center 
+			color #fff
+			font-size 14px 
+			margin-left 5px
+			transition all .3s ease
+			&:hover 
+				cursor pointer
+				color black
+				border-radius 5px
+				box-shadow -3px -3px -3px 15px black
+.listaDist
+	position relative
+	min-height 50px
+	width 100% !important
+	text-align center
+	li 
+		min-width 100px
+		display inline-block
+		vertical-align middle
+		padding 5px
+		color telmexBlue
+		transition all .3s ease
+		position relative
+		&:after 
+			content ('')
+		&:hover 
+			color red
+			cursor pointer
+			&:after
+				position after
+				right 13px
+				content ('-')
+				position absolute
+#edit-form 
+	width 100% 
+	height 100% 
+	background telmexBlue
+	.input-fild 
+		width 33% 
+		display inline-block
+#login-wrapper 
+	width 100% 
+	height 100% 
+	position absolute
+	background telmexBlue
+	h1 
+		float left 
+		width 100% 
+		font-weight 100
+		color #fff
+		text-align center
+		span 
+			font-weight 800
+	.inner 
+		width 40% 
+		height 40%
+		position relative
+		margin 0 auto 
+		top 50% 
+		transform translateY(-50%)
+		background #fff 
+		form 
+			width 100% 
+			height 100%
+		.content
+			width 80% 
+			height auto 
+			margin 0 auto
+			position relative
+			top 50% 
+			transform translateY(-50%)
+			p 
+				float left 
+				width 100% 
+				font-size 12px 
+				text-align center
+				margin-top -100px
+			input[type="text"]
+				margin-top -100px
+				background url(img/usr.png) no-repeat center left
+				padding-left 35px
+			input[type="password"]
+				background url(img/lock.png) no-repeat center left
+				padding-left 30px
+			.button-holder 
+				width 100% 
+				text-align center 
+				padding-top 20px
+		
+@keyframes bind
+	for i in 0..10
+		{10% * i}
+			opacity (i/10)
+#loadPlace 
+	background #fff
+.newUser-holder 
+	width 100% 
+	height 100% 
+	background #fff
+	input 
+		width 45% 
+		display inline-block
+		margin 2%
+		&:nth-child(3), &:nth-child(4)
+			width 94% !important
+.holder-block 
+	width 100% 
+	height 200px
+	p 
+		text-align center
+	.box 
+		width 33.33%
+		float left
+		select 
+			width 100%
+	.sendbtn 
+		width 100% 
+		float none 
+		display block
+		clear both
+	h4
+		font-weight 100
+	.distritosText 
+		small		
+			background-color telmexBlue
+			padding 5px 
+			display inline-block 
+			vertical-align center 
+			color #fff
+			font-size 14px 
+			margin-left 5px
+			transition all .3s ease
+			&:hover 
+				cursor pointer
+				color black
+				border-radius 5px
+				box-shadow -3px -3px -3px 15px black
+.listaDist
+	position relative
+	min-height 50px
+	width 100% !important
+	text-align center
+	li 
+		min-width 100px
+		display inline-block
+		vertical-align middle
+		padding 5px
+		color telmexBlue
+		transition all .3s ease
+		position relative
+		&:after 
+			content ('')
+		&:hover 
+			color red
+			cursor pointer
+			&:after
+				position after
+				right 13px
+				content ('-')
+				position absolute

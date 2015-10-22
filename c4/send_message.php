@@ -14,6 +14,7 @@ if (isset($_GET["regId"]) && isset($_GET["message"])) {
 
     $registatoin_ids = array($regId);
     $message = array("mensaje" => $message);
+    //$token = array("jwt" => $token);	
 
     $result = $gcm->send_notification($registatoin_ids, $message);
 
