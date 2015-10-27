@@ -1,0 +1,221 @@
+@import 'nib'
+@import 'normalize.css'
+@import 'font-awesome.min.css'
+blueTelmex = #2196F3
+*
+	transition all .5s ease !important
+#wrapper 
+	width 100% 
+	height 100% 
+	position fixed
+	#nav 
+		width 100% 
+		height 50px
+		background blueTelmex url(img/appLogo.png) no-repeat center center /140px auto
+		position relative 
+		#appMenu
+			width 40px 
+			height 40px
+			position absolute
+			left 5px 
+			top 5px
+			text-align center
+			cursor pointer
+			transition none !important
+			i 
+				color #fff 
+				font-size 35px
+				margin 0 auto
+				position relative 
+				top 50% 
+				transform translateY(-50%)
+		#appMenu.active 
+			width 100%
+			height 100%
+			position fixed
+			text-align center
+			top 0
+			left 70%
+			transition all .3s linear !important
+			i 
+				color tomato
+				font-size 35px
+				position absolute
+				top 24px
+				left 20px
+				width 100% 
+				background blueTelmex
+				text-align left
+	#content 
+		width 100% 
+		height 100% 
+		.homeInner
+			width 100% 
+			height 100% 
+			text-align center 
+			p 
+				padding 0
+				margin 10px 0
+				font-size 20px
+			#assignment 
+				margin-top 20px
+				width 100% 
+				height calc(100% - 20px) 
+				.block
+					width calc(50% - 2px) 
+					height calc(25% - 2px)
+					border 1px solid #fff 
+					background-position center !important
+					background-size cover !important 
+					background-repeat no-repeat !important
+					float left
+					&:nth-child(1)
+						background url(img/assets/001.jpg)
+					&:nth-child(2)
+						background url(img/assets/002.jpg)
+					&:nth-child(3)
+						background url(img/assets/003.jpg)
+					&:nth-child(4)
+						background url(img/assets/004.jpg)
+					&:nth-child(5)
+						background url(img/assets/005.jpg)
+					&:nth-child(6)
+						background url(img/assets/006.jpg)
+#wrapper.active 
+	#nav
+		background-image none
+		transition none !important
+#menuDisplay
+	width 70%
+	height 100% 
+	position fixed 
+	background #fff
+	top 0
+	z-index 9
+	left -72%
+	box-shadow 5px 0px 5px 0px rgba(50, 50, 50, 0.75)
+	transition all .5s linear !important
+
+	.block
+		width 100% 
+		background #fff
+		display block 
+		//text-align center 
+		padding 10% 0
+		border-bottom 1px solid black
+		text-align left
+		cursor pointer
+		p
+			color blueTelmex
+			margin 0 
+			padding 0
+			display inline-block
+			margin-left 20px
+		i 
+			color blueTelmex
+			margin-left 10px
+			font-size 20px
+	.block.active
+		background blueTelmex
+		p 
+			color #fff
+			font-weight 800
+		i
+			color #fff
+#menuDisplay.active
+	left 0%
+	transition all .4s linear !important
+
+#formulario
+	width 100% 
+	height 100% 
+	text-align center
+	background blueTelmex
+#newUser, #userInfo
+	width 100% 
+	height 50px 
+	text-align right 
+	i
+		color #fff 
+		font-size 30px
+		padding 5px
+		cursor pointer
+#newUser.left 
+	text-align left
+.content 
+	width 100%
+	height auto 
+	position absolute
+	top 50% 
+	text-align center
+	transform translateY(-50%)
+	.logo 
+		width 100% 
+		height 70px 
+		background url(img/appLogo.png) no-repeat center center/ 50% auto
+	p
+		font-size 20px
+		color #fff 
+		font-weight 100
+	i
+		font-size 20px 
+		color #fff
+	input[type="text"], input[type="password"]
+		background transparent 
+		border none 
+		border-bottom 1px solid #fff 
+		outline none
+		color #fff
+		font-size 20px
+		padding 10px
+		margin-top 10px
+		width 70%
+		font-family sans-serif
+	button
+		background green 
+		color #fff 
+		padding 10px 30px 
+		outline none 
+		border 1px solid green 
+		border-radius 5px
+		margin-top 40px 
+		border 1px groove green
+		font-family sans-serif
+		
+#overlay
+	display none
+	width 100%
+	height 100% 
+	position fixed 
+	background blueTelmex
+	.inner 
+		width 100% 
+		height auto 
+#masterLogin
+	z-index 9
+	top 0 
+	left 0 
+	width 100% 
+	height 100% 
+	position fixed 
+	background blueTelmex url(img/appLogo.png) no-repeat center 40% / 50% auto
+	.inner 
+		width 100% 
+		height 100% 
+		position fixed 
+		background url(img/loading.gif) no-repeat center 55%/ 20% auto
+.newUserContent 
+	background blueTelmex
+#mapa-canvas 
+	min-width 400px !important
+	min-height 600px !important
+#menuPuller
+	text-align center
+	border-radius 5px 
+	background blueTelmex
+	i 
+		color #fff
+		position relative
+		top 50% 
+		transform translateY(-50%)
+		font-size 20px
