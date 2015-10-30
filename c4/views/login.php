@@ -9,8 +9,7 @@
 				Ingresar
 				<i class="mdi-action-done-all right white-text"></i>
 			</button>-->
-<input type="button" value="Ingresar" onclick="validate();"/>
-
+		<input type="button" value="Ingresar" onclick="validate();"/>
 		</div>
 	</form>
 </div>

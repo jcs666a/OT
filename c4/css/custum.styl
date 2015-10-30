@@ -1,5 +1,7 @@
 @import 'nib'
 telmexBlue = #2196F3;
+body *
+	position relative
 #overlay 
 	display none
 	top 0 
@@ -89,29 +91,6 @@ telmexBlue = #2196F3;
 				color black
 				border-radius 5px
 				box-shadow -3px -3px -3px 15px black
-.listaDist
-	position relative
-	min-height 50px
-	width 100% !important
-	text-align center
-	li 
-		min-width 100px
-		display inline-block
-		vertical-align middle
-		padding 5px
-		color telmexBlue
-		transition all .3s ease
-		position relative
-		&:after 
-			content ('')
-		&:hover 
-			color red
-			cursor pointer
-			&:after
-				position after
-				right 13px
-				content ('-')
-				position absolute
 #login-c4 
 	width 80% 
 	padding 15px 10px 
@@ -162,29 +141,6 @@ span.select-dropdown
 				color black
 				border-radius 5px
 				box-shadow -3px -3px -3px 15px black
-.listaDist
-	position relative
-	min-height 50px
-	width 100% !important
-	text-align center
-	li 
-		min-width 100px
-		display inline-block
-		vertical-align middle
-		padding 5px
-		color telmexBlue
-		transition all .3s ease
-		position relative
-		&:after 
-			content ('')
-		&:hover 
-			color red
-			cursor pointer
-			&:after
-				position after
-				right 13px
-				content ('-')
-				position absolute
 #edit-form 
 	width 100% 
 	height 100% 
@@ -205,40 +161,57 @@ span.select-dropdown
 		text-align center
 		span 
 			font-weight 800
-	.inner 
-		width 40% 
-		height 40%
-		position relative
-		margin 0 auto 
-		top 50% 
-		transform translateY(-50%)
-		background #fff 
-		form 
-			width 100% 
+	.inner.error
+		transition height .5s
+		height 310px
+		span.error
+			animation bind 1s ease
+			color red
+			text-align center
+			display block
+			font-size 1.5em
+			position absolute
+			line-height 1
+			margin 10px 0 0 0
+	.inner
+		transition height .5s
+		min-width 300px
+		width 100%
+		height 250px
+		position absolute
+		margin -125px 0 0
+		top 50%
+		span.error
+			display none
+		form
+			display block
+			width 40%
+			min-width 300px
 			height 100%
+			background #fff
+			margin 0 auto
 		.content
-			width 80% 
-			height auto 
+			overflow hidden
+			width 80%
+			height auto
 			margin 0 auto
 			position relative
 			top 50% 
 			transform translateY(-50%)
 			p 
-				float left 
-				width 100% 
-				font-size 12px 
+				width 100%
+				font-size 1.1em
+				color green
 				text-align center
-				margin-top -100px
 			input[type="text"]
-				margin-top -100px
 				background url(img/usr.png) no-repeat center left
 				padding-left 35px
 			input[type="password"]
 				background url(img/lock.png) no-repeat center left
 				padding-left 30px
 			.button-holder 
-				width 100% 
-				text-align center 
+				width 100%
+				text-align center
 				padding-top 20px
 		
 @keyframes bind
@@ -291,18 +264,20 @@ span.select-dropdown
 				box-shadow -3px -3px -3px 15px black
 .listaDist
 	position relative
-	min-height 50px
-	width 100% !important
+	width 300px
+	background #fff
 	text-align center
+	margin 10px auto
+	max-height 100px
+	overflow auto
 	li 
-		min-width 100px
 		display inline-block
-		vertical-align middle
-		padding 5px
+		margin 5px
+		line-height 1
 		color telmexBlue
 		transition all .3s ease
 		position relative
-		&:after 
+		&:after
 			content ('')
 		&:hover 
 			color red
@@ -312,3 +287,113 @@ span.select-dropdown
 				right 13px
 				content ('-')
 				position absolute
+body.dentroc4
+	select
+		padding 3px
+		margin  0
+		border-radius 0
+		background #fff
+		color #666
+		border 1px solid #ccc
+		outline none
+		display inline-block
+		appearance none
+		cursor pointer
+	div.box.col.s12.m4.l4
+		label
+			position relative
+		label:after
+			content '\e6bb'
+			font-family "Material-Design-Icons"
+			color #aaa
+			transform rotate(90deg)
+			right 8px
+			top 2px
+			padding 0 0 2px
+			border-bottom 1px solid #ddd
+			position absolute
+			pointer-events none
+	#index-banner
+		.container
+			overflow hidden
+	#filter-box
+		div.box
+			margin-bottom 10px
+			label
+				font-size 1.3em
+				select
+					padding 3px 40px 3px 3px;
+			label:after
+				top -3px
+		.distritosText
+			clear both
+	div.clear
+		clear both
+	ul.devices
+		margin 0
+		padding 0
+		display block
+		text-align center
+		li
+			width 40%
+			display inline-block
+			list-style none
+			text-align left
+			border 1px solid #dedede
+			padding 10px
+			margin 0 15px 25px 0
+			border-radius 3px
+			box-shadow 0 1px 5px rgba(0, 0, 0, 0.35)
+			font-family 'Helvetica Neue', Helvetica, Arial, sans-serif
+			color #555
+			label,span
+				font-family 'Helvetica Neue', Helvetica, Arial, sans-serif
+				font-size 12px
+				font-style normal
+				font-variant normal
+				font-weight bold
+				color #393939
+				display block
+				float left
+			label
+				height 25px
+				width 50px
+			textarea,textarea:focus
+				appearance none
+				border 0
+				border-bottom 1px solid #ccc
+				display block
+				width 100%
+				height auto
+				max-height 300px
+				overflow auto
+				margin 10px 0
+				outline none
+		li.over
+			box-shadow none
+			margin 0
+			padding 0
+			border-radius 0
+			left 0
+			position absolute
+			width 100%
+			height 100%
+			background rgba(0,0,0,.2)
+			display none
+			z-index 9
+			span
+				color #fff
+				height 100px
+				font-size 2em
+				line-height 100px
+				top 50%
+				margin-top -50px
+				width 100%
+				text-align center
+		li.over.s
+			display block
+	.ui-autocomplete
+		z-index 9999999
+@media (max-width: 500px)
+	body
+		font-size .8em

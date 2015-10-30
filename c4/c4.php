@@ -3,8 +3,9 @@
     if ($_SESSION["sesion_de"] <>""){
         $sesionDe=$_SESSION["sesion_de"];
         $niv=$_SESSION["niv"];
+        $idJefe=$_SESSION["idJefe"];
     }else{
-        echo "<script>window.location='index.php';</script>";
+        echo "<html><head><script>window.location='index.php';</script></head></body></html>";
     }
 ?>
 <!DOCTYPE html>
@@ -15,133 +16,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
     <meta name="theme-color" content="#2196F3">
     <title>Telmex C4</title>
-    <script>var tipoUser = "<?php echo $niv; ?>";</script>
-    <!-- CSS  -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" charset="UTF-8"></script>
+    <script charset="UTF-8">var tipoUser="<?php echo $niv;?>",idJefe="<?php echo $idJefe;?>",nombreJefe="<?php echo $sesionDe;?>";</script>
+
     <link href="min/plugin-min.css" type="text/css" rel="stylesheet">
     <link href="min/custom-min.css" type="text/css" rel="stylesheet" >
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="css/custum.css">
- <style type="text/css">
-            div.clear{
-                clear: both;
-            }
-            ul.devices{
-                margin: 0;
-                padding: 0;
-            }
-            ul.devices li{
-                float: left;
-                list-style: none;
-                border: 1px solid #dedede;
-                padding: 10px;
-                margin: 0 15px 25px 0;
-                border-radius: 3px;
-                -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
-                -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
-                box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
-                font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-                color: #555;
-            }
-            ul.devices li label, ul.devices li span{
-                font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-                font-size: 12px;
-                font-style: normal;
-                font-variant: normal;
-                font-weight: bold;
-        color: #393939;
-                display: block;
-                float: left;
-            }
-            ul.devices li label{
-                height: 25px;
-                width: 50px;
-            }
-        </style>
- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function(){
-                
-            });
-            function sendPushNotification(id){
-                var data = $('form#'+id).serialize();
-                $('form#'+id).unbind('submit');                
-                $.ajax({
-                    url: "send_message.php",
-                    type: 'GET',
-                    data: data,
-                    beforeSend: function() {
-                         
-                    },
-                    success: function(data, textStatus, xhr) {
-                          $('.txt_message').val("");
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                         
-                    }
-                });
-                return false;
-            }
-            function sendBroadcast(){
-                var data = $('form#').serialize();
-                $('form#').unbind('submit');                
-                $.ajax({
-                    url: "index.php",
-                    type: 'GET',
-                    data: data,
-                    beforeSend: function() {
-                         
-                    },
-                    success: function(data, textStatus, xhr) {
-                          $('.txt_message').val("");
-
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-       
-                    }
-                });
-                return false;
-            }
-        $(function() {
-                $("#navigation a").stop().animate({"marginLeft":"-85px"},1000);
-                $("#navigation > li").hover(
-                    function () {
-                        $("a",$(this)).stop().animate({"marginLeft":"-2px"},200);
-                            },
-                    function () {
-                        $("a",$(this)).stop().animate({"marginLeft":"-85px"},200);
-                            }
-                        );
-                    });
-           var message="This function is not allowed here.";
-                   function clickIE4(){
-
-                                 if (event.button==2){
-                                 return false;
-                                 }
-                   }
-
-                   function clickNS4(e){
-                                 if (document.layers||document.getElementById&&!document.all){
-                                                if (e.which==2||e.which==3){
-                                                          return false;
-                                                }
-                                        }
-                   }
-
-                   if (document.layers){
-                                 document.captureEvents(Event.MOUSEDOWN);
-                                 document.onmousedown=clickNS4;
-                   }
-
-                   else if (document.all&&!document.getElementById){
-                                 document.onmousedown=clickIE4;
-                   }
-
-                   document.oncontextmenu=new Function("return false;")
-
-    </script>
 </head>
-<body id="top" class="scrollspy">
+<body id="top" class="scrollspy dentroc4">
        <?php
         include_once 'db_functions.php';
         $db = new DB_Functions();
@@ -155,32 +39,29 @@
         else
             $no_of_users = 0;
 
-    if ($channels != false)
+        if ($channels != false)
             $no_of_channels = mysql_num_rows($channels);
         else
             $no_of_channels = 0;
 
     $gcmRegIds = array();
         while ($row = mysql_fetch_array($gcms)){
-        array_push($gcmRegIds, $row['gcm_regid']);
-}
+            array_push($gcmRegIds, $row['gcm_regid']);
+        }
         include_once './GCM.php';
         $gcm = new GCM();
         $pushMessage = $_POST['message'];
-        if(isset($gcmRegIds) && isset($pushMessage)) {
-
-        $message = array('mensaje' => $pushMessage);
-        $gcm->send_notification($gcmRegIds, $message);
-    }
+        if(isset($gcmRegIds) && isset($pushMessage)){
+            $message = array('mensaje' => $pushMessage);
+            $gcm->send_notification($gcmRegIds, $message);
+        }
         ?>
 
 <!-- Pre Loader -->
 <div id="loader-wrapper">
     <div id="loader"></div>
- 
     <div class="loader-section section-left"></div>
     <div class="loader-section section-right"></div>
- 
 </div>
 
 <!--Navigation-->
@@ -192,7 +73,7 @@
                 <li><a href="#intro">Fielders</a></li>
                 <li><a href="#work">Proyectos</a></li>
                 <li><a href="#team">Team</a></li>
-                <li><a href="#registro" id="newUser" class="triggerOverlay">Nuevo Usuario</a></li>
+                <li><a href="#registro" id="newUser" class="triggerOverlay editar">Nuevo Usuario</a></li>
                 <li><a href="#contact">Contacto</a></li>
             </ul><a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
             </div>
@@ -213,20 +94,19 @@
     </div>
 </div>
 
-
 <!--Intro and service-->
     <div id="intro" class="section scrollspy">
-        <div id="filter-box">
+        <div id="filter-box" class="editar">
             <h4>Seleccione los filtros para ver el detalle.</h4>
             <?php include 'distritos.php';?>
             <div class="sendbtn">
                 <buttom type="button" value="Buscar" onClick="cargaReg();" class="btn waves-effect waves-light red darken-1 mostrarDatosGeoTel">
-                    Enviar
-                <i class="mdi-content-send right white-text"></i>
+                    Visualizar
+                <i class="mdi-action-visibility right white-text"></i>
             </button>
             </div>
         </div>
-        <div class="container">
+        <div class="container mensajes">
             <div class="col s12">
                 <h3 class="header text_h2"> Enviar a todos en el canal: <span class="span_h2"> Carlos Slim  </span>
             </div>
@@ -244,29 +124,29 @@
             <h2 class="center header text_h2">Dispositivos Registrados: <?php echo $no_of_users; ?>
         </div>
         <ul class="devices">
+            <li class="over"><span>Enviando mensaje</span></li>
             <?php
-                if ($no_of_users > 0) {
-            ?>
-            <?php
-                while ($row = mysql_fetch_array($users)) {
+                if($no_of_users>0){
+                while($row = mysql_fetch_array($users)){
             ?>
             <li>
-                <form id="<?php echo $row["id"] ?>" name="" method="post" onsubmit="return sendPushNotification('<?php echo $row["id"] ?>')">
+                <form id="<?php echo $row["id"] ?>" name="" method="post">
                     <label class="blue-text">Nombre: </label>
-                    <span class="black-text"><?php echo $row["name"] ?></span>                                
+                    <span class="sempleado black-text"><?php echo $row["name"] ?></span>
                     <div class="clear"></div>
-                    <label class="blue-text">Exp:</label> 
-                    <span  class="black-text"><?php echo $row["exp"] ?></span>
+                    <label class="blue-text">Exp:</label>
+                    <span  class="sexp black-text"><?php echo $row["exp"] ?></span>
                     <div class="clear"></div>
                     <label class="blue-text">Distrito: </label>
-                    <span class="black-text"><?php echo $row["distrito"] ?></span> 
+                    <span class="black-text"><?php echo $row["distrito"] ?></span>
                     <div class="send_container">
-                        <textarea rows="3" id="mensaje" name="message" cols="5" class="materialize-textarea black-text" placeholder="Mensaje"></textarea>
-                        <input type="hidden" name="regId" value="<?php echo $row["gcm_regid"] ?>"/>
-                        <button class="btn waves-effect waves-light red darken-1" type="submit">Enviar
+                        <textarea rows="3" id="mensaje" name="message" placeholder="Mensaje"></textarea>
+                        <input type="hidden" class="IDform" name="Id" value="<?php echo $row["id"] ?>"/>
+                        <input type="hidden" class="regIDform" name="regId" value="<?php echo $row["gcm_regid"] ?>"/>
+                        <button class="btn waves-effect waves-light red darken-1 mensajes" type="submit">Enviar
                             <i class="mdi-content-send right white-text"></i>
                         </button>
-                        <button class="btn waves-effect waves-light green accent-4 triggerOverlay" type="submit" id="edit">Editar
+                        <button class="btn waves-effect waves-light green accent-4 triggerOverlay editar" archivo="edit">Editar
                             <i class="mdi-content-create right white-text"></i>
                         </button>
                     </div>
@@ -279,7 +159,7 @@
             </li>
             <?php } ?>
         </ul>
-        <div  class="col s12 m4 l4">
+        <div class="col s12 m4 l4">
             <div class="center promo promo-example">
                 <i class="mdi-image-flash-on"></i>
                 <h5 class="promo-caption">PDM</h5>
@@ -591,21 +471,11 @@
     </div>
 </div>
     <!--  Scripts-->
-    <script src="min/plugin-min.js"></script>
-    <script src="min/custom-min.js"></script>
-    <script src="js/materialize.min.js"></script>
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <script src="js/mapa.js"></script>
-<script>
-$(document).ready(function() {
-    $('.divisionesGeoTel').material_select();
-    $(".triggerOverlay").click(function(event) {
-        var getId = this.id;
-        $("#loadPlace").load(getId+".php", function(){
-                $("#overlay").fadeIn('slow');
-            });
-        });
-});
-</script>
+    <script src="min/plugin-min.js" charset="UTF-8"></script>
+    <script src="min/custom-min.js" charset="UTF-8"></script>
+    <script src="js/materialize.min.js" charset="UTF-8"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js" charset="UTF-8"></script>
+    <script src="js/mapa.js" charset="UTF-8"></script>
+    <script src="js/c4.js" charset="UTF-8"></script>
     </body>
 </html>
