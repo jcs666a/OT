@@ -19,14 +19,12 @@
 
 <!DOCTYPE html>
 <html>
-        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <meta name="viewport" content="width=320, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <link rel="stylesheet" href="css/style.css">
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <link rel="stylesheet" href="css/style.css">
     </head>
         <div id="menuDisplay">
           <div class="block">
@@ -39,7 +37,7 @@
           </div>
           <a href="mensajeria.php">
               <div class="block">
-                <p>Mensajería</p><i class="fa fa-envelope-o"></i>
+                <p>Mensajería</p><i class="fa fa-comment-o"></i>
               </div>
           </a>
           <a href="contrataciones.php">
@@ -48,7 +46,8 @@
               </div>
           </a>
           <div class="block" onclick="logout();">
-            <p>Cerrar Sesión</p><i class="fa fa-key"></i>
+            <p>Cerrar Sesión</p><i class="fa fa-power-off"></i>
+
           </div>
         </div>
         <div id="wrapper">
@@ -77,10 +76,12 @@
         <script>
             $(function() {
                 global();
+                                    //traeteLasTecnologias('1','6','Distritos-LINDAVISTA');
+
             });
             $(window).bind("load", function() {
                $("#content").load('mapa/mapa.php',function(status) {
-                    $("#masterLogin").fadeOut('fast');
+                    //$("#masterLogin").fadeOut('fast');
                 });
             });
 

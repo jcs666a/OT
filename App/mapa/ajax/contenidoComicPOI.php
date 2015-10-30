@@ -3,23 +3,11 @@
 				$are = $_POST["are"];
 				$llave = $_POST["llave"];
 			?>
-            
-            <table style=" font-family:Arial, Helvetica, sans-serif; font-size:11px; width:350px;">
-            	<tr>
-                	<td colspan="2" style="font-size:14px; background-color:#F1EEA0;" ><strong>Selecciona los Puntos de Inter&eacute;s:</strong></td>
-                </tr>
-                <tr><td colspan="2"><br><hr></td></tr>
-				<tr><td>
-                    <div style="margin-left:15px;">
-                        <input type='checkbox' id="opcPoiAll" onchange="traetePoisAllCategories('<?php echo $are; ?>','<?php echo $llave; ?>');"/> Mostrar todos
-                    </div>                
-                </td></tr>
-				<tr>
-                	<td colspan="2">
-                    	<table style="width:100%; background-color:#FAFAFA; border:#CCCCCC solid 1px; padding:10px; font-size:9px;">
-                            <tr>
-                          		<td>
-                                	<ul id="poiCheck" style=" height:150px; overflow:auto;">
+						<h5>Selecciona los Puntos de Interés:</h5>
+						<div class="center">
+                        	<input type='checkbox' id="opcPoiAll" onchange="traetePoisAllCategories('<?php echo $are; ?>','<?php echo $llave; ?>');"/> Mostrar todos
+   						</div>
+                                	<ul id="poiCheck">
 
 										<script>
                                         
@@ -70,14 +58,12 @@
                                         </script>
 
                                     </ul>
-                                </td>
-                            </tr>                                                      
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                	<td colspan="2"><div id="loaderPOI_<?php echo $are; ?>" style="height:5px;"></div></td>
-                </tr>                
-                <tr><td colspan="2"><br><hr><br></td></tr>                
-
-            </table>
+                                    <div id="verSelecion" style="position: absolute; bottom: -13px; left: 120px;">
+                                    	<p>ver seleción</p><i class="fa fa-thumbs-o-up"></i>
+                                    </div>
+<div id="loaderPOI_<?php echo $are; ?>" style="height:5px;"></div>
+<script>
+			$("#verSelecion").click(function(event) {
+				$("#tecnoDialog").removeClass('open');
+			});	
+</script>

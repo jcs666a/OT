@@ -1,4 +1,4 @@
-<!--<?php
+<?php
     session_start();
     if ($_SESSION["sesion_de"] <>""){
         $sesionDe=$_SESSION["sesion_de"];
@@ -6,7 +6,7 @@
     }else{
         echo "<script>window.location='index.php';</script>";
     }
-?>-->
+?>
 
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <link rel="shortcut icon" href="mapa/images/favico.gif">    
@@ -15,7 +15,6 @@
 
     <link rel="stylesheet" href="mapa/css/mapa.css">
     <link rel="stylesheet" href="mapa/js/jquery-ui-1.11.4.custom/jquery-ui.css">
-    <script type="text/javascript" src="mapa/js/jquery-1.11.3.js"></script>
     <script type="text/javascript" src="mapa/js/jquery-ui-1.10.4.custom.min.js"></script>
     <script src="mapa/js/jquery.tabSlideOut.v1.3.js"></script>
     <script type="text/javascript" src="mapa/js/corner.js"></script>    
@@ -30,11 +29,7 @@
     <script src="mapa/js/sockjs-0.3.4.js"></script>
     <script src="mapa/js/stomp.js"></script>
 
- <!--HIGHCHART -->
-    <script src="http://code.highcharts.com/highcharts.js"></script>
-    <script src="http://code.highcharts.com/modules/exporting.js"></script>
-    <script src="http://code.highcharts.com/modules/data.js"></script>
-    <script src="http://code.highcharts.com/modules/drilldown.js"></script>
+
 
 <!-- tecnologias  -->
     <script src="mapa/js/pinta_tecnologias.js"></script>
@@ -58,12 +53,39 @@
     //require_once("include/connect_red.php");
 ?>    
         <div id="header">
-            <div id="menuPuller">
+            <!--<div id="menuPuller">
                <i class="fa fa-filter"></i>
+               <div class="showtitle">
+                    <small>Flitro</small>
+               </div>
+            </div>-->
+            <div id="techMenu">
+                <i class="fa fa-filter"></i>
+               <div class="showtitle">
+                    <small>Filtrar tecnologías</small>
+               </div>
+            </div>
+            <div id="chartMenu">
+                <i class="fa fa-area-chart"></i>
+               <div class="showtitle">
+                    <small>Graficas</small>
+               </div>
+            </div>
+            <div id="fildersMenu">
+                <i class="fa fa-briefcase"></i>
+               <div class="showtitle">
+                    <small>Filders</small>
+               </div>
+            </div>
+            <div id="clientMenu">
+                <i class="fa fa-thumb-tack"></i>
+               <div class="showtitle">
+                    <small>POI</small>
+               </div>
             </div>
         </div>
         <div id="contadorcillo" style="background-color:#D8F781; line-height:30px; position:relative; z-index:3; font-family:Arial, Helvetica, sans-serif; font-size:18px; padding-left:10px;"></div>
-        <div id="map-canvas" style="width:100%; height:100%; position:absolute;"></div>
+        <div id="map-canvas"></div>
 <div id="menu">
     <div id="menuJumper">
         <i class="fa fa-chevron-down"></i>
@@ -120,79 +142,7 @@
                 </ul>                 
 
                       
-        </div>
-        <div id="activos">
-            <div id="escondedorActivos">
-                <p>Elementos activos en el mapa </p><i class="fa fa-map-o"></i>
-            <div id="contenedorActivos">
-                <div class="header">
-                    <div class="block">
-                        <small>Mostrar</small>
-                    </div>
-                    <div class="block">
-                        <small>Elemento</small>
-                    </div>
-                    <div class="block">
-                        <small>Opciones</small>
-                    </div>
-                </div>
-                <div class="content">
-                    <ul id="divic"></ul>
-                    <ul id="ares"></ul>
-                    <ul id="distr"></ul>
-                </div>
-                <!--<div>
-                    <ul style="margin:0px; padding:0px; width:100%;" id="divic"></ul>
-                </div>
-                <div>
-                    <ul style="margin:0px; padding:0px; width:100%;" id="ares"></ul>
-                </div>
-                <div>
-                    <ul style="margin:0px; padding:0px; width:100%;" id="distr"></ul>
-                </div>-->
-            </div>
-        </div>
-        <!--
-        <div id="activos" style="display:none;">
-            <div style="background-color:#999999; line-height:35px; text-align:center; font-size:15px; color:#FFFFFF; cursor:pointer;" id="escondedorActivos">Elementos activos en el mapa</div>
-            <div id="contenedorActivos">
-                <table style="width:auto;">
-                    <tr>
-                        <td>
-                            <div>
-                                <ul style="margin:0px; padding:0px; width:100%;" id="encabezadosActivos">
-                                    <li style="width:45px; text-align:center;"  class="activoEnlaLista">Mostrar</li>
-                                    <li style="width:125px;" class="activoEnlaLista">Elemento</li>
-                                    <li style="width:65px;" class="activoEnlaLista">Opciones</li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div>
-                                <ul style="margin:0px; padding:0px; width:100%;" id="divic"></ul>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div>
-                                <ul style="margin:0px; padding:0px; width:100%;" id="ares"></ul>
-                            </div>
-                        </td>
-                    </tr>      
-                    <tr>
-                        <td>
-                            <div>
-                                <ul style="margin:0px; padding:0px; width:100%;" id="distr"></ul>
-                            </div>
-                        </td>
-                    </tr>                          
-                </table>
-            </div>
-        </div>-->
-        
+        </div>   
         <div id="detalleSlide" style="display:none;">
                 <div class="titleMenuWiket" id="menuPullerSlide">
                     <table style="width:100%;">
@@ -213,44 +163,24 @@
             <div id="distritosXareaPOP"></div>
         </div>
    
-        <div id="mapasdinamicos"></div>
+        <div id="mapasdinamicos"></div>    
+<div id="tecnoDialog">
+    <div id="closeLoader">
+        <i class="fa fa-chevron-down"></i>
+    </div>
+    <div class="inner">
         
-<!--DIALOGS-->
-        <div id="necroDialog" title="Opciones de Consulta" style="font-size:14px;">
-            <table style=" font-family:Arial, Helvetica, sans-serif; font-size:11px; width:400px;">
-                <tr>
-                    <td colspan="2" style="font-size:14px; background-color:#92E9D4;" ><strong>Selecciona los filtros necesarios:</strong></td>
-                </tr>
-                <tr><td colspan="2"><div style="height:20px;"><hr></div></td></tr>
-                <tr>
-                    <td><strong>Fecha inicial</strong></td>
-                    <td><strong>Fecha Final</strong></td>
-                </tr>
-                <tr>
-                    <td><div id="iniOpcNecrop"></div></td>
-                    <td><div id="finiOpcNecrop"></div></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <table>
-                            <tr>
-                                <td>Bajas </td><td><input type="checkbox" value="1" id="opcNecropBajas"></td>
-                            </tr>
-                            <tr>
-                                <td>Altas </td><td><input type="checkbox" value="2" id="opcNecropAltas"></td>                
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        
-        <div id="tecnoDialog" title="Opciones" style="font-size:14px;"></div>        
-        
-        
+    </div>
+    
+</div>          
 <div id="ocultos"></div>
+<div id="nameDistrict"></div>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script src="http://code.highcharts.com/modules/data.js"></script>
+    <script src="http://code.highcharts.com/modules/drilldown.js"></script>
 <script>
 $(document).ready(function() {
-                 initialize();   
+    initialize();   
 }); 
 </script>
