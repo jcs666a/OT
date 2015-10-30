@@ -29,7 +29,7 @@ function global(){
           return true;
         }
       });
-      loginUser.click(function(event) { enviarUsuario(); });
+      //loginUser.click(function(event) { enviarUsuario(); });
 
       $(".triggerOverlay").click(function(event) {
         var getId = this.id;
@@ -41,33 +41,45 @@ function global(){
         });
       });
 }
-function enviarUsuario(){
-  alert("enviar usuario");
-var exp=150971;
-var gcm_regid = $('#regid').val();
-var dist= "zds008";
-var data = {
-'usuario': $('#usuario').val(),
-'clave': $('#clave').val(),
-};
-$.ajax({
-  type: "POST",
-  url: "http://187.217.179.35:9000/login",
-  data: data,
-  success: function(data, a, b){
-  var respuesta = data;
-  alert(respuesta.cuenta.nombre);
-  window.location="views/login.php?us="+respuesta.cuenta.nombre + "&ni=" + respuesta.cuenta.permisos[0]+ "&exp" + exp + "&gcm_regid" + gcm_regid + "&dist" +dist;
-  },
-  error: function(jqXHR, textStatus, error){
-  console.log('Error',jqXHR, textStatus, error);
-  },
-  dataType: 'json'
-});
-
-}
 
 function logout(){
-  alert("redirecciono"); 
   window.location="views/logout.php";
 }
+
+function validate(){
+    if ( $("#usuario").val()=="" || $("#clave").val()=="" ) {
+        $("#formulario #error").html('<small>Por favor llene los campos.</small>');
+    }else{
+  var exp=150971;
+  var gcm_regid = $('#regid').val();
+  var dist= "zds008"
+  var data= formulario.serialize();
+        try{
+          $.ajax({
+            type: "POST",
+            url: "http://187.217.179.35:9000/login",
+            data: data,
+            success: function(data, a, b){
+              var respuesta = data;
+              window.location="views/login.php?us="+respuesta.cuenta.nombre + "&iduser="+respuesta.cuenta.idusuario +"&ni=" + respuesta.cuenta.permisos[0]+ "&exp" + exp + "&gcm_regid" + gcm_regid + "&dist" +dist;
+            },
+            error: function(jqXHR, textStatus, error){
+              $("#formulario #error").html('<small>Credenciales incorrectas.</small>');
+            },
+            dataType: 'json'
+          });
+        }catch(error){
+          console.log(error)
+        };
+      
+    }
+      
+  }
+
+
+  function validar(string) {  
+    for (var i=0, output='', validos="ABCDEFGHIJKLMNÃ‘OPQRSTUVWXYZabcdefghijklmnÃ±opqrstuvwxyz1234567890,. "; i<string.length; i++)  
+       if (validos.indexOf(string.charAt(i)) != -1)  
+        output += string.charAt(i)  
+    return output;  
+  }

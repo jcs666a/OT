@@ -7,7 +7,7 @@ class DB_Functions {
     //put your code here
     // constructor
     function __construct() {
-        include_once './db_connect.php';
+        include_once 'db_connect.php';
         // connecting to database
         $this->db = new DB_Connect();
         $this->db->connect();
@@ -42,7 +42,7 @@ class DB_Functions {
     }
     public function initUser($idUser) {
         // insert user into database
-        $result = mysql_query("INSERT INTO history_init($idUser) VALUES('$idUser')");
+        $result = mysql_query("INSERT INTO history_init(idUser) VALUES('$idUser')");
         // check for successful store
         if ($result) {
             // get user details

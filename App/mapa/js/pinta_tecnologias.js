@@ -1,14 +1,9 @@
-// JavaScript Document
-
-
-	
-	
-	
-
 	
 	var markersTec = [];
-	var resultt ="";
+	//var resultt ="";
 	var dataMapas = {};
+	areaType = "" ;
+	llavePinta = "";
 	
 	function traeteLasTecnologias(tecId, are, idllave){
 		
@@ -17,18 +12,18 @@
 
 		var url = "http://10.105.116.52:9090/telmex/infraestructura/tecnolgia/distrito/"+are+"/"+tecId+"";
 				
+		$("#loader_"+are).html("<div style='width:100%; text-align:center;'><img src='mapa/images/loader_small.gif' style='margin:0px auto;'></div>");
+				
 		$.when(promesa(url,are))
 			.then(function(response){
-				
-			
-			
-			  resultt = response;
+
+			resultt = response;
 				
 			if (resultt.apiResponse[0].distritos.length != 0){	////   verificamos si existen datos que pintar sobre el mapa
 				//barremos la respuesta para agrupar los resultados en un objeto de tecnologia
 						
 						
-						//dataTecnologica[idllave] = {};
+						//$("#loader_"+are).html("<div style='width:100%; text-align:center;'><img src='images/loader_small.gif' style='margin:0px auto;'></div>");
 						
 						for (var k = 0; k < resultt.apiResponse[0].distritos.length; k++){
 							
@@ -58,124 +53,149 @@
 											dataTecnologica[idllave].tecnologia[1].dsc=etiquetaTec;
 											
 											var indimarker = dataTecnologica[idllave].tecnologia[1].markers.indexOf(marker);
-											marker.title = indimarker;
+											marker.title = indimarker + "|" + distritoo + "|" + distritoDsc;
 											google.maps.event.addListener(dataTecnologica[idllave].tecnologia[1].markers[indimarker], 'click', function() {
-												muestraInfoxDemanda(this.getTitle(),etiquetaTec,1,idllave,distritoo);
+												muestraInfoxDemanda(this.getTitle(),etiquetaTec,1,idllave);
 											});
 											
 											break;
 										case 2:
 											var marker = new google.maps.Marker({position: centro,
 											 	 map: map,
+												 title: "",
 											 	 icon: "mapa/images/tecnoMarkers/poiFTTH.png"
 											});											
 											dataTecnologica[idllave].tecnologia[2].markers.push(marker);
 											markersTec.push(marker);
 											dataTecnologica[idllave].tecnologia[2].dsc="";
 											dataTecnologica[idllave].tecnologia[2].dsc=etiquetaTec;	
+											
+											var indimarker = dataTecnologica[idllave].tecnologia[2].markers.indexOf(marker);
+											marker.title = indimarker + "|" + distritoo + "|" + distritoDsc;
 											google.maps.event.addListener(dataTecnologica[idllave].tecnologia[2].markers[indimarker], 'click', function() {
-												 muestraInfoxDemanda(this.getTitle(),etiquetaTec,2,idllave,distritoo);
+												 muestraInfoxDemanda(this.getTitle(),etiquetaTec,2,idllave);
 											});										
 											break;
 										case 3:
 											var marker = new google.maps.Marker({position: centro,
 											 	 map: map,
+												 title: "",
 											 	 icon: "mapa/images/tecnoMarkers/poiIpDislam.png"
 											});											
 											dataTecnologica[idllave].tecnologia[3].markers.push(marker);
-											//dataTecnologica[idllave].tecnologia[3].markers[distritoDsc]={};
-											//dataTecnologica[idllave].tecnologia[3].markers[distritoDsc]=marker;
 											markersTec.push(marker);
 											dataTecnologica[idllave].tecnologia[3].dsc="";
 											dataTecnologica[idllave].tecnologia[3].dsc=etiquetaTec;	
+											
+											var indimarker = dataTecnologica[idllave].tecnologia[3].markers.indexOf(marker);
+											marker.title = indimarker + "|" + distritoo + "|" + distritoDsc;
 											google.maps.event.addListener(dataTecnologica[idllave].tecnologia[3].markers[indimarker], 'click', function() {
-												 muestraInfoxDemanda(this.getTitle(),etiquetaTec,3,idllave,distritoo);
+												 muestraInfoxDemanda(this.getTitle(),etiquetaTec,3,idllave);
 											});											
 											break;
 										case 4:
 											var marker = new google.maps.Marker({position: centro,
 											 	 map: map,
+												 title: "",
 											 	 icon: "mapa/images/tecnoMarkers/poiND.png"
 											});											
 											dataTecnologica[idllave].tecnologia[4].markers.push(marker);
 											markersTec.push(marker);
 											dataTecnologica[idllave].tecnologia[4].dsc="";
 											dataTecnologica[idllave].tecnologia[4].dsc=etiquetaTec;	
+											
+											var indimarker = dataTecnologica[idllave].tecnologia[4].markers.indexOf(marker);
+											marker.title = indimarker + "|" + distritoo + "|" + distritoDsc;
 											google.maps.event.addListener(dataTecnologica[idllave].tecnologia[4].markers[indimarker], 'click', function() {
-												muestraInfoxDemanda(this.getTitle(),etiquetaTec,4,idllave,distritoo);
+												muestraInfoxDemanda(this.getTitle(),etiquetaTec,4,idllave);
 											});										
 											break;
 										case 5:
 											var marker = new google.maps.Marker({position: centro,
 											 	 map: map,
+												 title: "",
 											 	 icon: "mapa/images/tecnoMarkers/poiTBA.png"
 											});											
 											dataTecnologica[idllave].tecnologia[5].markers.push(marker);
 											markersTec.push(marker);
 											dataTecnologica[idllave].tecnologia[5].dsc="";
 											dataTecnologica[idllave].tecnologia[5].dsc=etiquetaTec;	
+											
+											var indimarker = dataTecnologica[idllave].tecnologia[5].markers.indexOf(marker);
+											marker.title = indimarker + "|" + distritoo + "|" + distritoDsc;
 											google.maps.event.addListener(dataTecnologica[idllave].tecnologia[5].markers[indimarker], 'click', function() {
-												 muestraInfoxDemanda(this.getTitle(),etiquetaTec,5,idllave,distritoo);
+												 muestraInfoxDemanda(this.getTitle(),etiquetaTec,5,idllave);
 											});											
 											break;
 										case 6:
 											var marker = new google.maps.Marker({position: centro,
 											 	 map: map,
+												 title: "",
 											 	 icon: "mapa/images/tecnoMarkers/poiVSDLIPD.png"
 											});										
 											dataTecnologica[idllave].tecnologia[6].markers.push(marker);
 											markersTec.push(marker);
 											dataTecnologica[idllave].tecnologia[6].dsc="";
 											dataTecnologica[idllave].tecnologia[6].dsc=etiquetaTec;	
+											
+											var indimarker = dataTecnologica[idllave].tecnologia[6].markers.indexOf(marker);
+											marker.title = indimarker + "|" + distritoo + "|" + distritoDsc;
 											google.maps.event.addListener(dataTecnologica[idllave].tecnologia[6].markers[indimarker], 'click', function() {
-												 muestraInfoxDemanda(this.getTitle(),etiquetaTec,6,idllave,distritoo);
+												 muestraInfoxDemanda(this.getTitle(),etiquetaTec,6,idllave);
 											});									
 											break;
 										case 7:
 											var marker = new google.maps.Marker({position: centro,
 											 	 map: map,
+												 title: "",
 											 	 icon: "mapa/images/tecnoMarkers/poiVSDLTBA.png"
 											});											
 											dataTecnologica[idllave].tecnologia[7].markers.push(marker);
 											markersTec.push(marker);
 											dataTecnologica[idllave].tecnologia[7].dsc="";
 											dataTecnologica[idllave].tecnologia[7].dsc=etiquetaTec;	
+											
+											var indimarker = dataTecnologica[idllave].tecnologia[7].markers.indexOf(marker);
+											marker.title = indimarker + "|" + distritoo + "|" + distritoDsc;
 											google.maps.event.addListener(dataTecnologica[idllave].tecnologia[7].markers[indimarker], 'click', function() {
-												 muestraInfoxDemanda(this.getTitle(),etiquetaTec,7,idllave,distritoo);
+												 muestraInfoxDemanda(this.getTitle(),etiquetaTec,7,idllave);
 											});										
 											break;
 										case 8:
 											var marker = new google.maps.Marker({position: centro,
 											 	 map: map,
-											 	  icon: "mapa/images/tecnoMarkers/poiWIMAX.png"
+												 title: "",
+											 	 icon: "mapa/images/tecnoMarkers/poiWIMAX.png"
 											});											
 											dataTecnologica[idllave].tecnologia[8].markers.push(marker);
 											markersTec.push(marker);
 											dataTecnologica[idllave].tecnologia[8].dsc="";
 											dataTecnologica[idllave].tecnologia[8].dsc=etiquetaTec;	
+											
+											var indimarker = dataTecnologica[idllave].tecnologia[8].markers.indexOf(marker);
+											marker.title = indimarker + "|" + distritoo + "|" + distritoDsc;
 											google.maps.event.addListener(dataTecnologica[idllave].tecnologia[8].markers[indimarker], 'click', function() {
-												 muestraInfoxDemanda(this.getTitle(),etiquetaTec,8,idllave,distritoo);
-											});											
+												 muestraInfoxDemanda(this.getTitle(),etiquetaTec,8,idllave);
+											});									
 											break;											
 									}
-									
-									
-									
-								//}
+
 
 								$("#wigTeno_"+idTecnolog).html('<img src="mapa/images/widgetIconSmall.png" style="cursor:pointer;" onclick="abreWidgetTecnos(\''+idllave+'\',\''+idTecnolog+'\');" />');
-								$("#loader_"+are).html("");
+								
 
 						}	/// fin del barrido 		
 				
-				
+					
 					activos.push(idllave + "-tenoid-"+tecId);
 					
 				}else{
 					$("#loader_"+are).html("<div style='text-align:center;'> No existen datos <div>");
 				}
 				
-				
+				$("#loader_"+are).html("");
+			}).done(function(){
+				 setTimeout(function(){ $("#masterLogin").fadeOut('fast'); }, 3000);
 			});				
 			
 			
@@ -216,56 +236,132 @@
 			
 	}
 
+	
+	function limpiaTecnologias(){
+			
+			for (var idllave in dataTecnologica){
+				for (var tecId in dataTecnologica[idllave].tecnologia){
+					for (mm = 0; mm < dataTecnologica[idllave].tecnologia[tecId].markers.length; mm++) {
+						dataTecnologica[idllave].tecnologia[tecId].markers[mm].setMap(null);
+					}
+					$("#wigTeno_"+tecId).html("");
+					
+					var indiceElemento = activos.indexOf(idllave + "-tenoid-"+tecId)
+					if (indiceElemento >=0){
+						activos.splice(indiceElemento,1);
+					}					
+					cierraTumb(tecId, idllave);
+				}
+			}
+			
+			dataTecnologica ={};
+			markersTec = [];
+			dataMapas = {};
+	}
+	
+	
+	
 
+	function muestraInfoxDemanda(markerIndex,etiquetaTec, tec, idllave){
 
-	function muestraInfoxDemanda(markerIndex,etiquetaTec, tec, idllave, distritoo){
-
-		var content = '<div style="font-family:Arial, Helvetica, sans-serif; font-size:11px;"><div style="background-color:#CCCCCC; line-height:20px; text-align:center;">Equipos <b>'+etiquetaTec+'</b> en el distrito: <b>'+markerIndex+'--> ID:'+distritoo+'</b></div>'+
-						'<table style="width:300px; font-family:Arial, Helvetica, sans-serif; font-size:10px;">';
-						
+		var indices = markerIndex.split("|");
+		
+		var content = '<div style="font-family:Arial, Helvetica, sans-serif; font-size:11px;"><div style="background-color:#CCCCCC; line-height:20px; text-align:center;">Equipos <b>'+etiquetaTec+'</b> en el distrito: <b>'+indices[2]+'</b></div>'+ ///--> '+indices[1]+'
+						'<table style="width:350px; font-family:Arial, Helvetica, sans-serif; font-size:10px;">';
+						//'<tr><td style="text-align:center; background-color:#F2F2F2;"><b>#</b></td><td style="text-align:center; background-color:#F2F2F2;"><b>Nombre</b></td><td style="text-align:center; background-color:#F2F2F2;"><b>Modelo</b></td><td style="text-align:center; background-color:#F2F2F2;"><b>Clientes</b></td></tr>';
+		
+		
+		
+		var url = "http://10.105.116.52:9090/telmex/infraestructura/tecnolgia/equipos/acceso/info/"+indices[1]+"/"+ tec;
 		
 		$.ajax({
 			   method: "GET",
-			   url: "10.105.116.58",
+			   url: url,
 			   contentType: "application/json",
 			   data: "",
 			   sync: true,
 			   processData: false,
 			   success: function(html){
 					
-					var resultt = html;
+					var resultec = html;
 
-					if (resultt.apiResponse.length != 0){
-						/*for (var xx = 0; xx < resultt.apiResponse[0].distritos[k].tecnologias[j].items.length; xx++ ){
-									var contadd = xx+1;
-									content = content + '<tr><td><b>'+contadd+'</b></td>'+
-										'<td style="text-align:right; background-color:#F2F2F2;">Nombre:</td><td style="text-align:left;">'+resultt.apiResponse[0].distritos[k].tecnologias[j].items[xx].equipoAcceso+'</td>'+
-										'<td style="text-align:right; background-color:#F2F2F2;">Modelo:</td><td style="text-align:left;">'+resultt.apiResponse[0].distritos[k].tecnologias[j].items[xx].modelo+'</td></tr>';
+					if (resultec.apiResponse.length != 0){
 						
-						}*/
+						
+						var tipoSolucion = resultec.apiResponse[0].tipoSolucion;
+						var colorOrdenEjecucion = resultec.apiResponse[0].colorOrdenEjecucion;
+						var colordefondo = "";
+						switch (colorOrdenEjecucion) {
+								case "AMARILLO":
+									colordefondo = "#FFDE00";
+								break;
+								case "AZUL":
+									colordefondo = "#43ADF4";
+								break;
+								case "BLANCO":
+									colordefondo = "#ffffff";
+								break;
+								case "NARANJA":
+									colordefondo = "#ff9000";
+								break;
+								case "VERDE":
+									colordefondo = "#7BD25B";
+								break;
+								default:
+									colordefondo = "#F4F4F4";
+						}
+						
+						
+						content = content + '<tr><td style="background-color:'+colordefondo+'; font-size:12px; text-align:center;" colspan="5" ><b>Orden de Ejecuci&oacute;n: '+colorOrdenEjecucion+'</b></td></tr>'+
+											'<tr><td style="background-color:#f2f2f2; font-size:12px; text-align:center;" colspan="5" ><b>Tipo de Soluci&oacute;n: '+tipoSolucion+'</b></td></tr>'+
+											'<tr><td style="text-align:center; background-color:#F2F2F2;">#</td>'+
+											//'<td style="text-align:center; background-color:#F2F2F2;">Tecnologia</td>'+
+											'<td style="text-align:center; background-color:#F2F2F2;">Nombre</td>'+
+											'<td style="text-align:center; background-color:#F2F2F2;">Modelo</td>'+
+											'<td style="text-align:center; background-color:#F2F2F2;">Clientes</td></tr>';						
+						
+						
+						if (resultec.apiResponse[0].tecnologias[0].items.length > 0){
+						
+							for (var i = 0; i < resultec.apiResponse[0].tecnologias[0].items.length; i++ ){
+										var contadd = i+1;
+										content = content + '<tr><td style="text-align:center;" ><b>'+contadd+'</b></td>'+
+											'<td style="text-align:left;">'+resultec.apiResponse[0].tecnologias[0].items[i].equipoAcceso+'</td>'+
+											'<td style="text-align:left;">'+resultec.apiResponse[0].tecnologias[0].items[i].modelo+'</td>'+
+											'<td style="text-align:left;">'+resultec.apiResponse[0].tecnologias[0].items[i].numClientes+'</td></tr>';
+							}
+						}else{
+							content = content + '<tr><td style="text-align:center; color:#B40404;" colspan="5"><b>No hay informaci&oacute;n para mostrar!</b></td></tr>';
+						}
 						
 					}else{
-						content = content + '<tr><td><b>No hay información para mostrar!</b></td></tr>';
+						content = content + '<tr><td style="text-align:center; color:#B40404;" colspan="5"><b>No hay información para mostrar!</b></td></tr>';
 					}
+					
+					content = content + '</table></div>';		
+					
+			
+					var infoWindow = new google.maps.InfoWindow({
+						content: content
+					});
+					
+					infoWindow.open(map, dataTecnologica[idllave].tecnologia[tec].markers[indices[0]]);					
+					
 			   }
 						
 		});
 					 
-		content = content + '</table></div>';		
-		
 
-	    var infoWindow = new google.maps.InfoWindow({
-        	content: content
-    	});
-		
-		infoWindow.open(map, dataTecnologica[idllave].tecnologia[tec].markers[markerIndex]);
 		   
 	}
 
 	
 	function promesa(url,are){
-		//console.log("promesa ---> url:" + url + " data:" + data);
+		
 		$("#loader_"+are).html("<div style='width:100%; text-align:center;'><img src='mapa/images/loader_small.gif' style='margin:0px auto;'></div>");
+
+		//setTimeout('console.log("promesa ---> url:" + url + " data:" + data)',50000);
+		
 		var request = $.ajax({
 			   method: "GET",
 			   url: url,
@@ -327,7 +423,7 @@
 		if ( $('#tumbnailTecno_'+llave +'-'+idtecn).length <= 0 ) {
 						$("#gallery").append('<li id="tumbnailTecno_'+llave+'-'+idtecn+'">'+
                         		'<div style="background-color:#E6E6E6; text-align:left;"><table style="width:100%; margin:0px; padding:0px;" cellpadding="0" cellspacing="0" ><tr>'+
-								'<td><img src="mapa/images/widgetIcon.png" style="cursor:pointer; float:rigth; margin-top:4px; margin-left:5px; margin-bottom:3px;" align="absbottom"  onclick="abreWidgetTecnos(\''+llave+'\',\''+idtecn+'\');" /></td> '+
+								'<td><img src="imapa/mages/widgetIcon.png" style="cursor:pointer; float:rigth; margin-top:4px; margin-left:5px; margin-bottom:3px;" align="absbottom"  onclick="abreWidgetTecnos(\''+llave+'\',\''+idtecn+'\');" /></td> '+
 								'<td>&nbsp;&nbsp;&nbsp; ' + dataTecnologica[llave].tecnologia[idtecn].dsc + '</td>'+
 								'<td style="text-align:right;"><image src="mapa/images/closeVerySmall.png" style="margin-right:5px; cursor:pointer;" onclick="cierraTumb(\''+idtecn+'\',\''+llave+'\');" /></td></tr></table></div>'+
                         		'<div style="text-align:center;"><img src="mapa/images/tumb-'+idtecn+'.png" alt="Distritos por &aacute;rea" /></div>'+
@@ -364,5 +460,7 @@
 		}
 	}
 	
-	
-	
+	function pintaAll( i, llaveStuff, areStuff){
+		c = i + 1;
+		traeteLasTecnologias( ''+c+'',''+areStuff+'',''+llaveStuff+'');
+	}

@@ -13,13 +13,15 @@
 			center: {lat: 19.42808, lng: -99.14316},
 			zoom: 8,
 			styles: [{"featureType":"administrative.country","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"lightness":"65"}]},{"featureType":"administrative.locality","elementType":"all","stylers":[{"hue":"#2c2e33"},{"saturation":7},{"lightness":19},{"visibility":"on"}]},{"featureType":"landscape","elementType":"all","stylers":[{"hue":"#ffffff"},{"saturation":-100},{"lightness":100},{"visibility":"simplified"}]},{"featureType":"poi","elementType":"all","stylers":[{"hue":"#ffffff"},{"saturation":-100},{"lightness":100},{"visibility":"off"}]},{"featureType":"road","elementType":"geometry","stylers":[{"hue":"#008eff"},{"saturation":-93},{"lightness":31},{"visibility":"off"}]},{"featureType":"road","elementType":"labels","stylers":[{"hue":"#bbc0c4"},{"saturation":-93},{"lightness":31},{"visibility":"on"}]},{"featureType":"road.arterial","elementType":"labels","stylers":[{"hue":"#bbc0c4"},{"saturation":-93},{"lightness":-2},{"visibility":"simplified"}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"hue":"#e9ebed"},{"saturation":-90},{"lightness":-8},{"visibility":"simplified"}]},{"featureType":"transit","elementType":"all","stylers":[{"hue":"#e9ebed"},{"saturation":10},{"lightness":69},{"visibility":"on"}]},{"featureType":"water","elementType":"all","stylers":[{"visibility":"simplified"},{"saturation":"-30"},{"lightness":"50"}]}]
-		  });		    
+		  });
+			cargaReg();
 		}
 google.maps.event.addDomListener(window, 'load', initialize);		
 
 		var llave = "";
 		var dataCartografica = {};
 		var dataCartograficaDistritos = {};
+		var dataNecrop = {};
 		var capas = {};
 		var infoWindow ="";
 		var infowindows = {};
@@ -36,27 +38,21 @@ google.maps.event.addDomListener(window, 'load', initialize);
 		var dataTecnologica ={};
 		var dataPOI ={};
 		var mapaDin = new mapRepository();
-	
+		var tags=['ro_0055'];
 
 /******************************   funciones que obtienen los oligonos de areas divisiones o distritos individualmente segun el caso *********************************************/
 	function trimer(str) {
         return str.replace(" ","");
 	}
-		
 	function cargaReg(){
-			
-			var div = $("#divisionesGeoTel option:selected").text();
-			//div = div.trim();
-			var divid = $("#divisionesGeoTel").val();			
-			var reg = $("#areasGeoTel option:selected").text();
-			//reg = reg.trim();
-			var are = $("#areasGeoTel").val();
-			var opcDistrict = $("#districtOpcGeoTel").val(); 
+			var div = "METRO";
+			var divid = "1"; 	
+			var reg = "LINDAVISTA" ;
+			var are = "6";
+			var opcDistrict = "0" ;
 			var url = "";
 			var tipoArea = "";
-
 			if (reg=="Todas"){
-				
 				url = "http://10.105.116.52:9090/getDivisionByName/geoJson/" + div;
 				llave = "Division-"+trimer(div);
 				tipoArea = "todas";
@@ -78,12 +74,8 @@ google.maps.event.addDomListener(window, 'load', initialize);
 					llave = "Area-"+trimer(reg);
 					tipoArea = "sola";
 					obtieneAreasDivis(llave, url , tipoArea);
-					
-				}else if (opcDistrict=="2"){
-					/*url = "http://10.105.116.52:9090/getAreaByName/geoJson/" + reg;
-					llave = "Area-"+reg;
-					tipoArea = "sola";
-					obtieneAreasDivis(llave, url , tipoArea);*/					
+				}
+				else if (opcDistrict=="2"){			
 					llave = "Area-"+trimer(reg);
 					muestraDistrictsPorDemanda(are, llave);
 				}
@@ -92,7 +84,6 @@ google.maps.event.addDomListener(window, 'load', initialize);
 			if ($("#menu").is(":visible")){
 			$("#menu").removeClass('active');
 		}
-			
 	}
 
 
@@ -186,7 +177,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 													   <input type="checkbox" id="necro_'+distrito+'" value="'+distrito+'" onchange="toggleNecrop(this.value,\''+llave+'\','+i+',2,'+reg+');" /></td></tr>')*/
 								}
 								
-							} // FIN DE SIE EL POLIGONO TIENE COORDENADAS 
+							} // FIN DE SI EL POLIGONO TIENE COORDENADAS 
 							
 							
 						}
@@ -291,18 +282,17 @@ google.maps.event.addDomListener(window, 'load', initialize);
 								
 								$("#activos").css("display","block");
 								
-								var are = $("#areasGeoTel").val();
-								var divisionId = $("#divisionesGeoTel").val();
+								var are = "6";
+								var divisionId = "1";
 								
 								
 								
 								if (tipoArea=="sola"){
-									
-									agregaActivos("",llave,i,1,are,divisionId,tipoUser, "ares");
+									agregaActivos("",llave,i,'1',are,divisionId,tipoUser, "ares");
 								}
 								
 								if (tipoArea=="todas"){
-									agregaActivos("",llave,i,3,are,divisionId,tipoUser, "divic");
+									agregaActivos("",llave,i,'3',are,divisionId,tipoUser, "divic");
 								}
 								
 								map.fitBounds(bounds);
@@ -311,39 +301,37 @@ google.maps.event.addDomListener(window, 'load', initialize);
 								activos.push(llave);
 							}		
 						});	
-			}		
+			}
 	}
 	
 	
 /***************************  FUNCION QUE AGREGA LOS ELEMENTOS ACTIVOS A LA LISTA SOBRE EL MAPA CON LAS OPCIONES POR REENGLON *******************************/	
 	
 	
-		function agregaActivos(distrito, llave, i, tipo, are, divisionId, tipoUser, elemento){
-			//$("#"+elemento).append('<table style="display:none; float:left; width:100%; margin:0px;"><tr>');
-			
+		function agregaActivos(distrito, llave, i, tipo, are, divisionId, tipoUser, elemento){			
 			if (distrito==""){
 				$("#"+elemento).append('<li  class="activoEnlaLista"><input type="checkbox" id="'+llave+'" value="'+llave+'" checked onchange="toggleCapa(this.value);"/></li>');
-				$("#"+elemento).append('<li class="activoEnlaLista">'+llave+'</li>');
+				$("#nameDistrict").append('<small> Zona de trabajo: <strong>'+llave+'</small>');
 			}else if (distrito!=""){
 				$("#"+elemento).append('<li  class="activoEnlaLista"><input type="checkbox" id="'+distrito+'" value="'+distrito+'" checked onchange="toggleDistrict(this.value,\''+llave+'\','+i+');"/></li>');
-				$("#"+elemento).append('<li class="activoEnlaLista">'+llave+'-'+distrito+'</li>');
+				$("#nameDistrict").append('<small> Zona de trabajo: <strong>'+llave+' - '+distrito+'</small>');
 			}
-			
-			
 			
 			if (tipoUser==1){ //// SI ES USUARIO COMERCIAL
-				//$("#encabezadosActivos").append('<li style="width:80px;" class="activoEnlaLista">Necropsia</li>');
 				$("#"+elemento).append('<li  class="activoEnlaLista"><img src="mapa/images/necrop_icon.png" border="0" style="cursor:pointer;" id="comic_'+llave+'" align="absbottom" onclick="dialogModel(\''+llave+'\', \''+are+'\');" /></li>');
-				//$("#ares").append('<td><input type="checkbox" id="necro_'+llave+'" value="'+llave+'" onchange="toggleNecrop(this.value,\''+llave+'\','+i+','+tipo+','+are+','+divisionId+');" />');
 			}else if (tipoUser==2){ //// SI ES USUARIO TECNICO
-				//$("#encabezadosActivos").append('<li style="width:80px;"  class="activoEnlaLista">Tecnolog&iacute;as</li>');
-				$("#"+elemento).append('<li class="activoEnlaLista"><img src="mapa/images/ic_settings_input_antenna_black_18dp.png" title="Tecnologías" border="0" style="cursor:pointer;" id="comic_'+llave+'" align="absbottom" onclick="dialogModel(\''+llave+'\', \''+are+'\', \'tec\');" /></li>');
-				$("#"+elemento).append('<li class="activoEnlaLista">&nbsp;&nbsp;<img src="mapa/images/ic_assignment_ind_black_18dp.png" title="Fielders" border="0" style="cursor:pointer;" id="pye_'+llave+'" align="absbottom" onclick="detalleSlideTecnos(\''+llave+'\', \''+are+'\');" /></li>');
-				$("#"+elemento).append('<li class="activoEnlaLista">&nbsp;&nbsp;<img src="mapa/images/ic_accessibility_black_18dp.png" title="Clientes" border="0" style="cursor:pointer;" id="poi_'+llave+'" align="absbottom" onclick="dialogModel(\''+llave+'\', \''+are+'\', \'poi\');" /></li>');
- 				$("#"+elemento).append('<li class="activoEnlaLista">&nbsp;&nbsp;<img src="mapa/images/ic_assessment_black_18dp.png" title="Distritos" border="0" style="cursor:pointer;" id="pye_'+llave+'" align="absbottom" onclick="listadoSlideDistritos();" /></li>');
+				$("#techMenu").append('<div class="activoEnlaLista"  id="comic_'+llave+'" onclick="dialogModel(\''+llave+'\', \''+are+'\', \'tec\');" /></div>');
+				$("#fildersMenu").append('<div class="activoEnlaLista" id="pye_'+llave+'" onclick="detalleSlideTecnos(\''+llave+'\', \''+are+'\');" /></div>');
+				$("#clientMenu").append('<div class="activoEnlaLista" id="poi_'+llave+'" onclick="dialogModel(\''+llave+'\', \''+are+'\', \'poi\');" /></div>');
+ 				$("#chartMenu").append('<div class="activoEnlaLista" id="pye_'+llave+'" onclick="listadoSlideDistritos();" /></div>');
 
 			}
+			$("#flusheadorLoader").html("");
 			
+			/*$("#"+elemento).append('<li></li><li style="width:75px; text-align:center; background-color:rgba(235,248,204,0.8);" class="activoEnlaLista">'+
+										'<input type="checkbox" id="'+llave+'" value="'+llave+'" checked onchange="toggleCapa(this.value);"/>'+
+									'</li>');*/
+			autoLoad(llave,are,'tec');
 			//$("#"+elemento).append('</td></tr></table><br>');
 			
 			if (distrito!=""){
@@ -382,6 +370,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 						if (indiceElemento >=0){
 							activos.splice(indiceElemento,1);
 						}
+						limpiaSemaforo();
 					}
 				}
 			}
@@ -415,6 +404,21 @@ google.maps.event.addDomListener(window, 'load', initialize);
 						if (indiceElemento >=0){
 							activos.splice(indiceElemento,1);
 						}
+						
+						if (!$.isEmptyObject(dataNecrop[llave])){
+						
+							for (var color in dataNecrop[llave].colores){
+								for (mm = 0; mm < dataNecrop[llave].colores[color].markers.length; mm++) {
+									dataNecrop[llave].colores[color].markers[mm].setMap(null);
+								}
+								
+								var indiceElemento = activos.indexOf(llave + "-SemaforoNecrop")
+								if (indiceElemento >=0){
+									activos.splice(indiceElemento,1);
+								}
+							}
+							delete dataNecrop[llave];
+						}
 					}
 				}
 			}
@@ -438,6 +442,20 @@ google.maps.event.addDomListener(window, 'load', initialize);
 						if (indiceElemento >=0){
 							activos.splice(indiceElemento,1);						
 						}
+						
+						if (!$.isEmptyObject(dataNecrop[llave])){
+							for (var color in dataNecrop[llave].colores){
+								for (mm = 0; mm < dataNecrop[llave].colores[color].markers.length; mm++) {
+									dataNecrop[llave].colores[color].markers[mm].setMap(null);
+								}
+								
+								var indiceElemento = activos.indexOf(llave + "-SemaforoNecrop")
+								if (indiceElemento >=0){
+									activos.splice(indiceElemento,1);
+								}
+							}
+							delete dataNecrop[llave];
+						}
 					}
 				}
 			}
@@ -447,7 +465,6 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 
 		function getPromise(url, data){
-			console.log("promesa ---> url:" + url + " data:" + data);
 			
 			var request = $.ajax({
 				   method: "POST",
@@ -457,6 +474,33 @@ google.maps.event.addDomListener(window, 'load', initialize);
 				   processData: false
 			});		
 			return request;
+		}
+
+
+		function limpiatodo(){
+			
+			//limpieza de los elementos cartograficos  
+			limpiaDistricts();
+			limpiaAreas();
+			limpiaDivs();
+			dataCartografica = {};
+			dataCartograficaDistritos = {};
+			capas = {};
+			infoWindow ="";
+			infowindows = {};
+			contentInfoPoly = "";
+			poligonosCords = {};
+			poligonos = {};
+			
+			//limpieza de los elementos de tecnologias de la red
+			limpiaTecnologias();
+			limpiaPOIs();
+			limpiaSemaforo();
+			
+			
+			$("#flusheadorLoader").html("<img src='images/loader_small.gif'  style='margin:0px auto;'>");
+			setTimeout('$("#activos").slideUp("slow")',1000);
+		
 		}
 
 
@@ -569,6 +613,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 		function muestraDistrictsPorDemanda(are, llave){
 			//$('#socketizable').css({opacity: 0, visibility: "visible"}).animate({opacity: 1}, 'slow');
 			connectXdemanda(are, llave);
+			console.log("muestra distritos ");
 			
 		}
 		
@@ -616,16 +661,6 @@ var menuMapa = $("#menu");
 				$("#menuWiket").toggle("slide", { direction: "rigth" }, 500);
 			});	
 			
-			$('#menuPullerSlide').click(function(){
-				$("#detalleSlide").toggle("slide", { direction: "rigth" }, 500);
-			});				
-			
-			$('#escondedorActivos').click(function(){
-			  $( "#contenedorActivos" ).slideToggle( "slow", function() {
-				// Animation complete.
-			  });
-			});
-			
 			$( "#socketizable" ).draggable({ 
 				containment: "#map-canvas", scroll: false,
 				cursor: "move", cursorAt: { top: 15, left: 15 },
@@ -645,69 +680,48 @@ var menuMapa = $("#menu");
     			width: "auto"
 				//position: { my: "left top", at: "left bottom", of: button }
 			});
-			
-			$( "#tecnoDialog" ).dialog({ 
-				autoOpen: false,
-				height: "auto",
-    			width: "auto"
-				//position: { my: "left top", at: "left bottom", of: button }
-			});			
 
 			$( "#iniOpcNecrop" ).datepicker();
 			$( "#finiOpcNecrop" ).datepicker();
-	
+			$("#closeLoader").click(function(event) {
+				$("#tecnoDialog").removeClass('open');
+			});
 		});
 
 
 /************************************ FUNCIONES DE LOS DIALOGMODELS DEPENDIENDO EL TIPO CLIENTE **************************************/
-
+var loadDialog = $("#tecnoDialog");
 		function dialogModel(llave,are,tipoComic){
-
-
 			var targett = $("#comic_"+llave);
-
 			if (tipoUser==1){
-			
-				$('#necroDialog').dialog( 'open' );
-				var myDialogX = targett.position().left + 115; 
-				var myDialogY = targett.position().top + 85; 
-				$('#necroDialog').dialog( 'option', 'position', [myDialogX, myDialogY] );			
-			
+				//$('#necroDialog').dialog( 'open' );
+				//var myDialogX = targett.position().left + 115; 
+				//ar myDialogY = targett.position().top + 85; 
+				//$('#necroDialog').dialog( 'option', 'position', [myDialogX, myDialogY] );	
+
 			}else if (tipoUser==2){
-				
 				if (tipoComic=="tec"){
-						//console.log("TEC");
-						$('#tecnoDialog').dialog( 'open' );
-						var myDialogX = targett.position().left + 115; 
-						var myDialogY = targett.position().top + 85; 
-						$('#tecnoDialog').dialog( 'option', 'position', [myDialogX, myDialogY] );			
-						
-						
+					loadDialog.addClass('open');
 						$.ajax({
 							type: "POST",
 							url: "mapa/ajax/contenidoComic.php",
 							data: "llave=" + llave +  "&are=" + are,
 							cache: false, 
 							success: function(html){
-								$("#tecnoDialog").html(html);
+								$("#tecnoDialog .inner").html(html);
+								$("#tecnoDialog").addClass('open');
 							}		
-						});	
-						
-				}else if (tipoComic=="poi"){
-						//console.log("POI");
-						$('#tecnoDialog').dialog( 'open' );
-						var myDialogX = targett.position().left + 175; 
-						var myDialogY = targett.position().top + 85; 
-						$('#tecnoDialog').dialog( 'option', 'position', [myDialogX, myDialogY] );			
-						
-						
+						});		
+				}
+				else if (tipoComic=="poi"){
+					loadDialog.addClass('open');
 						$.ajax({
 							type: "POST",
 							url: "mapa/ajax/contenidoComicPOI.php",
 							data: "llave=" + llave +  "&are=" + are,
 							cache: false, 
 							success: function(html){
-								$("#tecnoDialog").html(html);
+								$("#tecnoDialog .inner").html(html);
 							}		
 						});					
 				
@@ -720,37 +734,34 @@ var menuMapa = $("#menu");
 
 		function detalleSlide(distrito, llave, are, tipo, div ){
 			
-			if ($("#detalleSlide").is(":hidden")){
-				$("#detalleSlide").toggle("slide", { direction: "rigth" }, 500);
-			}
+			//if ($("#detalleSlide").is(":hidden")){
+			//	$("#detalleSlide").toggle("slide", { direction: "rigth" }, 500);
+			//}
 				
-			$("#graphSlide").html("<div style='width:100%; text-align:center; margin-top:300px;'><img src='mapa/images/ajax-loader.gif' style='margin:0px auto;'></div>");
+			//$("#graphSlide").html("<div style='width:100%; text-align:center; margin-top:300px;'><img src='mapa/images/ajax-loader.gif' style='margin:0px auto;'></div>");
 			$.ajax({
 				type: "POST",
 				url: "widgets/fechadorNecropsia.php",
 				data: "llave=" + llave + "&distrito=" + distrito + "&are=" + are + "&tipo=" + tipo + "&div=" + div,
 				cache: false, 
 				success: function(html){
-					$("#graphSlide").html(html);
+					$("#tecnoDialog .inner").html(html);
+					loadDialog.addClass('open');
 				}		
 			});
 		}
 
 
 		function detalleSlideTecnos(llave, are ){
-			
-			if ($("#detalleSlide").is(":hidden")){
-				$("#detalleSlide").toggle("slide", { direction: "rigth" }, 500);
-			}
-				
-			$("#graphSlide").html("<div style='width:100%; text-align:center; margin-top:300px;'><img src='mapa/images/ajax-loader.gif' style='margin:0px auto;'></div>");
 			$.ajax({
 				type: "POST",
 				url: "mapa/widgets/tecnoCharts.php",
 				data: "llave=" + llave + "&are=" + are,
 				cache: false, 
 				success: function(html){
-					$("#graphSlide").html(html);
+
+					$("#tecnoDialog .inner").html(html);
+					loadDialog.addClass('open');
 				}		
 			});
 		}
@@ -929,44 +940,27 @@ var menuMapa = $("#menu");
 			});
 		}
 
-});
-	
-		/*
-		<img src='images/delete.png' class='recicla' />
-		onclick='deleteWid(\""+idwid+"\")'
-	
-		function deleteWid(op){
-			$("#"+op).appendTo( "#menuWiket" ).fadeIn(function() {
-			  $("#"+op)
-				.animate({ width: "150px" })
-				.animate({ height: "150px" })
-				//.css( "width", "150px")
-				.html("<div style='background-color:#E6E6E6;'>Historico</div><div style='text-align:center;'><img src='images/historico.PNG' alt='Historico' /></div>")
-				.draggable({
-					revert: "invalid",
-					containment: "document",
-					helper: "clone",
-					cursor: "move"
-				})
-				
-			});	
-		}	
-		*/
-	
+});	
 function listadoSlideDistritos(){
+	$.ajax({
+		type: "GET",
+		url: "mapa/list/list.php",
+		cache: false,
+		success: function(html){
+			$("#tecnoDialog .inner").html(html);
+			loadDialog.addClass('open');
+		}
+	});
+}
 
-                        if ($("#detalleSlide").is(":hidden")){
-                                $("#detalleSlide").toggle("slide", { direction: "rigth" }, 500);
-                        }
-                          $.ajax({
-                                type: "GET",
-                                url: "mapa/list/list.php",
-                                cache: false,
-                                success: function(html){
-                                	console.log(html)
-                                        $("#graphSlide").html(html);
-                                }
-                        });
-
-
-                }
+		function autoLoad(llave,are,tipoComic){
+			$.ajax({
+				type: "POST",
+				url: "mapa/ajax/autoload.php",
+				data: "llave=" + llave +  "&are=" + are,
+				cache: false, 
+				success: function(html){
+					$("#tecnoDialog .inner").html(html);
+				}		
+			});			
+		}

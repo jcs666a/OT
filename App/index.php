@@ -1,28 +1,23 @@
 <?php
     session_start();
     if ($_SESSION["sesion_de"] <>""){
-        $sesionDe=$_SESSION["sesion_de"];
-	$name=$sessionDe;
-	$exp=$_SESSION["exp"];;
-        $niv=$_SESSION["niv"];
-	$gcm_regid=$_SESSION["gcm_regId"];
-	$dist=$_SESSION["dist"];
-    // Store user details in db
-    include_once './db_functions.php';
-    $db = new DB_Functions();
-    $res = $db->storeUser($name, $exp, $gcm_regid);
-    }else{
+      $sesionDe=$_SESSION["sesion_de"];
+      $name=$sessionDe;
+      $exp=$_SESSION["exp"];
+      $niv=$_SESSION["niv"];
+      $gcm_regid=$_SESSION["gcm_regId"];
+      $dist=$_SESSION["dist"];
+      $iduser=$_SESSION["iduser"];
+
+   }else{
         echo "<script>window.location='login.php';</script>";
     }
 
 ?>
 <!DOCTYPE html>
 <html>
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <meta name="viewport" content="width=320, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
         <link rel="stylesheet" href="css/style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     </head>
@@ -58,7 +53,7 @@
             <div id="content">
             <!--carga contenido-->
                 <div class="homeInner">
-                  <p>Bienvenido <strong><?php echo $sesionDe; ?></strong></p>
+                  <p>Bienvenido <strong><?php echo $sesionDe; ?> <?php echo $iduser;?></strong></p>
                   <!--contendio home-->
                 </div>
             <!--carga contenido-->

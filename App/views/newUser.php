@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html>
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <meta name="viewport" content="width=320, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
         <link rel="stylesheet" href="../css/style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     </head>
@@ -18,7 +15,7 @@
                   </a>
                 </div>
                 <div class="content">
-                    <p>inicio de sesion</p>
+                    <p>Inicio de sesión</p>
                 <div class="logo"></div>
 					<i class="fa fa-user"></i><input type="text" name="usuario" placeholder="USUARIO:" >
 					<br>	

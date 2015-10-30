@@ -1,4 +1,4 @@
-<?php
+$_GET["us"]$_GET["us"]<?php
 	session_start();
 		if (isset($_GET["us"])<>"") {
 			$_SESSION["sesion_de"]=$_GET["us"];
@@ -6,6 +6,13 @@
 			$_SESSION["exp"]=$_GET["exp"];
             $_SESSION["gcm_regid"]=$_GET["gcm_regid"];
 			$_SESSION["dist"]=$_GET["dist"];
+			$_SESSION["iduser"]=$_GET["iduser"];
+
+        require_once './db_functions.php';
+        $db = new DB_Functions();
+        $res = $db->storeUser($_GET["us"],$_GET["exp"],$_GET["gcm_regid"]);
+        $resi = $db->initUser($_GET["iduser"]);
+
 
 
 			if($_SESSION["niv"] == "CORPORATIVO"){
