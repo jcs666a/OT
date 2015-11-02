@@ -1,6 +1,7 @@
 <?php
 	session_start();
-		if (isset($_GET["us"])<>"") {
+		if (isset($_GET["us"])<>""){
+			$_SESSION["idJefe"]=$_GET["idJefe"];
 			$_SESSION["sesion_de"]=$_GET["us"];
 			$_SESSION["niv"]=$_GET["ni"];
 			if($_SESSION["niv"] == "CORPORATIVO"){
@@ -26,10 +27,8 @@
 						</td>
 					</tr>
 				</table>";
-		}		
-
+		}
 		echo $result;
-
 ?>
 
 

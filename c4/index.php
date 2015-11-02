@@ -17,8 +17,9 @@
         <h1>Bienvenido a Telmex <span>C4</span></h1>
          <div class="inner">
             <form id="homeLoading" method="post">
+                <span class="error">Nombre de usuario o contraseña incorrectos</span>
                 <div class="content">
-                    <p>Por favor registrate para validar tus datos.</p>
+                <p>Por favor registrate para validar tus datos.</p>
                 <input type="text" name="usuario" id="usr" onChange="this.value=validar(this.value)" class="caja"  maxlength="20" placeholder="Usuario:" />
                 <input type="password" name="clave" id="pwd" onChange="this.value=validar(this.value)"  class="caja" maxlength="20" placeholder="Contraseña:"  />
                <div class="button-holder">
