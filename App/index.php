@@ -35,6 +35,11 @@
                 <p>Mensajería</p><i class="fa fa-envelope-o"></i>
               </div>
           </a>
+          <a href="campanias.php">
+              <div class="block">
+                <p>Campañas</p><i class="fa fa-star"></i>
+              </div>
+          </a>
           <a href="contrataciones.php">
               <div class="block">
                 <p>Contrataciones</p><i class="fa fa-pencil-square-o"></i>
@@ -46,14 +51,54 @@
         </div>
         <div id="wrapper">
             <div id="nav">
-                <div id="appMenu">
+               <!-- <div id="appMenu">
                     <i class="fa fa-bars"></i>
-                </div>
+                </div>-->
             </div>
             <div id="content">
             <!--carga contenido-->
                 <div class="homeInner">
-                  <p>Bienvenido <strong><?php echo $sesionDe; ?> <?php echo $iduser;?></strong></p>
+                  <p>Bienvenido <strong><?php echo $sesionDe; ?> </strong></p>
+                  <small>elige tu actividad:</small>
+                  <br>
+                  <div class="activity">
+                    <div class="boxSlide active2">
+                       <i class="fa fa-home"></i>
+                       <p>Home</p>
+                    </div>
+                    <div class="boxSlide">
+                      <a href="mapa.php">
+                        <i class="fa fa-map-o"></i>
+                        <p>Mapa</p>
+                      </a>
+                    </div>
+                    <div class="boxSlide">
+                      <a href="mensajeria.php">
+                        <i class="fa fa-envelope-o">
+                          <span>3</span>
+                        </i>
+                        <p>Mensajería</p>
+                      </a>
+                    </div>
+                    <div class="boxSlide">
+                      <a href="campanas.php">
+                        <i class="fa fa-star"></i>
+                        <p>Campañas</p>
+                      </a>
+                    </div>
+                    <div class="boxSlide">
+                      <a href="contrataciones.php">
+                        <i class="fa fa-pencil-square-o"></i>
+                        <p>Contrataciones</p>
+                      </a>
+                    </div>
+                    <div class="boxSlide">
+                      <a href="#" onclick="logout();">
+                        <i class="fa fa-key"></i>
+                        <p>Cerrar Sesión</p>
+                      </a>
+                    </div>
+                  </div>
                   <!--contendio home-->
                 </div>
             <!--carga contenido-->
@@ -73,6 +118,7 @@
         <script>
             $(function() {
                 global();
+                homeAnimation();
             });
             $(window).bind("load", function() {
                 $("#masterLogin").fadeOut('fast');

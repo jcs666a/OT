@@ -39,12 +39,12 @@
               </div>
           </a>
           <a href="campanias.php">
-              <div class="block">
+              <div class="block active">
                 <p>Campañas</p><i class="fa fa-star"></i>
               </div>
           </a>
           <a href="contrataciones.php">
-              <div class="block active">
+              <div class="block">
                 <p>Contrataciones</p><i class="fa fa-pencil-square-o"></i>
               </div>
           </a>

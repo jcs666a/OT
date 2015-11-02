@@ -22,9 +22,10 @@ class DB_Functions {
      * Storing new user
      * returns user details
      */
-    public function storeUser($name, $exp, $gcm_regid) {
+    public function storeUser( $gcm_regid, $iduser) {
         // insert user into database
-        $result = mysql_query("INSERT INTO gcm_users(name, exp, gcm_regid, created_at) VALUES('$name', '$exp', '$gcm_regid', NOW())");
+        $result = mysql_query("INSERT INTO gcm_users( gcm_regid, id_usuario) VALUES('$gcm_regid','$iduser');");
+//        $result ="INSERT INTO gcm_users( gcm_regid, id_usuario) VALUES('$gcm_regid','$iduser')";
         // check for successful store
         if ($result) {
             // get user details
@@ -112,6 +113,13 @@ class DB_Functions {
         $result = mysql_query("select * from canal");
         return $result;
     }
+    public function getIdOT($iduser){
+        $resultb=1;
+        $result = mysql_query("SELECT id_usuario FROM gcm_users WHERE id_usuario = $iduser");
+        if(mysql_num_rows($result) > 0)
+            $resultb=0;
+        return $resultb;
+    }
 
 
     /**
@@ -130,6 +138,5 @@ class DB_Functions {
     }
 
 }
-
 ?>
 

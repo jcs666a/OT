@@ -8,9 +8,9 @@
     $gcm_regid=$_SESSION["gcm_regId"];
     $dist=$_SESSION["dist"];
     // Store user details in db
-    include_once './db_functions.php';
-    $db = new DB_Functions();
-    $res = $db->storeUser($name, $exp, $gcm_regid);
+    //include_once './db_functions.php';
+    //$db = new DB_Functions();
+    //$res = $db->storeUser($name, $exp, $gcm_regid);
     }else{
         echo "<script>window.location='login.php';</script>";
     }
@@ -38,6 +38,11 @@
           <a href="mensajeria.php">
               <div class="block">
                 <p>Mensajería</p><i class="fa fa-comment-o"></i>
+              </div>
+          </a>
+          <a href="campanias.php">
+              <div class="block">
+                <p>Campañas</p><i class="fa fa-star"></i>
               </div>
           </a>
           <a href="contrataciones.php">
@@ -76,12 +81,10 @@
         <script>
             $(function() {
                 global();
-                                    //traeteLasTecnologias('1','6','Distritos-LINDAVISTA');
-
             });
             $(window).bind("load", function() {
                $("#content").load('mapa/mapa.php',function(status) {
-                    //$("#masterLogin").fadeOut('fast');
+                    getDistAutoPrint('<?php echo $dist;?>');
                 });
             });
 

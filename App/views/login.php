@@ -1,4 +1,4 @@
-$_GET["us"]$_GET["us"]<?php
+<?php
 	session_start();
 		if (isset($_GET["us"])<>"") {
 			$_SESSION["sesion_de"]=$_GET["us"];
@@ -8,10 +8,15 @@ $_GET["us"]$_GET["us"]<?php
 			$_SESSION["dist"]=$_GET["dist"];
 			$_SESSION["iduser"]=$_GET["iduser"];
 
-        require_once './db_functions.php';
+		$iduser=$_SESSION["iduser"];
+
+        require_once 'db_functions.php';
         $db = new DB_Functions();
-        $res = $db->storeUser($_GET["us"],$_GET["exp"],$_GET["gcm_regid"]);
-        $resi = $db->initUser($_GET["iduser"]);
+        $tts = $db->getIdOT($iduser);
+        if($tts){
+    		$res = $db->storeUser($_GET["gcm_regid"],$_GET["iduser"]);
+    	}
+        $resi = $db->initUser($iduser);
 
 
 
@@ -44,3 +49,4 @@ $_GET["us"]$_GET["us"]<?php
 		echo $result;
 
 ?>
+

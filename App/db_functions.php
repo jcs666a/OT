@@ -22,9 +22,10 @@ class DB_Functions {
      * Storing new user
      * returns user details
      */
-    public function storeUser($name, $exp, $gcm_regid) {
+
+    public function storeUser($gcm_regid,$idusuario) {
         // insert user into database
-        $result = mysql_query("INSERT INTO gcm_users(name, exp, gcm_regid, created_at) VALUES('$name', '$exp', '$gcm_regid', NOW())");
+        $result = mysql_query("INSERT INTO gcm_users(gcm_regid,id_usuario, created_at) VALUES('$gcm_regid','$idusuario', NOW())");
         // check for successful store
         if ($result) {
             // get user details
@@ -113,7 +114,6 @@ class DB_Functions {
         return $result;
     }
 
-
     /**
      * Check user is existed or not
      */
@@ -128,6 +128,7 @@ class DB_Functions {
             return false;
         }
     }
+
 
 }
 

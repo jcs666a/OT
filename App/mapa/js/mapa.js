@@ -38,17 +38,17 @@ google.maps.event.addDomListener(window, 'load', initialize);
 		var dataTecnologica ={};
 		var dataPOI ={};
 		var mapaDin = new mapRepository();
-		var tags=['ro_0055'];
 
 /******************************   funciones que obtienen los oligonos de areas divisiones o distritos individualmente segun el caso *********************************************/
 	function trimer(str) {
         return str.replace(" ","");
 	}
-	function cargaReg(){
+	function cargaReg(divString,areaString,distString){
 			var div = "METRO";
-			var divid = "1"; 	
+			var divid = divString; 	
 			var reg = "LINDAVISTA" ;
-			var are = "6";
+			var are = areaString;
+			tags.push(distString);
 			var opcDistrict = "0" ;
 			var url = "";
 			var tipoArea = "";

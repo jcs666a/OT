@@ -8,9 +8,9 @@
   $gcm_regid=$_SESSION["gcm_regId"];
   $dist=$_SESSION["dist"];
     // Store user details in db
-    include_once './db_functions.php';
-    $db = new DB_Functions();
-    $res = $db->storeUser($name, $exp, $gcm_regid);
+    //include_once './db_functions.php';
+    //$db = new DB_Functions();
+    //$res = $db->storeUser($name, $exp, $gcm_regid);
     }else{
         echo "<script>window.location='login.php';</script>";
     }
@@ -38,6 +38,11 @@
           <div class="block active">
             <p>Mensajería</p><i class="fa fa-comment-o"></i>
           </div>
+          <a href="campanias.php">
+              <div class="block">
+                <p>Campañas</p><i class="fa fa-star"></i>
+              </div>
+          </a>
           <a href="contrataciones.php">
               <div class="block">
                 <p>Contrataciones</p><i class="fa fa-pencil-square-o"></i>
@@ -56,9 +61,93 @@
             </div>
             <div id="content">
             <!--carga contenido-->
-                <div class="homeInner">
-                    <p>Mensajería</p>
-                  <!--contendio home-->
+                <div class="mensageInner">
+                    <h3>Mensajería</h3>
+                    <div class="inner">
+                      <div class="MensageHolder">
+                        <div class="image">
+                          <i class="fa fa-chevron-down"></i>
+                        </div>
+                        <div class="text">
+                            <div class="center">
+                               <span>15/11/2</span> <span>13:24</span>
+                            </div>
+                          <div id="readit">
+                            <i class="fa fa-check"></i>
+                            <i class="fa fa-check"></i>
+                          </div>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo, velit, non. Pariatur in, fugiat laboriosam tempora debitis eum voluptatibus neque, consequatur sint saepe ipsum quos officia rerum aperiam possimus maxime.</p>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae odit pariatur modi eaque ratione temporibus iusto architecto voluptatum, exercitationem adipisci harum nihil laboriosam fugit ipsa voluptates quasi dolorem cumque tempora?</p>
+                        </div>
+                      </div>
+                      <div class="MensageHolder">
+                        <div class="image">
+                          <i class="fa fa-chevron-down"></i>
+                        </div>
+                        <div class="text">
+                            <div class="center">
+                               <span>15/11/2</span> <span>13:24</span>
+                            </div>
+                          <div id="readit">
+                            <i class="fa fa-check"></i>
+                            <i class="fa fa-check"></i>
+                          </div>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo, velit, non. Pariatur in, fugiat laboriosam tempora debitis eum voluptatibus neque, consequatur sint saepe ipsum quos officia rerum aperiam possimus maxime.</p>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae odit pariatur modi eaque ratione temporibus iusto architecto voluptatum, exercitationem adipisci harum nihil laboriosam fugit ipsa voluptates quasi dolorem cumque tempora?</p>
+                        </div>
+                      </div>
+                      <div class="MensageHolder">
+                        <div class="image">
+                          <i class="fa fa-chevron-down"></i>
+                        </div>
+                        <div class="text">
+                            <div class="center">
+                               <span>15/11/2</span> <span>13:24</span>
+                            </div>
+                          <div id="readit">
+                            <i class="fa fa-check"></i>
+                            <i class="fa fa-check"></i>
+                          </div>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo, velit, non. Pariatur in, fugiat laboriosam tempora debitis eum voluptatibus neque, consequatur sint saepe ipsum quos officia rerum aperiam possimus maxime.</p>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae odit pariatur modi eaque ratione temporibus iusto architecto voluptatum, exercitationem adipisci harum nihil laboriosam fugit ipsa voluptates quasi dolorem cumque tempora?</p>
+                        </div>
+                      </div>
+                      <div class="MensageHolder">
+                        <div class="image">
+                          <i class="fa fa-chevron-down"></i>
+                        </div>
+                        <div class="text">
+                            <div class="center">
+                               <span>15/11/2</span> <span>13:24</span>
+                            </div>
+                          <div id="readit">
+                            <i class="fa fa-check"></i>
+                            <i class="fa fa-check"></i>
+                          </div>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo, velit, non. Pariatur in, fugiat laboriosam tempora debitis eum voluptatibus neque, consequatur sint saepe ipsum quos officia rerum aperiam possimus maxime.</p>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae odit pariatur modi eaque ratione temporibus iusto architecto voluptatum, exercitationem adipisci harum nihil laboriosam fugit ipsa voluptates quasi dolorem cumque tempora?</p>
+                        </div>
+                      </div>
+                      <div class="MensageHolder">
+                        <div class="image">
+                          <i class="fa fa-chevron-down"></i>
+                        </div>
+                        <div class="text">
+                            <div class="center">
+                               <span>15/11/2</span> <span>13:24</span>
+                            </div>
+                          <div id="readit">
+                            <i class="fa fa-check"></i>
+                            <i class="fa fa-check"></i>
+                          </div>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo, velit, non. Pariatur in, fugiat laboriosam tempora debitis eum voluptatibus neque, consequatur sint saepe ipsum quos officia rerum aperiam possimus maxime.</p>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae odit pariatur modi eaque ratione temporibus iusto architecto voluptatum, exercitationem adipisci harum nihil laboriosam fugit ipsa voluptates quasi dolorem cumque tempora?</p>
+                        </div>
+                      </div>
+                    </div>
+                  <div id="readMore">
+                    <p>leer más +</p>
+                  </div>
                 </div>
             <!--carga contenido-->
             </div>

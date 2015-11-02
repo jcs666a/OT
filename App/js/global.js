@@ -7,7 +7,8 @@ var appMenu = $("#appMenu"),
     wrapper = $("#wrapper"),
     masterLogin = $("#masterLogin"),
     loadInOverlay = $("#overlay .inner"),
-    overlay = $("#overlay");
+    overlay = $("#overlay"),
+    readMesage = $(".MensageHolder");
 function global(){
     appMenu.click(function(event) {
       if(wrapper.hasClass('active')){
@@ -40,6 +41,19 @@ function global(){
           $("#overlay").fadeOut('fast');
         });
       });
+readMesage.click(function(event) {
+  if($(this).hasClass('open')){
+    $(this).removeClass('open');
+    $(this).children('.image').children('i').removeClass('fa-chevron-up');
+    $(this).children('.image').children('i').addClass('fa-chevron-down');
+  }
+  else{
+    $(this).addClass('open');
+    $(this).addClass('done');
+    $(this).children('.image').children('i').removeClass('fa-chevron-down');
+    $(this).children('.image').children('i').addClass('fa-chevron-up');
+  }
+});
 }
 
 function logout(){
@@ -50,18 +64,17 @@ function validate(){
     if ( $("#usuario").val()=="" || $("#clave").val()=="" ) {
         $("#formulario #error").html('<small>Por favor llene los campos.</small>');
     }else{
+      var clave = $("#clave").val();
+      var usuario = $("#usuario").val();
   var exp=150971;
   var gcm_regid = $('#regid').val();
-  var dist= "zds008"
-  var data= formulario.serialize();
         try{
           $.ajax({
-            type: "POST",
-            url: "http://187.217.179.35:9000/login",
-            data: data,
+            type: "GET",
+            url: "http://10.105.116.52:9090/telmex/get/user/"+usuario+"/"+clave+"",
             success: function(data, a, b){
               var respuesta = data;
-              window.location="views/login.php?us="+respuesta.cuenta.nombre + "&iduser="+respuesta.cuenta.idusuario +"&ni=" + respuesta.cuenta.permisos[0]+ "&exp" + exp + "&gcm_regid" + gcm_regid + "&dist" +dist;
+              window.location="views/login.php?us="+respuesta.apiResponse[0].nombre + "&iduser="+respuesta.apiResponse[0].idUsuario +"&ni=" + respuesta.apiResponse[0].role.idRole+ "&exp=" + exp + "&gcm_regid=" + gcm_regid + "&dist=" +respuesta.apiResponse[0].regionTrabajo +"";
             },
             error: function(jqXHR, textStatus, error){
               $("#formulario #error").html('<small>Credenciales incorrectas.</small>');
@@ -83,3 +96,31 @@ function validate(){
         output += string.charAt(i)  
     return output;  
   }
+function getDistAutoPrint(valString){
+  var srt = valString;
+  var parts = srt.split('-', 3);
+  var divString = parts[0];
+  var areaString = parts[1];
+  var distString = parts[2];
+  cargaReg(divString,areaString,distString );
+}
+
+function homeAnimation(){
+ setInterval(function(){ 
+   var actual = 1;
+   var number =  $(".activity").children().size(), 
+      rondomizer = Math.ceil(Math.random() * number),
+      select = $(".boxSlide:nth-child("+rondomizer+")");
+      if(rondomizer != actual){
+        console.log("cambio");
+        select.addClass('active');
+        actual = rondomizer;
+      }
+      else{
+        rondomizer = Math.ceil(Math.random() * 6);  
+      }
+    setTimeout(function(){ 
+      select.removeClass('active');
+    }, 2100);
+  }, 2000); 
+}
