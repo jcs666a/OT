@@ -1,0 +1,1 @@
+{"idRegion":"6", "region":"area", "numeroRegistros": "50", "fechaInicial":"", "fechaFinal":"", "tecnologias": ["TBA","DISLAM","FTTH","ATM"]}

@@ -1,0 +1,445 @@
+@import 'nib/'
+blueTelmex = #2196F3
+#map-canvas
+	max-width 700px
+	min-height 500px
+	height 90%
+	width 100%
+	margin 0
+	padding 0
+	position fixed !important
+	top 50px 
+	left 0%
+#menuPuller,#techMenu,#chartMenu,#fildersMenu,#clientMenu
+	border 1px solid #fff
+	position absolute
+	right 10px
+	z-index 9
+	top 60px
+	height 35px
+	width 35px
+	text-align center
+	border-radius 5px
+	background blueTelmex
+	z-index 9
+	i 
+		top 50% 
+		position relative
+		transform translateY(-50%)
+		color #fff
+		background blueTelmex
+		z-index 9 
+		padding 6px 8px 
+		border-radius 5px
+	.showtitle
+		top 0
+		margin 0
+		position absolute
+		right 28px
+		height 15px
+		width 130px
+		background-color blueTelmex
+		padding 10px 5px
+		color rgb(255, 255, 255)
+		border-radius 5px
+		opacity 0
+		animation slideTitle 3s ease
+		small
+			color #fff 
+			text-align center
+			position absolute
+			min-width 130px
+			top 10px
+			left 0px
+#techMenu 
+	top 55px
+	.showtitle
+		animation slideTitle 3s ease 
+		animation-delay 5s
+#chartMenu
+	top 100px
+	.showtitle
+		animation slideTitle 3s ease 
+		animation-delay 8s
+#fildersMenu 
+	top 145px 
+	.showtitle
+		animation slideTitle 3s ease 
+		animation-delay 12s
+#clientMenu
+	top 193px
+	.showtitle
+		animation slideTitle 3s ease 
+		animation-delay 15s
+#menu 
+	width 100% 
+	height 100% 
+	position absolute
+	background blueTelmex
+	z-index 9999
+	top 100%
+	opacity 0 
+	select 
+		margin-top 20px
+		width 80% 
+		padding 10px 
+		background transparent url(../../css/img/select.png) no-repeat 90% center/ 10px auto
+		outline none 
+		border none
+		color #fff
+		border-bottom 1px solid #fff
+		text-align center
+	#distritosText
+		display none 
+		small 
+			color #fff 
+			text-align center
+			display block
+		input[type="text"]
+			margin-top 30px
+			background transparent
+			border none
+			color #fff
+			padding 10px
+			border-bottom 1px solid #fff
+		i 
+			color #fff 
+			font-size 35px
+			vertical-align middle
+		#listaDist 
+			margin-top 10px
+			li
+				display inline
+				color red 
+				margin-left 10px
+				&:after 
+					content ('-')
+	#mostrarDatosGeoTel
+		margin-top 20px
+		background green 
+		border none 
+		padding 10px 20px 
+		border-radius 5px 
+		color #fff
+	#menuJumper 
+		background #fff
+		text-align center
+		border-bottom 1px solid #fff
+		i 
+			display block 
+			color blueTelmex
+			font-size 35px 
+			padding 5px
+	.inner 
+		text-align center
+		h3 
+			color #fff
+#menu.active 
+	top 0px 
+	opacity 1
+#nameDistrict
+	width 100%
+	position fixed
+	bottom 0px
+	color #fff 
+	background blueTelmex
+	text-align center
+	height 30px 
+	small
+		color #FFF
+		position absolute
+		top 50%
+		transform translateY(-50%)
+		width 100%
+		left 0px
+.activoEnlaLista
+	list-style outside none none
+	background transparent
+	z-index 99
+	position absolute
+	top 0
+	width 100%
+	height 100%
+#tecnoDialog
+	display block
+	width 100% 
+	height 100% 
+	position fixed
+	top 100%
+	left 0
+	background rgba(255,255,255,.7)
+	opacity 0
+	#closeLoader
+		width 100%
+		height 49px 
+		background #fff
+		text-align center
+		border-bottom 1px solid blueTelmex
+		i 
+			color blueTelmex
+			font-size 30px
+			padding 5px 0px
+	.inner
+		h5
+			color blueTelmex
+			text-align center
+		#tecnoCheck 
+			width 100%
+			li
+				margin 0 auto
+				text-align left
+				display block
+				padding 10px
+				float none
+				list-style none
+				width 38%
+				border-bottom 1px solid blueTelmex	
+				background rgba(255,255,255,.5)
+		#poiCheck
+			width 100%  
+			height 70% 
+			position absolute
+			overflow-x hidden
+			li 
+				width 100% 
+				padding 10px 
+				font-size 12px 
+				color blueTelmex
+				border-bottom 1px solid blueTelmex
+				background rgba(255,255,255,.5)
+				vertical-align middle
+				input  
+					vertical-align middle
+		.center
+			text-align center 
+			width 100% 
+			color blueTelmex
+		#verSelecion
+			background green 
+			padding 10px 5px
+			width 120px 
+			border-radius 5px
+			margin 20px auto
+			p
+				display inline-block
+				color #fff 
+				margin 0
+				font-size 15px
+			i
+				display inline-block 
+				color #fff
+				font-size 20px
+				margin-left 5px
+#tecnoDialog.open 
+	top 0
+	opacity 1
+	z-index 9
+	
+@css{
+	#menuPullerWiket{
+			position:absolute;
+			background-image:url(../images/menu_top.png);
+			z-index:1;
+			width:37px; 
+			height:36px;
+			cursor:pointer;
+			right:0;
+			top:8px;
+			margin-right:23px;
+		}		
+		
+		.titleMenu{
+			font-family:Verdana, Arial, Helvetica, sans-serif;
+			font-size:18px;
+			/*margin:20px 10px 20px 30px;*/
+			line-height:40px;
+			background-color:#6094ea;
+			color:#FFFFFF;
+			padding-left:30px;
+			border-top:#CCCCCC solid 1px;
+		}
+		
+		.titleMenuWiket{
+			font-family:Verdana, Arial, Helvetica, sans-serif;
+			font-size:18px;
+			/*margin:20px 10px 20px 30px;*/
+			line-height:40px;
+			background-color:#6094ea;
+			color:#FFFFFF;
+			padding-left:15px;
+			text-align:left;
+			border-top:#CCCCCC solid 1px;
+		}		
+		
+		.widg{
+			width:400px;
+			height:430px;
+			position:absolute;
+			top:100px;
+			left:100px;
+			float:right;
+			background-color:rgba(250,250,250,0.8);
+			filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#CCffffff', endColorstr='#CCffffff');
+			z-index:2;
+			border:#CCCCCC solid 1px;
+			list-style:none;
+		}
+		
+		#socketizable{
+			width:450px;
+			height:550px;
+			position:absolute;
+			top:100px;
+			left:500px;
+			float:right;
+			background-color:rgba(250,250,250,0.9);
+			filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#CCffffff', endColorstr='#CCffffff');
+			z-index:1;
+			border:#000000 solid 2px;
+			list-style:none;
+			overflow:hidden;
+		}
+		
+		.mapaDin{
+			width:450px;
+			height:550px;
+			position:absolute;
+			top:100px;
+			left:560px;
+			float:right;
+			background-color:rgba(250,250,250,0.9);
+			filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#CCffffff', endColorstr='#CCffffff');
+			z-index:2;
+			border:#000000 solid 2px;
+			list-style:none;
+			overflow:hidden;
+			visibility:hidden; 
+			min-width:400px;
+		}
+		
+		#distritosXareaPOP{
+			width:1000px;
+			height:900px;
+		}
+		
+		/*.mapaDin{
+			width:1000px;
+			height:900px;
+		}	*/	
+		
+		#graphs{
+			width:400px;
+			height:400px;
+			position:absolute;
+			top:550px;
+			left:100px;
+			float:right;
+			background-color:rgba(250,250,250,0.8);
+			filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#CCffffff', endColorstr='#CCffffff');
+			z-index:1;
+			border:#CCCCCC solid 1px;
+		}		
+		
+		.manejador{
+			background-color:#CCCCCC;
+			height:25px;
+			cursor:move;
+			border-bottom:#999999 solid 1px;
+			width:inherit;
+		}	
+
+		
+		#gallery{
+			margin:10px;
+			list-style:none;
+		}
+
+		#gallery li{
+			width:160px;
+			height:153px;
+			background-color:#FFFFFF;
+			border:solid 1px #000000;
+			margin:5px;
+			display:inline;
+			float:left;
+			font-size:10px;
+			text-align:center;
+			padding:0px;
+			font-family:Verdana, Arial, Helvetica, sans-serif;
+			line-height:25px;			
+		}
+
+		#widgets{
+			display:block;
+			width:200px;
+			height:200px;
+			zindex:2; 
+			position:absolute; 
+			top:420px; 
+			left:10px; 
+			/*background-color:rgba(250,250,250,0.8);
+			filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#CCffffff', endColorstr='#CCffffff');*/
+		}
+		
+				
+		
+		#divic td, #ares td, #distr td{
+			/*margin:5px 20px;*/
+			background-color:rgba(235,248,204,0.8);
+			filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#CCDAF7C7', endColorstr='#CCDAF7C7');
+			/*line-height:30px;*/
+			padding:3px;
+			border-bottom:#FFFFFF solid 1px;
+		}
+		
+		#widgets ul{
+			margin:0px; 
+			padding:0px;
+			list-style:none;
+		}		
+		
+
+		
+		
+		#detalleSlide{
+			right:0; 
+			top:50px;		
+			position:absolute;
+			filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#CCffffff', endColorstr='#CCffffff');
+			background-color:rgba(250,250,250,0.9);
+			z-index:1;
+			width:100%; 
+			height:95%;
+			color:#333333;
+			font-size:12px;
+			float:right;
+			border-left:#CCCCCC solid 1px;
+			overflow:auto;
+		}		
+		
+
+
+
+#tecnoCheck,#poiCheck{
+	margin:0px;
+	padding:0px;
+}
+
+
+
+#dist{
+	text-align: center !important;
+	padding-top: 10px !important;
+}
+
+}
+@keyframes slideTitle
+	0%
+		opacity 0
+		width 0
+	25%,75% 
+		opacity 1
+		width 130px
+	100%
+		opacity 0 
+		width 0

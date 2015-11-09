@@ -1,6 +1,6 @@
 <?php
 
-class DB_Functions {
+class DB_Functions{
 
     private $db;
 
@@ -22,7 +22,7 @@ class DB_Functions {
      * Storing new user
      * returns user details
      */
-    public function storeUser($name, $exp, $gcm_regid) {
+    public function storeUser($name, $exp, $gcm_regid){
         // insert user into database
         $result = mysql_query("INSERT INTO gcm_users(name, exp, gcm_regid, created_at) VALUES('$name', '$exp', '$gcm_regid', NOW())");
         // check for successful store
@@ -40,16 +40,40 @@ class DB_Functions {
             return false;
         }
     }
+    //Store historyChange
+    public function history_change($idJefe,$idUser,$nvo_distrito){
+        $result = mysql_query("INSERT INTO history_change(idJefe,idUser,nvo_distrito)
+                                    VALUES('$idJefe','$idUser','$nvo_distrito')");
+        if ($result){
+            $id = mysql_insert_id();
+            $result = mysql_query("SELECT * FROM history_change WHERE id = $id") or die(mysql_error());
+            if (mysql_num_rows($result) > 0){
+                return mysql_fetch_array($result);
+            } else return false;
+        } else return false;
+    }
+    //Store mensajes
+    public function mensajes($idJefe,$idUser,$mensaje){
+        $result = mysql_query("INSERT INTO mensajes(id_jefe,id_usuario,mensaje)
+                                    VALUES('$idJefe','$idUser','$mensaje')");
+        if ($result){
+            $id = mysql_insert_id();
+            $result = mysql_query("SELECT * FROM mensajes WHERE id_mensaje = $id") or die(mysql_error());
+            if (mysql_num_rows($result) > 0){
+                return mysql_fetch_array($result);
+            } else return false;
+        } else return false;
+    }
 
     /**
      * Storing new gps
      * returns user details
      */
-    public function storeUserGPS($latitud, $longitud, $gcm_regid) {
+    public function storeUserGPS($latitud, $longitud, $gcm_regid){
         // insert user into database
         $result = mysql_query("INSERT INTO gps_users(latitud, longitud, gcm_regid, created_at) VALUES('$latitud', '$longitud', '$gcm_regid', NOW())");
         // check for successful store
-        if ($result) {
+        if ($result){
             // get user details
             $id = mysql_insert_id(); // last inserted id
             $result = mysql_query("SELECT * FROM gps_users WHERE id = $id") or die(mysql_error());
