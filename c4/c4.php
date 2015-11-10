@@ -1,13 +1,3 @@
-<?php
-    session_start();
-    if ($_SESSION["sesion_de"] <>""){
-        $sesionDe=$_SESSION["sesion_de"];
-        $niv=$_SESSION["niv"];
-        $idJefe=$_SESSION["idJefe"];
-    }else{
-        echo "<html><head><script>window.location='index.php';</script></head></body></html>";
-    }
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,7 +8,7 @@
     <title>Telmex C4</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" charset="UTF-8"></script>
-    <script charset="UTF-8">var tipoUser="<?php echo $niv;?>",idJefe="<?php echo $idJefe;?>",nombreJefe="<?php echo $sesionDe;?>";</script>
+    <?php include_once 'variables.php'; echo $var_script; ?>
 
     <link href="min/plugin-min.css" type="text/css" rel="stylesheet">
     <link href="min/custom-min.css" type="text/css" rel="stylesheet" >
@@ -26,44 +16,12 @@
     <link rel="stylesheet" href="css/custum.css">
 </head>
 <body id="top" class="scrollspy dentroc4">
-       <?php
-        include_once 'db_functions.php';
-        $db = new DB_Functions();
-        $users = $db->getAllUsers();
-    $gcms = $db->getAllGcmIds();
-        $channels = $db->getAllChannels();
-
-
-        if ($users != false)
-            $no_of_users = mysql_num_rows($users);
-        else
-            $no_of_users = 0;
-
-        if ($channels != false)
-            $no_of_channels = mysql_num_rows($channels);
-        else
-            $no_of_channels = 0;
-
-    $gcmRegIds = array();
-        while ($row = mysql_fetch_array($gcms)){
-            array_push($gcmRegIds, $row['gcm_regid']);
-        }
-        include_once './GCM.php';
-        $gcm = new GCM();
-        $pushMessage = $_POST['message'];
-        if(isset($gcmRegIds) && isset($pushMessage)){
-            $message = array('mensaje' => $pushMessage);
-            $gcm->send_notification($gcmRegIds, $message);
-        }
-        ?>
-
 <!-- Pre Loader -->
 <div id="loader-wrapper">
     <div id="loader"></div>
     <div class="loader-section section-left"></div>
     <div class="loader-section section-right"></div>
 </div>
-
 <!--Navigation-->
  <div class="navbar-fixed">
     <nav id="nav_f" class="default_color" role="navigation">
@@ -73,14 +31,14 @@
                 <li><a href="#intro">Fielders</a></li>
                 <li><a href="#work">Proyectos</a></li>
                 <li><a href="#team">Team</a></li>
-                <li><a href="#registro" id="newUser" class="triggerOverlay editar">Nuevo Usuario</a></li>
+                <li><a href="#registro" id="newUser" class="triggerOverlay editar">Usuarios</a></li>
                 <li><a href="#contact">Contacto</a></li>
+                <li><a href="#salir" id="salir">Salir</a></li>
             </ul><a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
             </div>
         </div>
     </nav>
 </div>
-
 <!--Hero-->
 <div class="section no-pad-bot" id="index-banner">
     <div class="container">
@@ -93,91 +51,60 @@
         </h1>
     </div>
 </div>
-
 <!--Intro and service-->
     <div id="intro" class="section scrollspy">
         <div id="filter-box" class="editar">
             <h4>Seleccione los filtros para ver el detalle.</h4>
             <?php include 'distritos.php';?>
-            <div class="sendbtn">
-                <buttom type="button" value="Buscar" onClick="cargaReg();" class="btn waves-effect waves-light red darken-1 mostrarDatosGeoTel">
-                    Visualizar
-                <i class="mdi-action-visibility right white-text"></i>
-            </button>
-            </div>
         </div>
-        <div class="container mensajes">
+        <div id="container_mensajes" class="container mensajes" style="display:none;">
             <div class="col s12">
                 <h3 class="header text_h2"> Enviar a todos en el canal: <span class="span_h2"> Carlos Slim  </span>
             </div>
-            <form name="" class="broad" method="post" onsubmit="return sendBroadcast()">                            
+            <form id="broad_msg" name="broad_msg" class="broad" method="post" target="./">
                 <div class="send_container">
-                    <textarea rows="3" name="message" cols="25" class="materialize-textarea black-text" placeholder="Mensaje"></textarea>
-                    <input type="hidden" name="regId" value="<?php echo $gcmRegIds ?>"/>
+                    <textarea rows="3" id="message_all" name="message_all" cols="25" placeholder="Mensaje"></textarea>
                     <button class="btn waves-effect waves-light red darken-1" type="submit">Enviar
                         <i class="mdi-content-send right white-text"></i>
                     </button>
                 </div>
             </form>
         </div>
-        <div  class="col s12">
-            <h2 class="center header text_h2">Dispositivos Registrados: <?php echo $no_of_users; ?>
+
+        <div id="showUP">
+            <div  class="col s12">
+                <h2 class="center header text_h2"></h2>
+            </div>
+            <ul class="devices">
+                <li class="over"><span>Enviando mensaje</span></li>
+            </ul>
         </div>
-        <ul class="devices">
-            <li class="over"><span>Enviando mensaje</span></li>
-            <?php
-                if($no_of_users>0){
-                while($row = mysql_fetch_array($users)){
-            ?>
-            <li>
-                <form id="<?php echo $row["id"] ?>" name="" method="post">
-                    <label class="blue-text">Nombre: </label>
-                    <span class="sempleado black-text"><?php echo $row["name"] ?></span>
-                    <div class="clear"></div>
-                    <label class="blue-text">Exp:</label>
-                    <span  class="sexp black-text"><?php echo $row["exp"] ?></span>
-                    <div class="clear"></div>
-                    <label class="blue-text">Distrito: </label>
-                    <span class="black-text"><?php echo $row["distrito"] ?></span>
-                    <div class="send_container">
-                        <textarea rows="3" id="mensaje" name="message" placeholder="Mensaje"></textarea>
-                        <input type="hidden" class="IDform" name="Id" value="<?php echo $row["id"] ?>"/>
-                        <input type="hidden" class="regIDform" name="regId" value="<?php echo $row["gcm_regid"] ?>"/>
-                        <button class="btn waves-effect waves-light red darken-1 mensajes" type="submit">Enviar
-                            <i class="mdi-content-send right white-text"></i>
-                        </button>
-                        <button class="btn waves-effect waves-light green accent-4 triggerOverlay editar" archivo="edit">Editar
-                            <i class="mdi-content-create right white-text"></i>
-                        </button>
+
+        <div class="section scrollspy">
+            <div class="container">
+                <div class="row">
+                    <div class="col s12 m4 l4">
+                        <div class="center promo promo-example">
+                            <i class="mdi-image-flash-on"></i>
+                            <h5 class="promo-caption">PDM</h5>
+                            <p class="light center">Atacar zonas con mayor foco.</p>
+                        </div>
                     </div>
-                </form>
-            </li>
-            <?php }
-            } else { ?>
-            <li>
-                No existen registros!
-            </li>
-            <?php } ?>
-        </ul>
-        <div class="col s12 m4 l4">
-            <div class="center promo promo-example">
-                <i class="mdi-image-flash-on"></i>
-                <h5 class="promo-caption">PDM</h5>
-                <p class="light center">Atacar zonas con mayor foco.</p>
-            </div>
-        </div>
-        <div class="col s12 m4 l4">
-            <div class="center promo promo-example">
-                <i class="mdi-social-group"></i>
-                <h5 class="promo-caption">Fielders</h5>
-                <p class="light center">Cuadrillas de trabajo dedicadas a difundir ofertas comerciales de Telmex.</p>
-            </div>
-        </div>
-        <div class="col s12 m4 l4">
-            <div class="center promo promo-example">
-                <i class="mdi-hardware-desktop-windows"></i>
-                <h5 class="promo-caption">Canales</h5>
-                <p class="light center">Canales disponibles de los usuarios</p>
+                    <div class="col s12 m4 l4">
+                        <div class="center promo promo-example">
+                            <i class="mdi-social-group"></i>
+                            <h5 class="promo-caption">Fielders</h5>
+                            <p class="light center">Cuadrillas de trabajo dedicadas a difundir ofertas comerciales de Telmex.</p>
+                        </div>
+                    </div>
+                    <div class="col s12 m4 l4">
+                        <div class="center promo promo-example">
+                            <i class="mdi-hardware-desktop-windows"></i>
+                            <h5 class="promo-caption">Canales</h5>
+                            <p class="light center">Canales disponibles de los usuarios</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -279,12 +206,10 @@
         </div>
     </div>
 </div>
-
 <!--Parallax-->
 <div class="parallax-container">
     <div class="parallax"><img src="img/parallax1.png"></div>
 </div>
-
 <!--Team-->
 <div class="section scrollspy" id="team">
     <div class="container">
@@ -392,7 +317,6 @@
         </div>
     </div>
 </div>
-
 <!--Footer-->
 <footer id="contact" class="page-footer default_color scrollspy">
     <div class="container">  
@@ -460,7 +384,7 @@
 </footer>
 <div id="overlay">
     <div class="inner">
-        <div id="close-overlay" onclick="overlayClose();">X</div>
+        <div id="close-overlay" onclick="overlayClose();"><span>x</span></div>
         <div id="laod">
             <div class="logo-box">
                 <h3><span>Telmex</span> C4</h3>
@@ -473,8 +397,8 @@
     <!--  Scripts-->
     <script src="min/plugin-min.js" charset="UTF-8"></script>
     <script src="min/custom-min.js" charset="UTF-8"></script>
-    <script src="js/materialize.min.js" charset="UTF-8"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js" charset="UTF-8"></script>
+    <script src="js/materialize.min.js" charset="UTF-8"></script>
     <script src="js/mapa.js" charset="UTF-8"></script>
     <script src="js/c4.js" charset="UTF-8"></script>
     </body>

@@ -4,8 +4,8 @@
 		$empleado = $_POST["empleado"];
 		$distrito = $_POST["distrito"];
 		$regIDform = $_POST["regIDform"];
-		include_once './db_functions.php';
-		$db = new DB_Functions();
+		include_once 'db_postgre.php';
+		$db = new db_Postgre();
 		$result = $db->history_change($idJefe,$empleado,$distrito);
 		$result=$idJefe.' + '.$empleado.' + '.$distrito;
 		$message='Has sido asignado al distrito '.$distrito;

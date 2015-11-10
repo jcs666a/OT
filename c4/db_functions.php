@@ -22,10 +22,16 @@ class DB_Functions{
      * Storing new user
      * returns user details
      */
-    public function storeUser($name, $exp, $gcm_regid){
-        // insert user into database
-        $result = mysql_query("INSERT INTO gcm_users(name, exp, gcm_regid, created_at) VALUES('$name', '$exp', '$gcm_regid', NOW())");
-        // check for successful store
+    public function storeUser($name,$exp,$usuario,$passwd,$rol,$region){
+//      $result = mysql_query("INSERT INTO gcm_users(name, exp, gcm_regid, created_at) VALUES('$name', '$exp', '$gcm_regid', NOW())");
+        $result = mysql_query("INSERT INTO
+                            `usuarios`(`name`,`exp`,`usuario`,`passwd`,`rol`,`region`)
+                            VALUES ('".$name."',
+                                    '".$exp."',
+                                    '".$usuario."',
+                                    '".$passwd."',
+                                    '".$rol."',
+                                    '".$region."');");
         if ($result) {
             // get user details
             $id = mysql_insert_id(); // last inserted id
@@ -91,24 +97,51 @@ class DB_Functions{
     /**
      * Get user by exp and password
      */
-    public function getUserByExp($exp) {
-        $result = mysql_query("SELECT * FROM gcm_users WHERE exp = '$exp' LIMIT 1");
+    public function getUserByExp($exp){
+        $result = mysql_query("SELECT `usuarios`.*,
+                                `gcm_users`.`id_usuario`,
+                                `gcm_users`.`id` AS 'id_gcm',
+                                `gcm_users`.`gcm_regid`,
+                                `gcm_users`.`created_at` AS 'gcm_created_at'
+                            FROM `usuarios` LEFT JOIN `gcm_users`
+                            ON `usuarios`.`id`=`gcm_users`.`id_usuario`
+                            WHERE `usuarios`.`exp`='".$exp."';");
         return $result;
     }
 
     /**
      * Getting all users
      */
-    public function getAllUsers() {
-        $result = mysql_query("select * FROM gcm_users");
+    public function getAllUsers(){
+    // Dependera de la prioridad, la consulta, si le damos prioridad a usuarios o a gcm
+/*      $result = mysql_query("SELECT `usuarios`.*,
+                                `gcm_users`.`id_usuario`,
+                                `gcm_users`.`id` AS 'id_gcm',
+                                `gcm_users`.`gcm_regid`,
+                                `gcm_users`.`created_at` AS 'gcm_created_at'
+                            FROM `usuarios` LEFT JOIN `gcm_users`
+                            ON `usuarios`.`id`=`gcm_users`.`id_usuario`;"); */
+        $result = mysql_query("SELECT `usuarios`.*,
+                                `gcm_users`.`id_usuario`,
+                                `gcm_users`.`id` AS 'id_gcm',
+                                `gcm_users`.`gcm_regid`,
+                                `gcm_users`.`created_at` AS 'gcm_created_at'
+                            FROM `gcm_users`,`usuarios`
+                            WHERE `gcm_users`.`id_usuario`=`usuarios`.`id`;");
         return $result;
     }
 
 /**
      * Getting all gcms
      */
-    public function getAllGcmIds() {
-        $result = mysql_query("select gcm_regid from gcm_users");
+    public function getAllGcmIds(){
+//      Depende de la prioridad, si usuarios o gcm
+/*      $result = mysql_query("SELECT `gcm_users`.`gcm_regid` AS 'id'
+                    FROM `usuarios` LEFT JOIN `gcm_users`
+                    ON `usuarios`.`id`=`gcm_users`.`id_usuario`;"); */
+        $result = mysql_query("SELECT `gcm_users`.`gcm_regid` AS 'id'
+                    FROM `gcm_users`,`usuarios`
+                    WHERE `gcm_users`.`id_usuario`=`usuarios`.`id`;");
         return $result;
     }
 

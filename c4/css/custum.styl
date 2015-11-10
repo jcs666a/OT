@@ -2,20 +2,22 @@
 telmexBlue = #2196F3;
 body *
 	position relative
-#overlay 
+#overlay
 	display none
-	top 0 
+	top 0
 	left 0
 	position fixed
-	width 100% 
-	height 100%  
+	width 100%
+	height 100%
 	background rgba(0,0,0, .9)
 	z-index 999
-	.inner 		
-		width 50% 
+	.inner
+		width 50%
 		height auto
-		position relative 
-		top 50% 
+		max-height 90%
+		overflow auto
+		position relative
+		top 50%
 		transform translateY(-50%)
 		margin 0 auto
 		z-index 999
@@ -27,8 +29,20 @@ body *
 			font-size 20px
 			cursor pointer
 			transition all .3s ease
-			&:hover 
+			span
+				margin 10px
+				text-align center
+				border 2px solid #ccc
+				padding 5px
+				border-radius 50%
+				width 30px
+				height 30px
+				display inline-block
+				line-height 15px
+			&:hover
 				color red
+				span
+					border-color red
 		#load
 			color telmexBlue
 			width 100% 
@@ -107,6 +121,7 @@ span.select-dropdown
 	width 90% 
 	margin 0 auto
 #filter-box
+	overflow hidden
 	margin-top -60px
 	width 100% 
 	height auto
@@ -114,7 +129,7 @@ span.select-dropdown
 	text-align center
 	padding 20px
 	background-color #F7F7F7
-	.box 
+	.box
 		width 33.33%
 		float left
 		select 
@@ -224,12 +239,11 @@ span.select-dropdown
 	width 100% 
 	height 100% 
 	background #fff
-	input 
-		width 45% 
+	padding 10px
+	input
+		width 100%
 		display inline-block
-		margin 2%
-		&:nth-child(3), &:nth-child(4)
-			width 94% !important
+		margin 0
 .holder-block 
 	width 100% 
 	height 200px
@@ -394,6 +408,96 @@ body.dentroc4
 			display block
 	.ui-autocomplete
 		z-index 9999999
+	#container_mensajes
+		div
+			h3.text_h2
+				font-size 2em
+				line-height 1
+				span.span_h2
+					cursor pointer
+					&:after
+						font-family "Material-Design-Icons"
+						background #eee
+						font-size .8em
+						display inline-block
+						content "\e89c"
+						color red
+						margin -10px 0 0 10px
+						position absolute
+		form
+			textarea,textarea:focus
+				appearance none
+				border 0
+				border-bottom 1px solid #ccc
+				display block
+				width 100%
+				height auto
+				max-height 300px
+				overflow auto
+				margin 10px 0
+				outline none
+#showUP
+	display none
+#adminUsers
+	.row
+		margin-bottom 4px
+		#au_usuarios,#au_newusr
+			float none
+			width auto
+			border 1px solid #77ADD8
+			margin 10px
+		#au_usuarios
+			padding-bottom 10px
+		#au_newusr
+			overflow hidden
+			padding 10px 40px
+			#FormNewUser
+				.newUser-holder
+					margin-top 20px
+					.FNUpas
+						margin-bottom 40px
+					.holder-block
+						overflow hidden
+						height auto
+						margin 10px 0
+						background #efefef
+						padding 0 10px 10px
+						.col.distritosText
+							float none
+							margin 0 auto
+							clear both
+							padding 30px 0 0 0
+						label
+							select
+								padding-right 30px
+								height 28px
+							&:after
+								font-size 1.4em
+								top -6px
+						.col
+							padding 0
+						p
+							text-transform uppercase
+							font-size 0.8em
+							color #9e9e9e
+							text-align left
+					.rol_user
+						width 300px
+						label
+							font-size 1.4em
+							position relative
+							&:after
+								font-size 1.2em
+								content '\e6bb'
+								font-family "Material-Design-Icons"
+								color #aaa
+								transform rotate(90deg)
+								right 8px
+								top -6px
+								padding 0 0 2px
+								border-bottom 1px solid #ddd
+								position absolute
+								pointer-events none
 @media (max-width: 500px)
 	body
 		font-size .8em

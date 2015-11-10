@@ -1,16 +1,18 @@
-<form action="#">
+<form name="FormNewUser" id="FormNewUser" action="#" method="post">
 <div class="newUser-holder">
-	<input type="text" name="nombre" placeholder="NOMBRE: ">
-	<input type="text" name="apellido" placeholder="APELLIDO: ">
-	<input type="text" name="usuario" placeholder="USUARIO: ">
-	<input type="password" name="expediente" placeholder="PASSWORD (EXPEDIENTE): ">
-	<label for="userRol">ROl DE USUARIO:</label>
-	<select name="rol" id="userRol">
-		<option value="#">Director</option>
-		<option value="#">Corporativo</option>
-		<option value="#">Lider</option>
-		<option value="#">Promotor</option>
-	</select>
+	<input class="FNUnom" type="text" name="nombre" placeholder="Nombre completo:" value="" />
+	<input class="FNUexp" type="text" name="expediente" placeholder="Expediente:" value="" />
+	<input class="FNUusu" type="text" name="usuario" placeholder="Usuario:" value="" />
+	<input class="FNUpas" type="password" name="passwd" placeholder="Password:" value="" />
+	<input class="FNUreg" type="hidden" name="region" id="region_nvo_user" />
+	<label>ROl DE USUARIO:</label>
+	<div class="box col s12 m4 l4">
+		<label><select class="FNUrol" name="rol" id="userRol">
+			<option value="5">Director</option>
+			<option value="1">Corporativo</option>
+			<option value="4">Lider</option>
+		</select></label>
+	</div>
 	<div class="holder-block">
 		<p>Eliga el distrito de pertencia:</p>
 		<?php include 'distritos.php';?>
@@ -22,9 +24,3 @@
 	</div>
 </div>
 </form>
-
-<script>
-	$(document).ready(function() {
-		$("#userRol").material_select();
-	});
-</script>

@@ -1,34 +1,31 @@
 <?php
-	session_start();
-		if (isset($_GET["us"])<>""){
-			$_SESSION["idJefe"]=$_GET["idJefe"];
-			$_SESSION["sesion_de"]=$_GET["us"];
-			$_SESSION["niv"]=$_GET["ni"];
-			if($_SESSION["niv"] == "CORPORATIVO"){
-				$_SESSION["niv"] = 1;
-			}	
-			if($_SESSION["niv"] == "DIRECCION"){
-				$_SESSION["niv"] = 2;
+function serialize_cookie($nombre_cookie='',$arreglo='',$time='mas'){
+	$la_url	= "10.105.116.69";
+	$array=array();
+	unset($_COOKIE[$nombre_cookie]);
+	if($nombre_cookie!='' && $arreglo!=''){
+		if($time=='mas'){
+			$nvo='[';
+			foreach($arreglo as $value){
+				$nvo.='"'.$value.'",';
 			}
-			if($_SESSION["niv"] == "LIDER"){
-				$_SESSION["niv"] = 3;
-			}	
-			if($_SESSION["niv"] == "PROMOTOR"){
-				$_SESSION["niv"] = 4;
-			}	
-			echo "<script>window.location='c4.php'</script>";
-
-		} else {
-				$result = "<table style='width:600px; margin:0px auto;'>
-					<tr>
-						<td style='color:#911A1A; text-align:center; font-size:12px;'> 
-							<img src='img/warning_small.png' align='absbottom' />
-							<b>No se encuentra el usuario, por favor escriba el usuario y contrase&ntilde;a correctamente</b>
-						</td>
-					</tr>
-				</table>";
+			$nvo=rtrim($nvo,",").']';
+			setcookie($nombre_cookie,$nvo,time()+7000,"/");
 		}
-		echo $result;
+		else
+			setcookie($nombre_cookie,'',time()-5600,"/");
+		$array=array($nombre_cookie=>$arreglo);
+	}
+	return $array;
+}
+if (isset($_GET["us"])<>""){
+	serialize_cookie('cCuatroV',array(
+						'idJefe'	=>$_GET["idJefe"],
+						'sesion_de'	=>$_GET["us"],
+						'niv'		=>$_GET["ni"]
+					));
+	echo "<html><head><script>window.location='c4.php';</script></head></body></html>";
+}
 ?>
 
 
