@@ -1,1 +1,416 @@
-eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)r[e(c)]=k[c]||e(c);k=[function(e){return r[e]}];e=function(){return'\\w+'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('$(3(){9 j=0,1t=$(X).1t()-3N;3 20(a){9 b=a+"=";9 d=r.P.3F(\';\');3E(9 i=0;i<d.z;i++){9 c=d[i];3m(c.39(0)==\' \')c=c.1y(1,c.z);o(c.15(b)==0)H c.1y(b.z,c.z)}H 1A}3 2c(a){9 b=r.P;9 c=a+"=";9 d=b.15("; "+c);o(d==-1){d=b.15(c);o(d!=0)H 1A}U{d+=2;9 e=r.P.15(";",d);o(e==-1){e=b.z}}H 38(b.1y(d+c.z,e))}9 k=2c("Z");3 2d(){9 a=[];o(k!=1A){9 b=20(\'Z\');9 c=37(b);9 a=1c.36(c)}U X.1K=\'33.w\';H a}9 l=2d();9 m=l[2],v=l[0],32=l[1];$(r).p("1a","N.12 2f",3(c){c.q();9 d=$(n).S("1M"),A=$(n).t(\'A\'),O=$(n).t(\'A\').8(),1f=$(n).t(\'.Q\').8();o(d!=\'\'&&O!=\'\'&&1f!=\'\'){$("N.12 B.2p").2q(\'s\');A.8(\'2s O....\');$.E({1H:"1d",D:"2K.w",x:{v:v,L:d,2J:O,1f:1f}}).1i(3(a){$("N.12 B.2p").1j(\'s\');A.8(\'2u 2x\');1m(3(){A.8("")},1n)}).1o(3(a,b){A.8(b+" "+a[\'1p\']+\', \'+a[\'1q\']);1m(3(){A.8("")},2D)})}H 2C});$(r).p("C","N.12 B 2f 2B.2w",3(e){e.q();9 f=$(n).S(\'2F\'),L=$(n).u().u().t(\'.2M\').V(),J=$(n).u().u().t(\'.2N\').V(),1D=$(n).u().t(\'.2V\').8(),Q=$(n).u().t(\'.Q\').8();$("#3b").2a(f+".w",3(){$("#25").3v(\'3I\');$(\'#1M-3J\').8(v);$(\'#3Q-L\').8(L);$(\'#J\').8(J);$(".1S 1Q[1P=\'2\']").I();$("#2R").p("1a",3(c){c.q();9 d=$(\'.1e B\').V();o(d!=\'\'&&v!=\'\'&&1D!=\'\'){$.E({1H:"1d",D:"3T.w",x:{v:v,L:1D,1L:d,Q:Q}}).1i(3(a){$("#25").3S(\'3R\')}).1o(3(a,b){F(b+" "+a[\'1p\']+\', \'+a[\'1q\'])})}U F(\'3P 3O 1L 3M 3L 3K y.\')})})});$("#22 a").1I().1b({"1g":"-26"},1n);$("#22 > B").3u(3(){$("a",$(n)).1I().1b({"1g":"-3d"},29)},3(){$("a",$(n)).1I().1b({"1g":"-26"},29)});o(m==5)$(\'.3c\').19();o(m==6)$(\'.2w\').19();o(m==7||m<4)X.1K.2e("./");$(r).p("C","#31",3(h){h.q();$("2g,2Z").1b({2Y:1t},2X);o(j==0){j=1;9 i=$("<2W 1M=\'18\'/>");$("#2U").2T(i);i.2a("2S.w",3(){$(".1S 1Q[1P=\'2\']").I();$(\'2Q\').2P();$("#2O").p("C",3(a){a.q();j=0;$(r).t(\'#18\').I()});$("#1C a").p("C",3(a){a.q();9 b=$(n).S(\'2e\');$("#1C a").u().1j(\'1z\');$(n).u().2q(\'1z\');$("#2t,#14,#14 2v,.1v,.2E,.3e,.2A").19();$(b).2y();$(".1u,.1s,.1r,.1l,#1k").8(\'\');$(".2G").8(0);$("N.1e").2H()});$("#2I").p("1a",3(d){d.q();9 e=$(\'.1u\').8(),T=$(\'.1s\').8(),y=$(\'.1r\').8(),Y=$(\'.2L\').8(),R=$(\'.2r\').8(),17=$(\'.1l\').8(),16=$(\'#1k\').8(),G=1O+\'-\'+2o+\'-\'+$(\'.1e B\').V();o(e!=\'\'&&T!=\'\'&&y!=\'\'&&Y!=\'\'&&R!=\'\'&&G.z>5&&17==\'\'&&16==\'\'){9 f={2n:{2m:R},2l:e,y:y,2k:Y,2j:G,J:T,2i:"2h"};30{$.E({1F:"1d",D:1x+"/1N/34/35",x:1c.1J(f),1E:"1B/K",1w:"K",1G:3(c,a,b){j=0;$(r).t(\'#18\').I()},M:3(a,b,c){F(b+\' - \'+c+\' - \'+a)}})}3a(M){F(M)}}U o(e!=\'\'&&T!=\'\'&&y!=\'\'&&R!=\'\'&&17!=\'\'&&16!=\'\'){o(G.z<5)G=16;9 g={2b:17,2n:{2m:R},2l:e,y:y,2k:Y,2j:G,J:T,2i:"2h"};$.E({1F:"28",D:1x+"/1N/3V",x:1c.1J(g),1E:"1B/K",1w:"K",1G:3(c,a,b){j=0;$(r).t(\'#18\').I()},M:3(a,b,c){}})}U F(\'3f 3g 3h 3i 3j 3k.\')});$(".3l").p("C",3(d){d.q();9 e=$(n).S(\'x\'),1h=$(n);9 f={2b:e};$.E({1F:"28",D:1x+"/1N/3n",x:1c.1J(f),1E:"1B/K",1w:"K",1G:3(c,a,b){1h.3o(\'3p\').I()},M:3(a,b,c){}})});$(".3q").p("C",3(a){a.q();9 b=$(n).S(\'x\'),1h=$(n);9 c=3r.3s(\'{\'+b+\'}\');9 d=3t(c.27);$("#1C a").u().1j(\'1z\');$("#2t").19();$("#14,#14 2v,24.1v").2y();$("24.1v 3w").2g(d.3x+\', \'+d.3y+\' - \'+d.1L);$(".1u").8(c.3z);$(".1s").8(c.J);$(".1r").8(c.3A);$(".1l").8(c.3B);$(".2r").8(c.3C);$("#1k").8(c.27)})})}});$("#3D").p("1a",3(c){c.q();9 d=$(\'#W\').8(),11=1O+\'-\'+2o+\'-\'+$(\'.1e B\').V();o(d!=\'\'&&11!=\'\'){$(\'#W\').8(\'2s O....\');$.E({1H:"1d",D:"3G.w",x:{v:v,W:d,11:11}}).1i(3(a){$(\'#W\').8(\'2u 2x\');1m(3(){$(\'#W\').8(\'\')},1n)}).1o(3(a,b){F(b+" "+a[\'1p\']+\', \'+a[\'1q\'])})}});$("#3H").p("C",3(a){a.q();r.P="Z=; 23=21, 10-1Z-1Y 13:13:10 1X;";$.1W("1V.w");1U.1T(\'1R\');X.1K="./"})});X.3U=2z;3 2z(){r.P="Z=; 23=21, 10-1Z-1Y 13:13:10 1X;";$.1W("1V.w");1U.1T(\'1R\')}',62,244,'|||function|||||val|var||||||||||||||this|if|on|preventDefault|document||find|parent|idJefe|php|data|usuario|length|textarea|li|click|url|ajax|alert|region|return|remove|expediente|json|empleado|error|ul|mensaje|cookie|regIDform|rol|attr|exp|else|text|message_all|window|passwd|cCuatroV|01|regId_all|devices|00|au_newusr|indexOf|sregion|edit|adminUsers|hide|submit|animate|JSON|POST|listaDist|regId|marginLeft|tre|done|removeClass|sigo_la_misma_region|FNUeDI|setTimeout|1000|fail|status|statusText|FNUusu|FNUexp|height|FNUnom|rol_actual|dataType|ip_services_b|substring|active|null|application|au_menu|idEmpleado|contentType|type|success|method|stop|stringify|location|distrito|id|telmex|nvoDivi|value|option|sali|districtOpcGeoTel|log|console|logout|get|GMT|70|Jan|readCookie|Thu|navigation|expires|h4|overlay|85px|region_trabajo|PUT|200|load|idUsuario|getCookie|valida_login|href|form|html|true|cuenta|regionTrabajo|password|nombre|idRole|role|nvoArea|over|addClass|FNUrol|Enviando|au_usuarios|Mensaje|h3|editar|enviado|show|confirmExit|distritosText|button|false|2000|areasOpcGeoTelCombo|archivo|divisionesGeoTel|empty|FormNewUser|message|send_message|FNUpas|sempleado|sexp|au_cierra|sortable|tbody|fcambiar_distro|administraUsers|before|intro|IDform|div|400|scrollTop|body|try|newUser|nombreJefe|index|add|user|parse|decodeURIComponent|unescape|charAt|catch|loadPlace|mensajes|2px|districtOpcGeoTelCombo|Por|favor|llena|correctamente|los|campos|au_eliminar|while|userDel|closest|tr|au_editar|jQuery|parseJSON|regisdivareas|hover|fadeIn|span|division|area|usr_nombre|usr_user|usr_id|id_role|broad_msg|for|split|send_broadcast|salir|slow|jefe|al|cambiar|para|60|un|Selecciona|name|fast|fadeOut|edit_b|onbeforeunload|userUp'.split('|'),0,{}))
+$(function(){
+	var adminUsersBolean=0,
+	height=$(window).height() - 60;
+	function readCookie(name){
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for (var i = 0; i < ca.length; i++){
+			var c = ca[i];
+			while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+			if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+		}
+		return null;
+	}
+	function getCookie(name){
+		var dc=document.cookie;
+		var prefix=name + "=";
+		var begin=dc.indexOf("; " + prefix);
+		if(begin==-1){
+			begin=dc.indexOf(prefix);
+			if (begin != 0) return null;
+		}
+		else{
+			begin+=2;
+			var end=document.cookie.indexOf(";", begin);
+			if(end==-1){
+				end=dc.length;
+			}
+		}
+		return unescape(dc.substring(begin + prefix.length,end));
+	}
+	var myCookie=getCookie("cCuatroV");
+	function valida_login(){
+		var json=[];
+		if(myCookie!=null){
+			var login_co=readCookie('cCuatroV');
+			var sdfasddf=decodeURIComponent(login_co);
+			var json = JSON.parse(sdfasddf);
+		}
+		else window.location='index.php';
+		return json;
+	}
+	var datos_lo=valida_login();
+	var tipoUser=datos_lo[2],
+		idJefe=datos_lo[0],
+		nombreJefe=datos_lo[1];
+/*	$('#mapaggg').gmap3({
+		map:{
+			options:{
+				scrollwheel:false,
+				center:[19.573005992,-99.143340206],
+				zoom:7
+			}
+		}
+	}); */
+	$(document).on("submit","ul.devices form",function(event){
+		event.preventDefault();
+		var id=$(this).attr("id"),
+			textarea=$(this).find('textarea'),
+			mensaje=$(this).find('textarea').val(),
+			regId=$(this).find('.regIDform').val();
+		if(id!='' && mensaje!='' && regId!=''){
+			$("ul.devices li.over").addClass('s');
+			textarea.val('Enviando mensaje....');
+			$.ajax({
+				method:"POST",
+				url:"send_message.php",
+				data:{
+					idJefe:idJefe,
+					empleado:id,
+					message:mensaje,
+					regId:regId
+				}
+			}).done(function(msg){
+				$("ul.devices li.over").removeClass('s');
+				textarea.val('Mensaje enviado');
+				setTimeout(function(){
+					textarea.val("");
+				},1000);
+			}).fail(function(jqXHR,textStatus){
+				textarea.val(textStatus + " " + jqXHR['status'] + ', ' + jqXHR['statusText']);
+				setTimeout(function(){
+					textarea.val("");
+				},2000);
+			});
+		}
+		return false;
+	});
+	$(document).on("click","ul.devices li form button.editar",function(event){
+		event.preventDefault();
+		var empleado=$(this).parent().parent().find('.sempleado').text(),
+			expediente=$(this).parent().parent().find('.sexp').text(),
+			formuli=$(this).parent().parent().parent(),
+			idEmpleado=$(this).parent().find('.IDform').val(),
+			regIDform=$(this).parent().find('.regIDform').val(),
+			cuantosc=$(document).find("#showUP div h2.text_h2 span");
+			gcm_reg_usr_id=$(this).parent().find('.regIDform').val();
+			idDelJefe=idJefe;
+			cuantos=parseInt(cuantosc.text());
+		$("#loadPlace").load("edit.php", function(){
+			$("#overlay").fadeIn('slow');
+			$('#id-jefe').val(idJefe);
+			$('#id-usuario').val(idEmpleado);
+			$('#name-empleado').val(empleado);
+			$('#expediente').val(expediente);
+			$("#fcambiar_distro .districtOpcGeoTel option[value='2']").remove();
+			$.ajax({
+				type:"GET",
+				url:"http://10.105.116.52:9090/telmex/get/region/" + idEmpleado,
+				dataType:"json",
+				success:function(html){
+					var regiones_de=html.apiResponse[0];
+					if(regiones_de.length>0){
+						$("#fcambiar_distro").find('.distritosText').addClass('editoUser');
+						$.each(regiones_de,function(index,valor){
+							var laregi=regisdivareas(valor.regionTrabajo);
+							$("#fcambiar_distro").find('.listaDist').append("<li reg='" + valor.regionTrabajo + "'>" + laregi.regionT + "</li>");
+						});
+					}
+					else{
+						$("#fcambiar_distro").find('.distritosText').removeClass('editoUser');
+					}
+					$(".listaDist li").click(function(event){
+						$(".listaDist li").removeClass('sub');
+						$(this).addClass('sub');
+						quitame($(this));
+					});
+					$(".mensaje_elimina a").on("click",function(event){
+						event.preventDefault();
+						var opcion=$(this).attr('class'),
+							region=li_eli_region.attr('reg');
+						li_eli_region.removeClass('sub');
+						if(opcion=='si'){
+							$.ajax({
+								type:"DELETE",
+								url:ip_services_b + "/telmex/del/region/" + idEmpleado + "/" + region,
+								success:function(data,a,b){
+									li_eli_region.remove();
+								},
+								error:function(jqXHR,textStatus,error){
+									alert(textStatus + ' ' + error);
+								}
+							});
+						}
+						div_eli_region.hide();
+					});
+				}
+			});
+			$("#fcambiar_distro").on("submit",function(event){
+				event.preventDefault();
+				$("#overlay").fadeOut('fast');
+			});
+		});
+	});
+	$("#navigation a").stop().animate({"marginLeft":"-85px"},1000);
+	$("#navigation > li").hover(
+		function(){
+			$("a",$(this)).stop().animate({"marginLeft":"-2px"},200);
+		},
+		function(){
+			$("a",$(this)).stop().animate({"marginLeft":"-85px"},200);
+		}
+	);
+	if(tipoUser==5)
+		$('.mensajes').hide();
+	if(tipoUser==6)
+		$('.editar').hide();
+	if(tipoUser==7 || tipoUser<4)
+		window.location.href("./");
+	$(document).on("click","#newUser",function(event){
+		event.preventDefault();
+		$("html,body").animate({scrollTop:180},400);
+		if(adminUsersBolean==0){
+			adminUsersBolean=1;
+			var divadminusers=$("<div id='adminUsers'/>");
+			$("#intro").before(divadminusers);
+			divadminusers.load("administraUsers.php",function(){
+				$("#FormNewUser").find(".districtOpcGeoTel option[value='2']").remove();
+				$("#au_cierra").on("click",function(event){
+					event.preventDefault();
+					adminUsersBolean=0;
+					$(document).find('#adminUsers').remove();
+				});
+				$("#au_menu a").on("click",function(event){
+					event.preventDefault();
+					var id_div=$(this).attr('href');
+					$("#au_menu a").parent().removeClass('active');
+					$(this).parent().addClass('active');
+					$("#au_usuarios,#au_newusr,#FormNewUser #au_newusr h3,#FormNewUser .areasOpcGeoTelCombo,#FormNewUser .districtOpcGeoTelCombo,#FormNewUser .distritosText").hide();
+					$(id_div).show();
+					$(".FNUnom,.FNUexp,.FNUusu,.FNUeDI,.FNUpas").val('');
+					$(".divisionesGeoTel").val(0);
+					$("ul.listaDist").empty();
+				});
+				$("#FormNewUser").on("submit",function(event){
+					event.preventDefault();
+					var    name=$('.FNUnom').val(),
+							exp=$('.FNUexp').val(),
+						usuario=$('.FNUusu').val(),
+						 passwd=$('.FNUpas').val(),
+							rol=$('.FNUrol').val(),
+						   edit=$('.FNUeDI').val(),
+					   regiones=[],
+						    nvo;
+					$(".listaDist li").each(function(index){
+						regiones.push($(this).attr('reg'));
+					});
+					var ctos_reg=Object.keys(regiones).length;
+					if(name!='' && exp!='' && usuario!='' && passwd!='' && rol!='' && edit==''){
+						var arrSend={	role:{idRole:rol},
+										nombre:name,
+										usuario:usuario,
+										password:passwd,
+										expediente:exp,
+										cuenta:"true"
+									};
+						$.ajax({
+							type:"POST",
+							url:ip_services + "/telmex/add/user",
+							data:JSON.stringify(arrSend),
+							contentType:"application/json",
+							dataType:"json",
+							success:function(data,a,b){
+								nvo_id(data.apiResponse[0].idUsuario);
+								adminUsersBolean=0;
+								$(document).find('#adminUsers').remove();
+							},
+							error: function(jqXHR,textStatus,error){
+								alert(textStatus + ' - ' + error + ' - ' + jqXHR);
+							}
+						});
+					}
+					else if(name!='' && exp!='' && usuario!='' && rol!='' && edit!=''){
+						var update={idUsuario:edit,
+									role:{idRole:rol},
+									nombre:name,
+									usuario:usuario,
+									password:passwd,
+									expediente:exp,
+									cuenta:"true"
+								};
+						$.ajax({
+							type:"PUT",
+							url:ip_services + "/telmex/userUp",
+							data:JSON.stringify(update),
+							contentType:"application/json",
+							dataType:"json",
+							success:function(data,a,b){
+								nvo_id(edit);
+								adminUsersBolean=0;
+								$(document).find('#adminUsers').remove();
+							},
+							error:function(jqXHR,textStatus,error){
+							}
+						});
+					}
+					else alert('Por favor llena correctamente los campos.');
+					function nvo_id(nvo){
+						if(ctos_reg>0){
+							$.each(regiones,function(i,region){
+								$.post("postgre.php?hago=3",{
+									id:nvo,
+									reg:region
+								}).done(function(data){
+									var ex=parseInt(data);
+									if(ex==0){
+										var upnreg={idUsuario:{idUsuario:nvo},regionTrabajo:region};
+										$.ajax({
+											type:"POST",
+											url:ip_services + "/telmex/add/region",
+											data:JSON.stringify(upnreg),
+											contentType:"application/json",
+											dataType:"json",
+											success:function(data,a,b){	},
+											error:function(jqXHR,textStatus,error){
+												alert(textStatus + ' - ' + error + ' - ' + jqXHR);
+											}
+										});
+									}
+								}).fail(function(jqXHR,textStatus,error){
+									console.log(textStatus + ' - ' + error + ' - ' + jqXHR);
+								});
+							});
+						}
+					}
+				});
+				$(".au_eliminar").on("click",function(event){
+					event.preventDefault();
+					var ide=$(this).attr('data'),
+						tre=$(this);
+					var del={idUsuario:ide};
+					$.ajax({
+						type:"PUT",
+						url:ip_services_b + "/telmex/userDel",
+						data:JSON.stringify(del),
+						contentType:"application/json",
+						dataType:"json",
+						success:function(data,a,b){
+							tre.closest('tr').remove();
+						},
+						error:function(jqXHR,textStatus,error){
+						}
+					});
+				});
+				$(".au_editar").on("click",function(){
+					var ide=$(this).attr('data'),
+						tre=$(this);
+					var obj=jQuery.parseJSON('{' + ide + '}');
+					$.ajax({
+						type:"GET",
+						url:"http://10.105.116.52:9090/telmex/get/region/" + obj.usr_id,
+						dataType:"json",
+						success:function(html){
+							var regiones_de=html.apiResponse[0];
+							if(regiones_de.length>0){
+								$("#FormNewUser").find('.distritosText').addClass('editoUser');
+								$.each(regiones_de,function(index,valor){
+									var laregi=regisdivareas(valor.regionTrabajo);
+									$("#FormNewUser").find('.listaDist').append("<li reg='" + valor.regionTrabajo + "'>" + laregi.regionT + "</li>");
+								});
+							}
+							else{
+								$("#FormNewUser").find('.distritosText').removeClass('editoUser');
+							}
+							$("#au_menu a").parent().removeClass('active');
+							$("#au_usuarios").hide();
+							$("#au_newusr,#au_newusr h3").show();
+							$(".FNUnom").val(obj.usr_nombre);
+							$(".FNUexp").val(obj.expediente);
+							$(".FNUusu").val(obj.usr_user);
+							$(".FNUeDI").val(obj.usr_id);
+							$(".FNUrol").val(obj.id_role);
+							$(".listaDist li").click(function(event){
+								$(".listaDist li").removeClass('sub');
+								$(this).addClass('sub');
+								quitame($(this));
+							});
+							$(".mensaje_elimina a").on("click",function(event){
+								event.preventDefault();
+								var opcion=$(this).attr('class'),
+									region=li_eli_region.attr('reg'),
+									iduser=$(".FNUeDI").val();
+								li_eli_region.removeClass('sub');
+								if(opcion=='si'){
+									$.ajax({
+										type:"DELETE",
+										url:ip_services_b + "/telmex/del/region/" + iduser + "/" + region,
+										success:function(data,a,b){
+											li_eli_region.remove();
+										},
+										error:function(jqXHR,textStatus,error){
+											alert(textStatus + ' ' + error);
+										}
+									});
+								}
+								div_eli_region.hide();
+							});
+						}
+					});
+				});
+				$("table").tablesorter({
+					theme : 'blue',
+					sortList : [[1,0]],
+					headerTemplate : '{content}{icon}',
+					headers:{5:{sorter:false},6:{sorter:false}}
+				}).tablesorterPager({container:$("#pager")});
+			});
+		}
+	});
+	$("#broad_msg").on("submit",function(event){
+		event.preventDefault();
+		var message_all=$('#message_all').val(),
+			regId_all=nvoDivi + '-' + nvoArea + '-' + $('.listaDist li').text();
+		if(message_all!='' && regId_all!=''){
+			$('#message_all').val('Enviando mensaje....');
+			$.ajax({
+				method:"POST",
+				url:"send_broadcast.php",
+				data:{
+					idJefe:idJefe,
+					message_all:message_all,
+					regId_all:regId_all
+				}
+			}).done(function(msg){
+				$('#message_all').val('Mensaje enviado');
+				setTimeout(function(){
+					$('#message_all').val('');
+				},1000);
+			}).fail(function(jqXHR,textStatus){
+				alert(textStatus + " " + jqXHR['status'] + ', ' + jqXHR['statusText']);
+			});
+		}
+	});
+	$("#salir").on("click",function(event){
+		event.preventDefault();
+		document.cookie = "cCuatroV=; expires=Thu, 01-Jan-70 00:00:01 GMT;";
+		$.get("logout.php");
+		console.log('sali');
+		window.location="./"
+	});
+});
+//window.onbeforeunload = confirmExit;
+function confirmExit(){
+	document.cookie = "cCuatroV=; expires=Thu, 01-Jan-70 00:00:01 GMT;";
+	$.get("logout.php");
+	console.log('sali');
+//  return false;
+}
+//document.oncontextmenu=new Function("return false;");
+$(window).load(function(){
+	setTimeout(function(){
+		$("section.mainloader").remove();
+		setTimeout(function(){
+			$("#index-banner").addClass('cierra');
+		},2000);
+	},800);
+});

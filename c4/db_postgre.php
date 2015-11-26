@@ -21,11 +21,16 @@ class db_Postgre{
 	}
 	function __destruct(){ }
 // usuarios: usr_id - id_role - usr_nombre - usr_user - usr_pwd - region_trabajo - expediente - create_at
-	public function storeUsuarios($id_role,$usr_nombre,$usr_user,$usr_pwd,$region_trabajo,$expediente){
-		$this->result=pg_query("INSERT INTO usuarios(id_role,usr_nombre,usr_user,usr_pwd,region_trabajo,expediente,create_at)
-				VALUES('".$id_role."','".$usr_nombre."','".$usr_user."','".$usr_pwd."','".$region_trabajo."','".$expediente."',NOW());") or die('ERROR AL INSERTAR DATOS: '.pg_last_error());
-		$this->oid = pg_last_oid($this->result);
-		return $result;
+	public function storeUsuarios($id_role,$usr_nombre,$usr_user,$usr_pwd,$expediente){
+		$this->result=pg_query("INSERT INTO usuarios(
+					id_role,usr_nombre,usr_user,usr_pwd,expediente)
+			VALUES('".$id_role."','".$usr_nombre."',
+					'".$usr_user."','".$usr_pwd."',
+					'".$expediente."')
+					RETURNING usr_id;") or die('ERROR AL INSERTAR DATOS: '.pg_last_error());
+		$insert_row=pg_fetch_row($this->result);
+		$insert_id=$insert_row[0];
+		return $insert_id;
 	}
 	public function getUsuarios(){
 		$this->i=0;$this->ar=array();
@@ -51,15 +56,44 @@ class db_Postgre{
 		}
 		return $this->ar;
 	}
-	public function updateUser($region_trabajo,$id){
-		$this->result=pg_query("UPDATE usuarios SET region_trabajo='".$region_trabajo."'
-								WHERE usr_id=".$id.";") or die('ERROR AL INSERTAR DATOS: '.pg_last_error());
-		return $result;
+//Actualiza al usuario
+	public function updateUser($id,$id_role,$usr_nombre,$usr_user,$usr_pwd,$expediente){
+		$act_pass='';
+		if($usr_pwd!='')
+			$act_pass="usr_pwd='".$usr_pwd."',";
+		$this->result=pg_query("UPDATE usuarios SET
+				id_role='".$id_role."',
+				usr_nombre='".$usr_nombre."',
+				usr_user='".$usr_user."',
+				".$act_pass."
+				expediente='".$expediente."'
+			WHERE usr_id=".$id.";") or die('ERROR AL INSERTAR DATOS: '.pg_last_error());
+		return 'Usuario '.$id.' editado';
+	}
+//Actualiza las regiones
+	public function eliminaRegiones($id){
+		$this->result=pg_query("DELETE FROM region_trabajo
+				WHERE id_usr=".$id.";") or die('ERROR AL INSERTAR DATOS: '.pg_last_error());
+		return 'Regiones del usuario '.$id.' eliminadas';
+	}
+	public function storeRegion($id,$region_trabajo){
+		$this->result=pg_query("INSERT INTO region_trabajo(id_usr,region)
+				VALUES('".$id."','".$region_trabajo."')
+			RETURNING id;") or die('ERROR AL INSERTAR DATOS: '.pg_last_error());
+		$insert_row=pg_fetch_row($this->result);
+		$insert_id=$insert_row[0];
+		return $insert_id;
 	}
 	public function eliminaUser($id){
 		$this->result=pg_query("DELETE FROM usuarios WHERE usr_id=".$id.";") or die('ERROR AL INSERTAR DATOS: '.pg_last_error());
 		$this->result=pg_query("DELETE FROM gcm_users WHERE id_usr=".$id.";") or die('ERROR AL INSERTAR DATOS: '.pg_last_error());
-		return $result;
+		return 'Usuario '.$id.' eliminado';
+	}
+	public function reviveUser($id){
+		$this->result=pg_query("UPDATE usuarios SET
+				cuenta='true'
+			WHERE usr_id=".$id.";") or die('ERROR AL ACTUALIZAR CUENTA: '.pg_last_error());
+		return 'Usuario '.$id.' revivido';
 	}
 // mensajes: id - id_jefe - id_usr - mensaje - created_at - status_leido
 	public function storeMensajes($id_jefe,$id_usr,$mensaje){
@@ -120,6 +154,48 @@ class db_Postgre{
 	public function getAllGcmIds(){
 		$this->i=0;$this->ar=array();
 		$this->result=pg_query("SELECT gcm_regid FROM gcm_users;") or die('ERROR: '.pg_last_error());
+		while($this->row_db = pg_fetch_array($this->result,NULL,PGSQL_ASSOC)){
+			$this->ar[$this->i]=$this->row_db;
+			$this->i++;
+		}
+		return $this->ar;
+	}
+//Regiones de trabajo
+	public function getAllRegionesTrabajo(){
+		$this->i=0;$this->ar=array();
+		$this->result=pg_query("SELECT * FROM region_trabajo") or die('ERROR: '.pg_last_error());
+		while($this->row_db = pg_fetch_array($this->result,NULL,PGSQL_ASSOC)){
+			$this->ar[$this->i]=$this->row_db;
+			$this->i++;
+		}
+		return $this->ar;
+	}
+	public function getRegionTrabajo($id,$reg){
+		$this->i=0;$this->ar=array();
+		$this->result=pg_query("SELECT * FROM region_trabajo
+			WHERE id_usr=".$id." AND region='".$reg."';") or die('ERROR: '.pg_last_error());
+		while($this->row_db = pg_fetch_array($this->result,NULL,PGSQL_ASSOC)){
+			$this->ar[$this->i]=$this->row_db;
+			$this->i++;
+		}
+		return $this->i;
+	}
+	public function getRegionTrabajoCrea($id,$reg){
+		$this->i=0;$this->ar=array();
+		$this->result=pg_query("SELECT * FROM region_trabajo
+			WHERE id_usr=".$id." AND region='".$reg."';") or die('ERROR: '.pg_last_error());
+		while($this->row_db = pg_fetch_array($this->result,NULL,PGSQL_ASSOC)){
+			$this->ar[$this->i]=$this->row_db;
+			$this->i++;
+		}
+		if($this->i==0)
+			$this->storeRegion($id,$reg);
+		return $this->i;
+	}
+//Todas las tablas
+	public function getAllTablas(){
+		$this->i=0;$this->ar=array();
+		$this->result=pg_query("SELECT * FROM information_schema.tables") or die('ERROR: '.pg_last_error());
 		while($this->row_db = pg_fetch_array($this->result,NULL,PGSQL_ASSOC)){
 			$this->ar[$this->i]=$this->row_db;
 			$this->i++;
@@ -271,8 +347,28 @@ function regiones($region){
 		if($zonas[1]==68)$regiones['area']='Mexicali';
 		if($zonas[1]==69)$regiones['area']='Tijuana';
 	}
-	$regiones['distrito']=$zonas[2];
-	$regiones['region']=$regiones['division'].'-'.$regiones['area'].'-'.$zonas[2];
+	$regiones['distrito']='';
+	$regiones['colonia']='';
+	if($zonas[2]!='0')
+		$regiones['distrito']=$zonas[2];
+	if($zonas[3]!='0')
+		$regiones['colonia']=$zonas[3];
+	if($zonas[2]!='0' && $zonas[3]=='0'){
+		$regiones['region']=$regiones['division'].', '.$regiones['area'].', '.$zonas[2];
+		$regiones['regionT']='<span>Distrito:</span> '.$regiones['division'].', '.$regiones['area'].', '.$zonas[2];
+	}
+	elseif($zonas[2]=='0' && $zonas[3]=='0'){
+		$regiones['region']=$regiones['division'].', '.$regiones['area'];
+		$regiones['regionT']='<span>Area:</span> '.$regiones['division'].', '.$regiones['area'];
+	}
+	else if($zonas[2]=='0' && $zonas[3]!='0'){
+		$regiones['region']=$regiones['division'].', '.$regiones['area'].', '.$zonas[3];
+		$regiones['regionT']='<span>Colonia:</span> '.$regiones['division'].', '.$regiones['area'].', '.$zonas[3];
+	}
+	else if($zonas[2]!='0' && $zonas[3]!=0){
+		$regiones['region']=$regiones['division'].', '.$regiones['area'].', '.$zonas[3].', '.$zonas[2];
+		$regiones['regionT']='<span>Distrito/Colonia:</span> '.$regiones['division'].', '.$regiones['area'].', '.$zonas[3].', '.$zonas[2];
+	}
 	$regiones['original']=$region;
 	return $regiones;
 }

@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Telmex  | Dashboard</title>
+    <title>Telmex Operaciones Terrestres - C4</title>
     <link href="min/plugin-min.css" type="text/css" rel="stylesheet">
     <link href="min/custom-min.css" type="text/css" rel="stylesheet" >
     <link rel="stylesheet" href="css/custum.css">
@@ -30,8 +30,8 @@
          </div>
         </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" charset="UTF-8"></script>
-    <script src="js/materialize.min.js"></script>
-    <script type="text/javascript" src="js/mapa.js"></script>
+    <script src="js/jquery.min.js" charset="UTF-8"></script>
+    <script src="js/materialize.min.js" charset="UTF-8"></script>
+    <script src="js/mapa.js" charset="UTF-8"></script>
 </body>
 </html>

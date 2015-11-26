@@ -5,9 +5,10 @@
     <link rel="shortcut icon" href="img/favico.gif">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
     <meta name="theme-color" content="#2196F3">
-    <title>Telmex C4</title>
+    <title>Telmex Operaciones Terrestres - C4</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" charset="UTF-8"></script>
+
     <?php include_once 'variables.php'; echo $var_script; ?>
 
     <link href="min/plugin-min.css" type="text/css" rel="stylesheet">
@@ -17,11 +18,11 @@
 </head>
 <body id="top" class="scrollspy dentroc4">
 <!-- Pre Loader -->
-<div id="loader-wrapper">
-    <div id="loader"></div>
-    <div class="loader-section section-left"></div>
-    <div class="loader-section section-right"></div>
-</div>
+<section class="mainloader">
+    <div class="bar">
+        <i class="sphere"></i>
+    </div>
+</section>
 <!--Navigation-->
  <div class="navbar-fixed">
     <nav id="nav_f" class="default_color" role="navigation">
@@ -79,7 +80,7 @@
                 <li class="over"><span>Enviando mensaje</span></li>
             </ul>
         </div>
-
+<div id="mapaggg"></div>
         <div class="section scrollspy">
             <div class="container">
                 <div class="row">
@@ -158,7 +159,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col s12 m4 l4">
+            <!-- div class="col s12 m4 l4">
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
                         <img class="activator" src="img/playa.png">
@@ -202,14 +203,14 @@
                         <p>Here is some more information about this project that is only revealed once clicked on.</p>
                     </div>
                 </div>
-            </div>
+            </div -->
         </div>
     </div>
 </div>
 <!--Parallax-->
-<div class="parallax-container">
+<!-- div class="parallax-container">
     <div class="parallax"><img src="img/parallax1.png"></div>
-</div>
+</div -->
 <!--Team-->
 <div class="section scrollspy" id="team">
     <div class="container">
@@ -384,22 +385,26 @@
 </footer>
 <div id="overlay">
     <div class="inner">
-        <div id="close-overlay" onclick="overlayClose();"><span>x</span></div>
+        <div id="close-overlay" onclick="overlayClose();">
+            <h3><span>Telmex</span> C4</h3>
+            <span>x</span>
+        </div>
         <div id="laod">
-            <div class="logo-box">
-                <h3><span>Telmex</span> C4</h3>
-            </div>
             <div id="loadPlace">
             </div>
         </div>
     </div>
 </div>
-    <!--  Scripts-->
-    <script src="min/plugin-min.js" charset="UTF-8"></script>
-    <script src="min/custom-min.js" charset="UTF-8"></script>
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js" charset="UTF-8"></script>
-    <script src="js/materialize.min.js" charset="UTF-8"></script>
-    <script src="js/mapa.js" charset="UTF-8"></script>
-    <script src="js/c4.js" charset="UTF-8"></script>
-    </body>
+<div id="notificaciones"></div>
+<script src="min/plugin-min.js" charset="UTF-8"></script>
+<script src="min/custom-min.js" charset="UTF-8"></script>
+<!-- script src="http://maps.googleapis.com/maps/api/js?sensor=false" charset="UTF-8"></script>
+<script src="js/gmap3.min.js" charset="UTF-8"></script -->
+<script src="js/jquery-ui.js" charset="UTF-8"></script>
+<script src="js/jquery.tablesorter.min.js" charset="UTF-8"></script>
+<script src="js/jquery.tablesorter.pager.js" charset="UTF-8"></script>
+<script src="js/materialize.min.js" charset="UTF-8"></script>
+<script src="js/mapa.js" charset="UTF-8"></script>
+<script src="js/c4.js" charset="UTF-8"></script>
+</body>
 </html>
