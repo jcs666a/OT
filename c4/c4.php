@@ -11,10 +11,10 @@
 
     <?php include_once 'variables.php'; echo $var_script; ?>
 
-    <link href="min/plugin-min.css" type="text/css" rel="stylesheet">
-    <link href="min/custom-min.css" type="text/css" rel="stylesheet" >
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="css/custum.css">
+    <link href="min/plugin-min.css" type="text/css" rel="stylesheet" />
+    <link href="min/custom-min.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="css/custum.css" />
 </head>
 <body id="top" class="scrollspy dentroc4">
 <!-- Pre Loader -->
@@ -54,6 +54,7 @@
 </div>
 <!--Intro and service-->
     <div id="intro" class="section scrollspy">
+        <div id="mapaggg"></div>
         <div id="filter-box" class="editar">
             <h4>Seleccione los filtros para ver el detalle.</h4>
             <?php include 'distritos.php';?>
@@ -71,7 +72,6 @@
                 </div>
             </form>
         </div>
-
         <div id="showUP">
             <div  class="col s12">
                 <h2 class="center header text_h2"></h2>
@@ -80,7 +80,6 @@
                 <li class="over"><span>Enviando mensaje</span></li>
             </ul>
         </div>
-<div id="mapaggg"></div>
         <div class="section scrollspy">
             <div class="container">
                 <div class="row">
@@ -396,10 +395,11 @@
     </div>
 </div>
 <div id="notificaciones"></div>
+
 <script src="min/plugin-min.js" charset="UTF-8"></script>
 <script src="min/custom-min.js" charset="UTF-8"></script>
-<!-- script src="http://maps.googleapis.com/maps/api/js?sensor=false" charset="UTF-8"></script>
-<script src="js/gmap3.min.js" charset="UTF-8"></script -->
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp" charset="UTF-8"></script>
+<script src="js/pintaMapa.js" charset="UTF-8"></script>
 <script src="js/jquery-ui.js" charset="UTF-8"></script>
 <script src="js/jquery.tablesorter.min.js" charset="UTF-8"></script>
 <script src="js/jquery.tablesorter.pager.js" charset="UTF-8"></script>

@@ -30,6 +30,7 @@
          </div>
         </div>
     </div>
+    <div id="notificaciones"></div>
     <script src="js/jquery.min.js" charset="UTF-8"></script>
     <script src="js/materialize.min.js" charset="UTF-8"></script>
     <script src="js/mapa.js" charset="UTF-8"></script>

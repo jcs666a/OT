@@ -620,8 +620,8 @@ body.dentroc4
 				outline none
 	#mapaggg
 		width 100%
-		height 300px
-		display none
+		height 350px
+		display block
 	#index-banner.section.no-pad-bot
 		transition all 1s ease
 		div
@@ -819,6 +819,7 @@ body.dentroc4
 									border-bottom 1px solid #ddd
 									position absolute
 									pointer-events none
+body
 	#notificaciones
 		position fixed
 		top 0
@@ -830,8 +831,8 @@ body.dentroc4
 		padding 10px
 		overflow hidden
 		div.tn
-			background #ffe691
-			border 1px solid #f6db7b
+			background #4DBCE9
+			border 1px solid #26ADE4
 			border-radius 8px
 			margin 5px
 			padding 15px
@@ -839,7 +840,7 @@ body.dentroc4
 			opacity 0
 			animation fadeOut 5s linear forwards
 			h2,p
-				color #7d5912
+				color #222
 				margin 0
 				padding 0
 				line-height 1
@@ -849,13 +850,23 @@ body.dentroc4
 			.tn-progress
 				width 0
 				height 4px
-				background rgba(255,255,255,0.3)
+				background rgba(255,255,255,0.2)
 				position absolute
 				bottom 5px
 				left 2%
 				border-radius 3px
 				box-shadow inset 0 1px 1px rgba(0,0,0,0.05),0 -1px 0 rgba(255,255,255,0.6)
 				animation runProgress 4s linear forwards 0.5s
+		div.tn.error
+			background #E53935
+			h2,p
+				color #fff
+				text-shadow 0 1px 1px rgba(0,0,0,0.6)
+		div.tn.advertencia
+			background #F8CA00
+			h2,p
+				color #444
+				text-shadow 0 1px 1px rgba(255,255,255,0.6)
 @media (max-width: 500px)
 	body
 		font-size .8em
@@ -875,7 +886,7 @@ body.dentroc4
 @keyframes runProgress
 	0%
 		width 0%
-		background rgba(255,255,255,0.3)
+		background rgba(255,255,255,0.2)
 	100%
-		width 96%
+		width 85%
 		background rgba(255,255,255,1)

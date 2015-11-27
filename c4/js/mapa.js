@@ -1,4 +1,4 @@
-var div_eli_region,li_eli_region,gcm_reg_usr_id,idDelJefe;
+var div_eli_region,li_eli_region,gcm_reg_usr_id,idDelJefe,tipoUser="6",textAreaG,activadistrito=0,busca_col_o_dist='';
 function regisdivareas(region){
 	var res=region.split("-"),
 		regiones=[];
@@ -130,6 +130,39 @@ function quitame(li){
 	div_eli_region=li.parent().parent().find('.mensaje_elimina');
 	$(div_eli_region).show();
 }
+function creanotificacion(titulo,mensaje,error,textStatus,clase){
+	var op=''; if(error!='') op='<p>' + error + ' ' + textStatus + '</p>';
+	$('#notificaciones').append('<div class="tn ' + clase + '">' +
+		'<h2>' + titulo + '</h2>' +
+		'<p>' + mensaje + '</p>' + op +
+		'<div class="tn-progress"></div>' +
+	'</div>');
+	setTimeout(function(){$('#notificaciones').find(".tn").first().remove();},5000);
+}
+function mapaselecta(div){
+	var url = "http://10.105.116.52:9090/getDivisionByName/geoJson/" + div,
+		llave = "Division-"+trimer(div),
+		tipoArea = "todas";
+	limpiaDivs();
+	obtieneAreasDivis(llave,url,tipoArea,'7AA7D6');
+}
+function mapaselectb(reg){
+	var url = "http://10.105.116.52:9090/getAreaByName/geoJson/" + reg,
+		llave = "Area-"+trimer(reg),
+		tipoArea = "todas";
+	obtieneAreasDivis(llave,url,tipoArea,'7B86E2');
+}
+function mapaselectc(distri){
+	if(busca_col_o_dist=='distritos'){
+		var url = "http://10.105.116.52:9090/telmex/necropsia/reporte/distrito";
+			llave="Distritos-"+trimer(textAreaG),
+			dtags=[distri];
+		obtieneDistrics(llave,url,nvoArea,dtags,'E5C943');
+	}
+	else if(busca_col_o_dist=='colonias'){
+		limpiaDistricts();
+	}
+}
 $(function(){
 	$(document).on("change",".divisionesGeoTel",function(){
 		var	op=$(this).val(),
@@ -137,6 +170,7 @@ $(function(){
 			tc=$(this).children("option").filter(":selected").text();
 		todosdiv=$(this).parent().parent().parent().attr('id');
 		nvoDivi=op;
+		mapaselecta(tc);
 		if(todosdiv=='filter-box'){
 			$('#container_mensajes,#showUP').hide();
 			ap.parent().parent().parent().find('.listaDist').html('');
@@ -155,36 +189,16 @@ $(function(){
 			$(ap).parent().parent().next('div').next('div').next('div').hide();
 			$(ap).parent().parent().next('div').find('select').children().remove().end().append(msg);
 		});
-		divisiones.fail(function(jqXHR,textStatus){
-			alert( "Request failed: " + textStatus );
+		divisiones.fail(function(jqXHR,textStatus,error){
+			creanotificacion('Error:',
+				'No se pudo conectar al servicio para obtener las areas.',
+				error,textStatus,'error');
 		});
-/*		$.ajax({
-			type:"GET",
-			url: "mapa.php?tipo=division&cual=" + tc,
-			success:function(data,a,b){
-//				console.log(data);
-				var mapaareap=JSON.parse(data);
-				console.log(mapaareap); */
-/*				$("#mapaggg").gmap3({
-					polygon:{
-						options:{
-							strokeColor: "#FFFF00",
-							strokeOpacity: 0.8,
-							strokeWeight: 2,
-							fillColor: "#FFFF00",
-							fillOpacity: 0.35,
-							paths:mapaareap
-						}
-					} 
-				}); */
-/*			},
-			error: function(jqXHR, textStatus, error){
-				console.log(error, jqXHR, textStatus);
-			}
-		}); */
 	});
 	$(document).on("change",".areasGeoTel",function(){
 		nvoArea=$(this).val();
+		textAreaG=$(this).children("option").filter(":selected").text();
+		mapaselectb(textAreaG);
 		todosdiv=$(this).parent().parent().parent().attr('id');
 		$(this).parent().parent().next('div').find(".districtOpcGeoTel").val('0');
 		$(this).parent().parent().next('div').slideDown();
@@ -224,7 +238,13 @@ $(function(){
 				url: urldis,
 				dataType:"json",
 				success:function(html){
+					busca_col_o_dist='distritos';
 					dG.attr("placeholder","Buscar distrito").autocomplete({source:html});
+				},
+				error: function(jqXHR, textStatus, error){
+					creanotificacion('Error:',
+						'No se pudo conectar al servicio para obtener los distritos.',
+						error,textStatus,'error');
 				}
 			});
 			$(this).parent().parent().next('div').slideDown();
@@ -237,7 +257,13 @@ $(function(){
 				dataType:"json",
 				cache:false,
 				success:function(html){
+					busca_col_o_dist='colonias';
 					dG.attr("placeholder","Buscar colonia").autocomplete({source:html.apiResponse});
+				},
+				error: function(jqXHR, textStatus, error){
+					creanotificacion('Error:',
+						'No se pudo conectar al servicio para obtener las colonias.',
+						error,textStatus,'error');
 				}
 			});
 			$(this).parent().parent().next('div').slideDown();
@@ -245,6 +271,7 @@ $(function(){
 		}
 		else if(op=="2"){
 			var region_solo_area=nvoDivi + '-' + nvoArea + '-';
+			limpiaDistricts();
 			$("#showUP").fadeIn('fast',function(){
 				$.ajax({
 					type:"GET",
@@ -289,264 +316,208 @@ $(function(){
 						}
 					},
 					error: function(jqXHR, textStatus, error){
+						creanotificacion('Error:',
+							'No se pudo conectar al servicio para obtener los usuarios de la region seleccionada.',
+							error,textStatus,'error');
 					}
 				});
 			});
-/*			dT.slideUp();
-			var xarreglo=[]; // xarreglo.push("Kiwi");
-			$.ajax({
-				type:"GET",
-				url:urldis
-			}).done(function(html){
-				var totalI=html.length;
-				creaDevices(html,totalI);
-			}).fail(function(jqXHR,textStatus){
-				console.log(error, jqXHR, textStatus);
-			});
-			function meteAxArreglo(ids,arrr){
-				ids=parseInt(ids);
-				xarreglo[ids]=arrr;
-			}
-			function creaXarreglo(){
-				var conte=$("#showUP"),
-					title=$("#showUP div h2.text_h2"),
-					devic=$("#showUP ul.devices")
-					mi=0;
-				$("#showUP ul.devices li").not(':first').remove();
-				$.each(xarreglo,function(i,item){
-					if(item!==undefined)
-						mi++;
-					devic.append(item);
-				});
-				if(mi==0){
-					$('#container_mensajes').hide();
-					title.html('No se encontraron dispositivos de esa región');
-				}
-				else
-					title.html('Dispositivos Registrados: <span>' + mi +'</span>');
-				conte.fadeIn();
-			}
-			function creaDevices(html,totalI){
-				$.each(html,function(i,atem){
-					region=nvoDivi + '-' + nvoArea + '-' + atem + '-0';
-					var xi=i;
-					$.ajax({
-						type:"GET",
-						url:ip_services + "/telmex/get/usuariosregion/" + region
-					}).done(function(data){
-						var datos=data.apiResponse[0];
-							$.each(datos,function(index,item){
-								var reere=regisdivareas(item[5]);
-								meteAxArreglo(item[0],
-									'<li>' +
-										'<form id="' + item[0] + '" name="" method="post">' +
-											'<label class="blue-text">Nombre:</label>' +
-											'<span class="sempleado black-text"> ' + item[2] + '</span>' +
-											'<div class="clear"></div>' +
-											'<label class="blue-text">Exp:</label>' +
-											'<span class="sexp black-text"> ' + item[5] + '</span>' +
-											'<div class="clear"></div>' +
-											'<div class="send_container">' +
-												'<textarea rows="3" id="mensaje" name="message" placeholder="Mensaje"></textarea>' +
-												'<input type="hidden" class="IDform" name="Id" value="' + item[0] + '"/>' +
-												'<input type="hidden" class="regIDform" name="regId" value="' + item[9] + '"/>' +
-												'<button class="btn waves-effect waves-light red darken-1 mensajes" type="submit">Enviar' +
-													'<i class="mdi-content-send right white-text"></i>' +
-												'</button> &nbsp; ' +
-												'<button class="btn waves-effect waves-light green accent-4 triggerOverlay editar">Reasignar' +
-													'<i class="mdi-navigation-refresh right white-text"></i>' +
-												'</button>' +
-											'</div>' +
-										'</form>' +
-									'</li>');
-							});
-							if(xi===totalI-1)
-								creaXarreglo();
-					}).fail(function(jqXHR,textStatus){
-						console.log(error, jqXHR, textStatus);
-					});
-				});
-			} */
 		}
 		else dT.slideUp();
 	});
+	$(document).on("keypress",".distritosGeoTel",function(){
+		activadistrito=0;
+	});
+	$(document).on("click",".ui-autocomplete li",function(){
+		activadistrito=1;
+	});
 	$(document).on("click","small.agregarDistrito",function(){
-		var dist=$(this).parent().find('.distritosGeoTel').val(),
-			divi=$(this).parent(),
-		  region,reer,
-		elformul=$(this).parent().parent(),
-		todosdiv=$(this).parent().parent().attr('id');
-		if (dist==""){
-			alert("Debes escribir un nombre de distrito");
-		}else{
-			$(this).parent().find('.distritosGeoTel').val("");
-			$(this).parent().find('.distritosGeoTel').focus();
-			if(dis_o_col=='distritos')
-				region=nvoDivi + '-' + nvoArea + '-' + dist+'-0';
-			else if(dis_o_col=='colonias')
-				region=nvoDivi + '-' + nvoArea + '-0-' + dist;
-			reer=regisdivareas(region);
-			if(todosdiv=='filter-box'){
-				$(this).parent().find('.listaDist').html("<li>"+dist+"</li>");
-				$(this).parent().find(".listaDist > li").hide();
-				$('#container_mensajes').find('h3.header span').html(reer.region);
-				$('#container_mensajes').find('textarea').val('');
-				$('#container_mensajes').slideDown();
-				$('#container_mensajes').find('h3.header span').click(function(event){
-					$('#container_mensajes').hide();
-				});
-				$("#showUP").fadeIn('fast',function(){
-					$.ajax({
-						type:"GET",
-						url:ip_services + "/telmex/get/usuariosregion/" + region,
-						success:function(data,a,b){
-							var datos=data.apiResponse[0],
-								conte=$("#showUP"),
-								title=$("#showUP div h2.text_h2"),
-								devic=$("#showUP ul.devices");
-							var cntos=Object.keys(datos).length;
-							$("#showUP ul.devices li").not(':first').remove();
-							if(cntos>0){
-								title.html('Dispositivos Registrados: <span>' + cntos + '</span>');
-								jQuery.each(datos,function(i,item){
-									devic.append(
-										'<li>' +
-											'<form id="' + item[0] + '" name="" method="post">' +
-												'<label class="blue-text">Nombre:</label>' +
-												'<span class="sempleado black-text"> ' + item[2] + '</span>' +
-												'<div class="clear"></div>' +
-												'<label class="blue-text">Exp:</label>' +
-												'<span class="sexp black-text"> ' + item[5] + '</span>' +
-												'<div class="clear"></div>' +
-												'<div class="send_container">' +
-													'<textarea rows="3" id="mensaje" name="message" placeholder="Mensaje"></textarea>' +
-													'<input type="hidden" class="IDform" name="Id" value="' + item[0] + '"/>' +
-													'<input type="hidden" class="regIDform" name="regId" value="' + item[9] + '"/>' +
-													'<button class="btn waves-effect waves-light red darken-1 mensajes" type="submit">Enviar' +
-														'<i class="mdi-content-send right white-text"></i>' +
-													'</button> &nbsp; ' +
-													'<button class="btn waves-effect waves-light green accent-4 triggerOverlay editar">Reasignar' +
-														'<i class="mdi-navigation-refresh right white-text"></i>' +
-													'</button>' +
-												'</div>' +
-											'</form>' +
-										'</li>');
-								});
-							}
-							else{
-								$('#container_mensajes').hide();
-								title.html('No se encontraron dispositivos de esa región');
-							}
-						},
-						error: function(jqXHR, textStatus, error){
-						}
+		if(activadistrito==1){
+			var dist=$(this).parent().find('.distritosGeoTel').val(),
+				divi=$(this).parent(),
+			  region,reer,
+			elformul=$(this).parent().parent(),
+			todosdiv=$(this).parent().parent().attr('id');
+			if(dist==""){
+				creanotificacion('Notificación:',
+					'Debes seleccionar un distrito o colonia de la lista.','','','');
+			}else{
+				$(this).parent().find('.distritosGeoTel').val("");
+				$(this).parent().find('.distritosGeoTel').focus();
+				if(dis_o_col=='distritos')
+					region=nvoDivi + '-' + nvoArea + '-' + dist+'-0';
+				else if(dis_o_col=='colonias')
+					region=nvoDivi + '-' + nvoArea + '-0-' + dist;
+				reer=regisdivareas(region);
+				if(todosdiv=='filter-box'){
+					mapaselectc(reer.distrito);
+					$(this).parent().find('.listaDist').html("<li>"+dist+"</li>");
+					$(this).parent().find(".listaDist > li").hide();
+					$('#container_mensajes').find('h3.header span').html(reer.region);
+					$('#container_mensajes').find('textarea').val('');
+					$('#container_mensajes').slideDown();
+					$('#container_mensajes').find('h3.header span').click(function(event){
+						$('#container_mensajes').hide();
 					});
-				});
-			}
-			else if(todosdiv=='fcambiar_distro'){
-				var laregi=regisdivareas(region),
-					idEmpleado=$(elformul).find('#id-usuario').val();
-				$(elformul).addClass('cambiando');
-				if(gcm_reg_usr_id!='' && region!='' && idDelJefe!='' && idEmpleado!=''){
-					function envia_mensaje(){
+					$("#showUP").fadeIn('fast',function(){
 						$.ajax({
-							method:"POST",
-							url:"edit_b.php",
-							data:{
-								idJefe:idDelJefe,
-								empleado:idEmpleado,
-								distrito:region,
-								regIDform:gcm_reg_usr_id
-							}
-						}).done(function(msg){
-							$(elformul).removeClass('cambiando');
-							$(elformul).find('.listaDist').append("<li reg='" + region + "'>"+laregi.region+"</li>");
-						}).fail(function(jqXHR,textStatus){
-							alert(textStatus + " " + jqXHR['status'] + ', ' + jqXHR['statusText']);
-						});
-					}
-					function crea_region(){
-						var upnreg={idUsuario:{idUsuario:idEmpleado},regionTrabajo:region};
-						$.ajax({
-							type:"POST",
-							url:ip_services + "/telmex/add/region",
-							data:JSON.stringify(upnreg),
-							contentType:"application/json",
-							dataType:"json",
+							type:"GET",
+							url:ip_services + "/telmex/get/usuariosregion/" + region,
 							success:function(data,a,b){
-								envia_mensaje();
+								var datos=data.apiResponse[0],
+									conte=$("#showUP"),
+									title=$("#showUP div h2.text_h2"),
+									devic=$("#showUP ul.devices");
+								var cntos=Object.keys(datos).length;
+								$("#showUP ul.devices li").not(':first').remove();
+								if(cntos>0){
+									title.html('Dispositivos Registrados: <span>' + cntos + '</span>');
+									jQuery.each(datos,function(i,item){
+										devic.append(
+											'<li>' +
+												'<form id="' + item[0] + '" name="" method="post">' +
+													'<label class="blue-text">Nombre:</label>' +
+													'<span class="sempleado black-text"> ' + item[2] + '</span>' +
+													'<div class="clear"></div>' +
+													'<label class="blue-text">Exp:</label>' +
+													'<span class="sexp black-text"> ' + item[5] + '</span>' +
+													'<div class="clear"></div>' +
+													'<div class="send_container">' +
+														'<textarea rows="3" id="mensaje" name="message" placeholder="Mensaje"></textarea>' +
+														'<input type="hidden" class="IDform" name="Id" value="' + item[0] + '"/>' +
+														'<input type="hidden" class="regIDform" name="regId" value="' + item[9] + '"/>' +
+														'<button class="btn waves-effect waves-light red darken-1 mensajes" type="submit">Enviar' +
+															'<i class="mdi-content-send right white-text"></i>' +
+														'</button> &nbsp; ' +
+														'<button class="btn waves-effect waves-light green accent-4 triggerOverlay editar">Reasignar' +
+															'<i class="mdi-navigation-refresh right white-text"></i>' +
+														'</button>' +
+													'</div>' +
+												'</form>' +
+											'</li>');
+									});
+								}
+								else{
+									$('#container_mensajes').hide();
+									title.html('No se encontraron dispositivos de esa región');
+								}
 							},
 							error:function(jqXHR,textStatus,error){
-								alert(textStatus + ' - ' + error + ' - ' + jqXHR);
+								creanotificacion('Error:',
+									'No se pudo conectar al servicio para regresar la lista de usuarios de la región seleccionada.',
+									error,textStatus,'error');
 							}
 						});
-					}
-					$.post("postgre.php?hago=3",{
-						id:idEmpleado,
-						reg:region
-					}).done(function(data){
-						var ex=parseInt(data);
-						if(ex==0)
-							crea_region();
-						else{
-							$(elformul).removeClass('cambiando');
-							$('#notificaciones').append('<div class="tn">' +
-									'<h2>Notificación:</h2>' +
-									'<p>Ya estaba asignado a ' + laregi.region + '</p>' +
-									'<div class="tn-progress"></div>' +
-								'</div>');
-							setTimeout(function(){$("#notificaciones").empty();},5000);
-						}
-					}).fail(function(jqXHR,textStatus,error){
-						console.log(textStatus + ' - ' + error + ' - ' + jqXHR);
 					});
 				}
-				else alert('Selecciona un distrito para cambiar al usuario.');
+				else if(todosdiv=='fcambiar_distro'){
+					var laregi=regisdivareas(region),
+						idEmpleado=$(elformul).find('#id-usuario').val();
+					$(elformul).addClass('cambiando');
+					if(gcm_reg_usr_id!='' && region!='' && idDelJefe!='' && idEmpleado!=''){
+						function envia_mensaje(){
+							$.ajax({
+								method:"POST",
+								url:"edit_b.php",
+								data:{
+									idJefe:idDelJefe,
+									empleado:idEmpleado,
+									distrito:region,
+									regIDform:gcm_reg_usr_id
+								}
+							}).done(function(msg){
+								$(elformul).removeClass('cambiando');
+								$(elformul).find('.listaDist').append("<li reg='" + region + "'>"+laregi.region+"</li>");
+							}).fail(function(jqXHR,textStatus,error){
+								creanotificacion('Error:',
+									'No se recibió respuesta del programa que envía la notificación de cambio de region al usuario.',
+									error,textStatus,'error');
+							});
+						}
+						function crea_region(){
+							var upnreg={idUsuario:{idUsuario:idEmpleado},regionTrabajo:region};
+							$.ajax({
+								type:"POST",
+								url:ip_services + "/telmex/add/region",
+								data:JSON.stringify(upnreg),
+								contentType:"application/json",
+								dataType:"json",
+								success:function(data,a,b){
+									envia_mensaje();
+								},
+								error:function(jqXHR,textStatus,error){
+									creanotificacion('Error:',
+										'No se pudo conectar al servicio que agrega la region al usuario',
+										error,textStatus,'error');
+								}
+							});
+						}
+						$.post("postgre.php?hago=3",{
+							id:idEmpleado,
+							reg:region
+						}).done(function(data){
+							var ex=parseInt(data);
+							if(ex==0)
+								crea_region();
+							else{
+								$(elformul).removeClass('cambiando');
+								creanotificacion('Notificación:',
+									'Ya estaba asignado a ' + laregi.region,'','','');
+							}
+						}).fail(function(jqXHR,textStatus,error){
+							creanotificacion('Error:',
+								'No se pudo verificar si ya estaba asignado a esa region',
+								error,textStatus,'error');
+						});
+					}
+					else{
+						creanotificacion('Nota:','Selecciona un distrito para el usuario.','','','');
+					}
 
+				}
+				else{
+					var laregi=regisdivareas(region);
+					$(this).parent().find('.listaDist').append("<li reg='" + region + "'>"+laregi.region+"</li>");
+				}
 			}
-			else{
-				var laregi=regisdivareas(region);
-				$(this).parent().find('.listaDist').append("<li reg='" + region + "'>"+laregi.region+"</li>");
-			}
+			$(this).parent().find(".listaDist > li").click(function(event){
+				quitame($(this));
+			});
 		}
-		$(this).parent().find(".listaDist > li").click(function(event){
-//			$(this).remove();
-			quitame($(this));
-		});
+		else{
+			creanotificacion('Advertencia:','Por favor selecciona un distrito de la lista desplegable.','','','advertencia');
+		}
 	});
 	$("#homeLoading").on("submit",function(event){
 		event.preventDefault();
 		if($("#usr").val()=="" || $("#pwd").val()==""){
-			alert("Debes escribir un usuario y un password");
+			creanotificacion('Advertencia:',
+				'Debes escribir tu usuario y contraseña','','','advertencia');
 		}else{
 			var usuario=$("#usr").val(),
 				clave=$("#pwd").val();
-			try{
-				$.ajax({
-					type:"GET",
-					url: ip_services + "/telmex/get/user/"+usuario+"/"+clave,
-					success:function(data,a,b){
-						var respuesta = data;
-						if(respuesta.errorMessage!= null){
-							$('#login-wrapper div.inner').addClass('error');
-							setTimeout(function(){$('#login-wrapper div.inner').removeClass('error');},2500);
-						}
-						else{
-							window.location="loginP.php?us=" + respuesta.apiResponse[0].nombre +
-											"&ni=" + respuesta.apiResponse[0].role.idRole +
-											"&idJefe=" + respuesta.apiResponse[0].idUsuario;
-						}
-					},
-					error: function(jqXHR, textStatus, error){
-						$('#login-wrapper div.inner').addClass('error');
-						setTimeout(function(){
-							$('#login-wrapper div.inner').removeClass('error');
-						},2500);
-					},
-					dataType: 'json'
-				});
-			}catch(error){
-			};
+			$.ajax({
+				type:"GET",
+				url: ip_services + "/telmex/get/user/"+usuario+"/"+clave,
+				success:function(data,a,b){
+					var respuesta = data;
+					if(respuesta.errorMessage!= null){
+						creanotificacion('Error:',
+							'Nombre de usuario o contraseña incorrecto.','','','error');
+					}
+					else{
+						window.location="loginP.php?us=" + respuesta.apiResponse[0].nombre +
+										"&ni=" + respuesta.apiResponse[0].role.idRole +
+										"&idJefe=" + respuesta.apiResponse[0].idUsuario;
+					}
+				},
+				error:function(jqXHR,textStatus,error){
+					creanotificacion('Error:',
+						'No se recibió respuesta del servicio de acceso.',
+						error,textStatus,'error');
+				},
+				dataType: 'json'
+			});
 		}
 	});
 });

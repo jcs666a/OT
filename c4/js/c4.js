@@ -43,15 +43,6 @@ $(function(){
 	var tipoUser=datos_lo[2],
 		idJefe=datos_lo[0],
 		nombreJefe=datos_lo[1];
-/*	$('#mapaggg').gmap3({
-		map:{
-			options:{
-				scrollwheel:false,
-				center:[19.573005992,-99.143340206],
-				zoom:7
-			}
-		}
-	}); */
 	$(document).on("submit","ul.devices form",function(event){
 		event.preventDefault();
 		var id=$(this).attr("id"),
@@ -137,12 +128,19 @@ $(function(){
 									li_eli_region.remove();
 								},
 								error:function(jqXHR,textStatus,error){
-									alert(textStatus + ' ' + error);
+									creanotificacion('Error:',
+										'No se recibió respuesta del servicio para eliminar la region del usuario.',
+										error,textStatus,'error');
 								}
 							});
 						}
 						div_eli_region.hide();
 					});
+				},
+				error:function(jqXHR,textStatus,error){
+					creanotificacion('Error:',
+						'No se recibió respuesta del servicio para obtener la region del usuario.',
+						error,textStatus,'error');
 				}
 			});
 			$("#fcambiar_distro").on("submit",function(event){
@@ -151,7 +149,7 @@ $(function(){
 			});
 		});
 	});
-	$("#navigation a").stop().animate({"marginLeft":"-85px"},1000);
+/*	$("#navigation a").stop().animate({"marginLeft":"-85px"},1000);
 	$("#navigation > li").hover(
 		function(){
 			$("a",$(this)).stop().animate({"marginLeft":"-2px"},200);
@@ -159,7 +157,7 @@ $(function(){
 		function(){
 			$("a",$(this)).stop().animate({"marginLeft":"-85px"},200);
 		}
-	);
+	); */
 	if(tipoUser==5)
 		$('.mensajes').hide();
 	if(tipoUser==6)
@@ -225,7 +223,9 @@ $(function(){
 								$(document).find('#adminUsers').remove();
 							},
 							error: function(jqXHR,textStatus,error){
-								alert(textStatus + ' - ' + error + ' - ' + jqXHR);
+								creanotificacion('Error:',
+									'No se recibió respuesta del servicio para crear un usuario.',
+									error,textStatus,'error');
 							}
 						});
 					}
@@ -250,6 +250,9 @@ $(function(){
 								$(document).find('#adminUsers').remove();
 							},
 							error:function(jqXHR,textStatus,error){
+								creanotificacion('Error:',
+									'No se recibió respuesta del servicio para editar al usuario.',
+									error,textStatus,'error');
 							}
 						});
 					}
@@ -277,7 +280,9 @@ $(function(){
 										});
 									}
 								}).fail(function(jqXHR,textStatus,error){
-									console.log(textStatus + ' - ' + error + ' - ' + jqXHR);
+									creanotificacion('Error:',
+										'No se recibió respuesta del servicio para agregar la region al usuario.',
+										error,textStatus,'error');
 								});
 							});
 						}
@@ -298,6 +303,9 @@ $(function(){
 							tre.closest('tr').remove();
 						},
 						error:function(jqXHR,textStatus,error){
+							creanotificacion('Error:',
+								'No se recibió respuesta del servicio para eliminar al usuario.',
+								error,textStatus,'error');
 						}
 					});
 				});
@@ -348,12 +356,19 @@ $(function(){
 											li_eli_region.remove();
 										},
 										error:function(jqXHR,textStatus,error){
-											alert(textStatus + ' ' + error);
+											creanotificacion('Error:',
+												'No se recibió respuesta del servicio para eliminar la region del usuario.',
+												error,textStatus,'error');
 										}
 									});
 								}
 								div_eli_region.hide();
 							});
+						},
+						error:function(jqXHR,textStatus,error){
+							creanotificacion('Error:',
+								'No se recibió respuesta del servicio para obtener la region del usuario.',
+								error,textStatus,'error');
 						}
 					});
 				});
@@ -385,8 +400,10 @@ $(function(){
 				setTimeout(function(){
 					$('#message_all').val('');
 				},1000);
-			}).fail(function(jqXHR,textStatus){
-				alert(textStatus + " " + jqXHR['status'] + ', ' + jqXHR['statusText']);
+			}).fail(function(jqXHR,textStatus,error){
+				creanotificacion('Error:',
+					'No se recibió respuesta del servicio para mandar el broadcast.',
+					error,textStatus,'error');
 			});
 		}
 	});

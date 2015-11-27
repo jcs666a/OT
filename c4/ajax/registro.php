@@ -1,5 +1,4 @@
 <?php
-//require_once("../include/connect_red.php");
 include_once '../variables.php';
 $div=$_POST["div"];
 echo '<option value="0">Todas</option>';
