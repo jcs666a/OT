@@ -234,6 +234,30 @@ class db_Postgre{
 		}
 		return $this->ar;
 	}
+//donde estan los fielders
+	public function TrackingFielders($telefono,$latitud,$longitud,$id_fielder){
+		$this->result=pg_query("INSERT INTO fielders_coordinates_unica(latitud,longitud,telefono,created_at,id_fielder)
+				VALUES('".$latitud."','".$longitud."','".$telefono."',NOW(),'".$id_fielder."');") or die('ERROR AL INSERTAR DATOS: '.pg_last_error());
+		return $id_fielder.': '.$latitud.','.$longitud.' : '.$telefono.' -> listo';
+	}
+//Obtener traking fielders
+	public function GettrackingFielders($ids_fielders){
+		$this->i=0;$this->ar=array();
+		$this->result=pg_query("SELECT DISTINCT ON (usuarios.usr_id)
+				fielders_coordinates_unica.*,
+				usuarios.usr_id,
+				usuarios.usr_nombre,
+				usuarios.expediente
+			FROM fielders_coordinates_unica,usuarios
+			WHERE usuarios.usr_id IN(".$ids_fielders.")
+				AND usuarios.usr_id=fielders_coordinates_unica.id_fielder
+			ORDER BY usuarios.usr_id,fielders_coordinates_unica.created_at DESC;") or die('ERROR: '.pg_last_error());
+		while($this->row_db = pg_fetch_array($this->result,NULL,PGSQL_ASSOC)){
+			$this->ar[$this->i]=$this->row_db;
+			$this->i++;
+		}
+		return $this->ar;
+	}
 }
 function roles($rol){
 		 if($rol==1)

@@ -1,4 +1,4 @@
-var div_eli_region,li_eli_region,gcm_reg_usr_id,idDelJefe,tipoUser="6",textAreaG,activadistrito=0,busca_col_o_dist='';
+var div_eli_region,li_eli_region,gcm_reg_usr_id,idDelJefe,tipoUser="6",textAreaG,activadistrito=0,busca_col_o_dist='',ubicalosFirst=1,intervaloMarcadores;
 function regisdivareas(region){
 	var res=region.split("-"),
 		regiones=[];
@@ -141,23 +141,20 @@ function creanotificacion(titulo,mensaje,error,textStatus,clase){
 }
 function mapaselecta(div){
 	var url = "http://10.105.116.52:9090/getDivisionByName/geoJson/" + div,
-		llave = "Division-"+trimer(div),
-		tipoArea = "todas";
-	limpiaDivs();
-	obtieneAreasDivis(llave,url,tipoArea,'7AA7D6');
+		llave = "Division-"+trimer(div);
+	obtieneAreasDivis(llave,url,'2196F3');
 }
 function mapaselectb(reg){
 	var url = "http://10.105.116.52:9090/getAreaByName/geoJson/" + reg,
-		llave = "Area-"+trimer(reg),
-		tipoArea = "todas";
-	obtieneAreasDivis(llave,url,tipoArea,'7B86E2');
+		llave = "Area-"+trimer(reg);
+	obtieneAreasDivis(llave,url,'2196F3');
 }
 function mapaselectc(distri){
 	if(busca_col_o_dist=='distritos'){
 		var url = "http://10.105.116.52:9090/telmex/necropsia/reporte/distrito";
 			llave="Distritos-"+trimer(textAreaG),
 			dtags=[distri];
-		obtieneDistrics(llave,url,nvoArea,dtags,'E5C943');
+		obtieneDistrics(llave,url,nvoArea,dtags,'F4F328');
 	}
 	else if(busca_col_o_dist=='colonias'){
 		limpiaDistricts();
@@ -170,6 +167,9 @@ $(function(){
 			tc=$(this).children("option").filter(":selected").text();
 		todosdiv=$(this).parent().parent().parent().attr('id');
 		nvoDivi=op;
+		$("#mapaggg").slideDown(500);
+		limpiaMarcadores();
+		clearInterval(intervaloMarcadores);
 		mapaselecta(tc);
 		if(todosdiv=='filter-box'){
 			$('#container_mensajes,#showUP').hide();
@@ -198,8 +198,10 @@ $(function(){
 	$(document).on("change",".areasGeoTel",function(){
 		nvoArea=$(this).val();
 		textAreaG=$(this).children("option").filter(":selected").text();
-		mapaselectb(textAreaG);
 		todosdiv=$(this).parent().parent().parent().attr('id');
+		limpiaMarcadores();
+		clearInterval(intervaloMarcadores);
+		mapaselectb(textAreaG);
 		$(this).parent().parent().next('div').find(".districtOpcGeoTel").val('0');
 		$(this).parent().parent().next('div').slideDown();
 		$(this).parent().parent().next('div').next('div').find(".distritosGeoTel").val('');
@@ -223,6 +225,8 @@ $(function(){
 		urldis=ip_services + '/getDistritosBySearch/'+ar+'/TODO',
 		urlcol=ip_services + '/telmex/necropsia/getNecropsiaColoniaByArea/'+ar;
 		todosdiv=$(this).parent().parent().parent().attr('id');
+		limpiaMarcadores();
+		clearInterval(intervaloMarcadores);
 		dG.autocomplete({ create:function(event,ui){} });
 		dG.val('');
 		if(todosdiv=='filter-box'){
@@ -270,7 +274,8 @@ $(function(){
 			dis_o_col='colonias';
 		}
 		else if(op=="2"){
-			var region_solo_area=nvoDivi + '-' + nvoArea + '-';
+			var region_solo_area=nvoDivi + '-' + nvoArea + '-',
+				xyregion=regisdivareas(nvoDivi + '-' + nvoArea + '-');
 			limpiaDistricts();
 			$("#showUP").fadeIn('fast',function(){
 				$.ajax({
@@ -280,12 +285,26 @@ $(function(){
 						var datos=data.apiResponse[0],
 							conte=$("#showUP"),
 							title=$("#showUP div h2.text_h2"),
-							devic=$("#showUP ul.devices");
+							devic=$("#showUP ul.devices"),
+							marks='',
+							markI=1;
 						var cntos=Object.keys(datos).length;
 						$("#showUP ul.devices li").not(':first').remove();
 						if(cntos>0){
-							title.html('Dispositivos Registrados: <span>' + cntos + '</span>');
+							title.html(cntos + ' en ' + xyregion.region);
 							jQuery.each(datos,function(i,item){
+								if(markI<cntos)
+									marks=marks+item[0]+',';
+								else{
+									marks=marks+item[0];
+									creaMarcadores(marks);
+									intervaloMarcadores=setInterval(function(){
+										limpiaMarcadores();
+										creaMarcadores(marks);
+										ubicalosFirst=2;
+									},15000);
+								}
+								markI++;
 								devic.append(
 									'<li>' +
 										'<form id="' + item[0] + '" name="" method="post">' +
@@ -342,6 +361,8 @@ $(function(){
 				creanotificacion('Notificación:',
 					'Debes seleccionar un distrito o colonia de la lista.','','','');
 			}else{
+				limpiaMarcadores();
+				clearInterval(intervaloMarcadores);
 				$(this).parent().find('.distritosGeoTel').val("");
 				$(this).parent().find('.distritosGeoTel').focus();
 				if(dis_o_col=='distritos')
@@ -367,12 +388,26 @@ $(function(){
 								var datos=data.apiResponse[0],
 									conte=$("#showUP"),
 									title=$("#showUP div h2.text_h2"),
-									devic=$("#showUP ul.devices");
+									devic=$("#showUP ul.devices"),
+									markI=1,
+									marks='';
 								var cntos=Object.keys(datos).length;
 								$("#showUP ul.devices li").not(':first').remove();
 								if(cntos>0){
-									title.html('Dispositivos Registrados: <span>' + cntos + '</span>');
+									title.html(cntos + ' en ' + reer.region);
 									jQuery.each(datos,function(i,item){
+										if(markI<cntos)
+											marks=marks+item[0]+',';
+										else{
+											marks=marks+item[0];
+											creaMarcadores(marks);
+											intervaloMarcadores=setInterval(function(){
+												limpiaMarcadores();
+												creaMarcadores(marks);
+												ubicalosFirst=2;
+											},15000);
+										}
+										markI++;
 										devic.append(
 											'<li>' +
 												'<form id="' + item[0] + '" name="" method="post">' +
@@ -399,7 +434,7 @@ $(function(){
 								}
 								else{
 									$('#container_mensajes').hide();
-									title.html('No se encontraron dispositivos de esa región');
+									title.html('No se encontraron dispositivos.');
 								}
 							},
 							error:function(jqXHR,textStatus,error){

@@ -425,6 +425,7 @@ function confirmExit(){
 //document.oncontextmenu=new Function("return false;");
 $(window).load(function(){
 	setTimeout(function(){
+		$("#mapaggg").hide();
 		$("section.mainloader").remove();
 		setTimeout(function(){
 			$("#index-banner").addClass('cierra');

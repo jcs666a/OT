@@ -47,16 +47,16 @@ class db_Postgre{
 				$this->ar[$this->i]=array($value['TELEFONO']=>'Insertado');
 				$this->result=pg_query("INSERT INTO ut_contact_ot_unica
 					(telefono,distrito,tcode,campaign_code,offer_code,contact_datetime,processed,campoa,campob,campoc)
-					VALUES(	'".$value['TELEFONO']."',
-							'".$value['DISTRITO']."',
-							'".$value['TCODE']."',
-							'".$value['CAMPAIGNCODE']."',
-							'".$value['OFFERCODE']."',
-							'".$value['CONTACTDATETIME']."',
-							'".$value['PROCESSED']."',
-							'".$value['CAMPOA']."',
-							'".$value['CAMPOB']."',
-							'".$value['CAMPOC']."');") or die('ERROR AL INSERTAR DATOS: '.pg_last_error());
+					VALUES(	'".trim($value['TELEFONO'])."',
+							'".trim($value['DISTRITO'])."',
+							'".trim($value['TCODE'])."',
+							'".trim($value['CAMPAIGNCODE'])."',
+							'".trim($value['OFFERCODE'])."',
+							'".trim($value['CONTACTDATETIME'])."',
+							'".trim($value['PROCESSED'])."',
+							'".trim($value['CAMPOA'])."',
+							'".trim($value['CAMPOB'])."',
+							'".trim($value['CAMPOC'])."');") or die('ERROR AL INSERTAR DATOS: '.pg_last_error());
 //			}
 		}
 		return $this->ar;
@@ -168,14 +168,16 @@ class db_Oracle{
 //$res=$oracle_db->getTime();
 //$res=$oracle_db->copyUsuariosUnikaPostgre();
 //print_r($res);
-/*
+
 $postgre_db=new db_Postgre();
 $res=$postgre_db->getUnik();
 
 print_r($res);
 
+/*
 $fin = microtime(true);
 $execution_time = ($fin - $inicio);
+
 echo 'Me tarde: '.$execution_time.' segundos';
 */
 ?>

@@ -6,6 +6,7 @@
 
 		if($hago=='nada_de_nada'){
 			$Usuarios=$db->getUsuarios();
+			$Tracking=$db->GettrackingFielders('7,8');
 			$Ssuarios=$db->getUsuariosSIN();
 			$mensajes=$db->getMensajes();
 			$Gcm_user=$db->getGcm_users();
@@ -29,6 +30,8 @@
 				print_r($Gcm_user);
 			echo '</pre><p>&nbsp;</p><h2>History Change:</h2><pre>';
 				print_r($History_);
+			echo '</pre><p>&nbsp;</p><h2>User Tracking:</h2><pre>';
+				print_r($Tracking);
 			echo '</pre><p>&nbsp;</p><h2>All Regiones de Trabajo:</h2><pre>';
 				print_r($RegTraba);
 			//echo '</pre><p>&nbsp;</p><h2>All Tablas:</h2><pre>';
@@ -38,42 +41,94 @@
 			echo '<pre>';
 		}
 		else if($hago==1){
-			$id=trim($_POST['idUsuario']);
-			$id_role=trim($_POST['idRole']);
-			$usr_nombre=trim($_POST['nombre']);
-			$usr_user=trim($_POST['usuario']);
-			$usr_pwd=trim($_POST['password']);
-			$expediente=trim($_POST['expediente']);
-			$regiones=$_POST['regiones'];
-			$regeliminado=$db->eliminaRegiones($id);
-			$user=$db->updateUser($id,$id_role,$usr_nombre,$usr_user,$usr_pwd,$expediente);
-			foreach ($regiones as $region){
-				$agrega_reg.=$db->storeRegion($id,$region).', ';
+			if(isset($_POST['idRole'])){
+				$id=trim($_POST['idUsuario']);
+				$id_role=trim($_POST['idRole']);
+				$usr_nombre=trim($_POST['nombre']);
+				$usr_user=trim($_POST['usuario']);
+				$usr_pwd=trim($_POST['password']);
+				$expediente=trim($_POST['expediente']);
+				$regiones=$_POST['regiones'];
+				$regeliminado=$db->eliminaRegiones($id);
+				$user=$db->updateUser($id,$id_role,$usr_nombre,$usr_user,$usr_pwd,$expediente);
+				foreach ($regiones as $region){
+					$agrega_reg.=$db->storeRegion($id,$region).', ';
+				}
+				echo $user.', regiones: '.$agrega_reg;
 			}
-			echo $user.', regiones: '.$agrega_reg;
+			else{
+				echo 'No mandaste los post WEY';
+			}
 		}
 		else if($hago==2){
-			$id_role=trim($_POST['idRole']);
-			$usr_nombre=trim($_POST['nombre']);
-			$usr_user=trim($_POST['usuario']);
-			$usr_pwd=trim($_POST['password']);
-			$expediente=trim($_POST['expediente']);
-			$regiones=$_POST['regiones'];
-			$user=$db->storeUsuarios($id_role,$usr_nombre,$usr_user,$usr_pwd,$expediente);
-			foreach ($regiones as $region){
-				$agrega_reg.=$db->storeRegion($user,$region).', ';
+			if(isset($_POST['idRole'])){
+				$id_role=trim($_POST['idRole']);
+				$usr_nombre=trim($_POST['nombre']);
+				$usr_user=trim($_POST['usuario']);
+				$usr_pwd=trim($_POST['password']);
+				$expediente=trim($_POST['expediente']);
+				$regiones=$_POST['regiones'];
+				$user=$db->storeUsuarios($id_role,$usr_nombre,$usr_user,$usr_pwd,$expediente);
+				foreach ($regiones as $region){
+					$agrega_reg.=$db->storeRegion($user,$region).', ';
+				}
+				echo 'Usuario '.$user.' creado, regiones: '.$agrega_reg;
 			}
-			echo 'Usuario '.$user.' creado, regiones: '.$agrega_reg;
+			else{
+				echo 'No mandaste los post WEY';
+			}
 		}
 		else if($hago==3){ // ver si existen usuarios con tal o cual region
-			$id=trim($_POST['id']);
-			$reg=trim($_POST['reg']);
-			echo $db->getRegionTrabajo($id,$reg);
+			if(isset($_POST['id'])){
+				$id=trim($_POST['id']);
+				$reg=trim($_POST['reg']);
+				echo $db->getRegionTrabajo($id,$reg);
+			}
+			else{
+				echo 'No mandaste los post WEY';
+			}
 		}
 		else if($hago==4){
-			$id=trim($_POST['id']);
-			$reg=trim($_POST['reg']);
-			echo $db->getRegionTrabajoCrea($id,$reg);
+			if(isset($_POST['id'])){
+				$id=trim($_POST['id']);
+				$reg=trim($_POST['reg']);
+				echo $db->getRegionTrabajoCrea($id,$reg);
+			}
+			else{
+				echo 'No mandaste los post WEY';
+			}
+		}
+		else if($hago==5){
+			if(isset($_POST['latitud'])){
+				$telefono=trim($_POST['telefono']);
+				$latitud=trim($_POST['latitud']);
+				$longitud=trim($_POST['longitud']);
+				$id_fielder=trim($_POST['id_fielder']);
+				if($latitud!='' && $longitud!='' && $id_fielder!=''){
+					echo $db->TrackingFielders($telefono,$latitud,$longitud,$id_fielder);
+				}
+				else{
+					echo 'Uno de los post requeridos esta vacio WEY';
+				}
+			}
+			else{
+				echo 'No mandaste los post WEY';
+			}
+		}
+		else if($hago==6){
+			if(isset($_POST['ids_fielders'])){
+				$ids_fielders=trim($_POST['ids_fielders']);
+				if($ids_fielders!=''){
+					$posiciones=json_encode($db->GettrackingFielders($ids_fielders));
+					echo $posiciones;
+				}
+				else{
+					echo 'ids_fielders esta vacio WEY';
+				}
+			}
+			else{
+				echo 'No mandaste el post WEY';
+			}
 		}
 	}
 ?>

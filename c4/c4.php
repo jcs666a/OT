@@ -56,6 +56,7 @@
     <div id="intro" class="section scrollspy">
         <div id="mapaggg"></div>
         <div id="filter-box" class="editar">
+            <h2 class="header text_b" style="text-align:left;">Fielders</h2>
             <h4>Seleccione los filtros para ver el detalle.</h4>
             <?php include 'distritos.php';?>
         </div>
@@ -398,6 +399,7 @@
 
 <script src="min/plugin-min.js" charset="UTF-8"></script>
 <script src="min/custom-min.js" charset="UTF-8"></script>
+<script src="js/date.format.js" charset="UTF-8"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp" charset="UTF-8"></script>
 <script src="js/pintaMapa.js" charset="UTF-8"></script>
 <script src="js/jquery-ui.js" charset="UTF-8"></script>

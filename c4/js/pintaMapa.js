@@ -8,19 +8,33 @@ var map,
 	contentInfoPoly="",
 	poligonosCords={},
 	poligonos={},
-	testing={};
+	testing={},
+	marcadores=[];
+function creanoti(titulo,mensaje,error,textStatus,clase){
+	var op=''; if(error!='') op='<p>' + error + ' ' + textStatus + '</p>';
+	$('#notificaciones').append('<div class="tn ' + clase + '">' +
+		'<h2>' + titulo + '</h2>' +
+		'<p>' + mensaje + '</p>' + op +
+		'<div class="tn-progress"></div>' +
+	'</div>');
+	setTimeout(function(){$('#notificaciones').find(".tn").first().remove();},5000);
+}
 function initialize(){
 	map = new google.maps.Map(document.getElementById('mapaggg'),{
-		zoom:7,
+		disableDefaultUI:true,
 		scrollwheel:false,
+		zoomControl:true,
+		zoom:7,
 		center:{lat:19.3907336,lng:-99.1436126},
-		styles:[{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#112251"}]},{"featureType":"administrative.land_parcel","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f3ebe2"}]},{"featureType":"landscape","elementType":"geometry.fill","stylers":[{"saturation":"23"},{"color":"#fffcf7"},{"visibility":"on"}]},{"featureType":"landscape","elementType":"labels.text","stylers":[{"visibility":"on"}]},{"featureType":"landscape","elementType":"labels.text.fill","stylers":[{"color":"#112251"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"simplified"},{"lightness":"39"}]},{"featureType":"poi.business","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"poi.government","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"poi.school","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road","elementType":"geometry.fill","stylers":[{"color":"#ede5d7"}]},{"featureType":"road","elementType":"labels.icon","stylers":[{"weight":"0.20"},{"visibility":"simplified"}]},{"featureType":"road.highway","elementType":"labels","stylers":[{"visibility":"on"}]},{"featureType":"road.highway","elementType":"labels.icon","stylers":[{"invert_lightness":true},{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"transit.station.airport","elementType":"all","stylers":[{"visibility":"on"}]},{"featureType":"transit.station.bus","elementType":"all","stylers":[{"visibility":"on"}]},{"featureType":"transit.station.rail","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#c9e4f3"},{"visibility":"on"}]}]
+		styles:[{"stylers":[{"hue":"#2c3e50"},{"saturation":250}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":50},{"visibility":"simplified"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]}]
 	});
 }
 google.maps.event.addDomListener(window,'load',initialize);
 function trimer(str){ return str.replace(" ",""); }
 function obtieneDistrics(llave,url,reg,dtags,color){
 	limpiaDistricts();
+	limpiaDivs();
+	limpiaAreas();
 	var coordenadas=[];
 	var bounds=new google.maps.LatLngBounds();
 	testing={distritos:{name: dtags, fechaInicial: "", fechaFinal: "", idArea: reg}};
@@ -52,16 +66,6 @@ function obtieneDistrics(llave,url,reg,dtags,color){
 							fillOpacity: 0.35
 						});
 						dataCartografica[llave].apiResponse[i].poligonos[distrito].setMap(map);
-						var addListenersOnPolygon = function(polygon,llave, distrito, ventana){
-						  google.maps.event.addListener(polygon, 'click', function (event){
-							contentInfoPoly = '<div style="font-family:Arial, Helvetica, sans-serif; font-size:10px;"><div>' + distrito + '</div>';
-							ventana.setContent(contentInfoPoly);
-							ventana.setPosition(event.latLng);
-							ventana.open(map);
-						  });
-						}
-						dataCartografica[llave].apiResponse[i].infowindows[distrito] = new google.maps.InfoWindow({});
-						addListenersOnPolygon(dataCartografica[llave].apiResponse[i].poligonos[distrito], llave, distrito, dataCartografica[llave].apiResponse[i].infowindows[distrito]);
 					}
 				}
 			}
@@ -69,13 +73,11 @@ function obtieneDistrics(llave,url,reg,dtags,color){
 		}
 	);
 }
-function obtieneAreasDivis(llave,url,tipoArea,color){
+function obtieneAreasDivis(llave,url,color){
 	var datas="",
 		coordenadas=[],
 		bounds=new google.maps.LatLngBounds();
-	limpiaDistricts();
-	if (tipoArea=="sola") limpiaDivs();
-	else if(tipoArea=="todas") limpiaAreas();
+	limpiaDistricts();limpiaAreas();limpiaDivs();
 	$.ajax({
 		type:"GET",
 		url: url,
@@ -90,7 +92,7 @@ function obtieneAreasDivis(llave,url,tipoArea,color){
 			dataCartografica[llave].poligonos = {};
 			dataCartografica[llave].capas[llave] = new google.maps.Data();
 			dataCartografica[llave].capas[llave].addGeoJson(html.apiResponse[0]);
-			var featureStyle = {
+			var featureStyle={
 				fillColor: '#' + color,
 				strokeWeight: 1,
 				strokeOpacity: 0.4,
@@ -115,20 +117,59 @@ function obtieneAreasDivis(llave,url,tipoArea,color){
 				fillColor: '#' + color,
 				fillOpacity: 0.2
 			});
-			var addListenersOnPolygon=function(polygon,llave){
-				google.maps.event.addListener(polygon,'click',function(event){
-					var quejas=dataCartografica[llave].markers.length;
-					contentInfoPoly='<div><div>'+llave+'</div>';
-					contentInfoPoly=contentInfoPoly + '<div> Quejas:'+quejas+'</div></div>';
-					dataCartografica[llave].infowindows[llave].setContent(contentInfoPoly);
-						dataCartografica[llave].infowindows[llave].setPosition(event.latLng);
-						dataCartografica[llave].infowindows[llave].open(map);
-				});
-			}
-			addListenersOnPolygon(dataCartografica[llave].capas[llave],llave);
-			dataCartografica[llave].infowindows[llave] = new google.maps.InfoWindow({});
 			map.fitBounds(bounds);
 		}
+	});
+}
+function creaMarcadores(marcas){
+	var todos=marcas.split(','),
+		marcax=[];
+	$.each(todos,function(inx,uno){
+		marcax.push({"idFielder":uno});
+	});
+	$.ajax({
+		type:"POST",
+		url:ip_services + "/telmex/get/coordn",
+		data:JSON.stringify(marcax),
+		contentType:"application/json",
+		dataType:"json"
+	}).done(function(data){
+		var x=data.apiResponse[0],
+			centro,
+			datosMarker,
+			i=0,
+			infowindow=new google.maps.InfoWindow({content:'Espere por favor, cargando...'}),
+			fecha;
+		$.each(x,function(index,mark){
+			fecha=mark.createAt.slice(0,19);
+			horas=fecha.slice(11,19);
+			fecha=fecha.slice(6,10)+'-'+fecha.slice(3,5)+'-'+fecha.slice(0,2)+'T'+horas;
+			fecha=new Date(fecha);
+			fecha=fecha.format('h:MM:ss TT, dddd d "de" mmm "del "yyyy');
+			if(ubicalosFirst==1)
+				creanoti(mark.nombre+', ubicado...',mark.latitud+', '+mark.longitud+'<br/>'+fecha,'','','');
+			datosMarker='<div>'+
+				'<h4>'+mark.nombre+'</h4>'+
+				'<p>'+fecha+'</p>'+
+				'</div>';
+			centro=new google.maps.LatLng(mark.latitud, mark.longitud);
+			marcadores[i]=new google.maps.Marker({
+				position:centro,
+				map:map,
+				title:mark.nombre,
+				icon:'img/geo_a.png',
+				html:datosMarker
+			});
+			marcadores[i].addListener('click', function(){
+				infowindow.setContent(this.html);
+				infowindow.open(map, this);
+			});
+			i++;
+		}); // map.setCenter(centro);
+	}).fail(function(jqXHR,textStatus,error){
+		creanoti('Error:',
+			'No se pudo conectar al servicio para recibir la ubicación de los usuarios',
+			error,textStatus,'error');
 	});
 }
 function limpiaDistricts(){
@@ -188,6 +229,11 @@ function limpiaDivs(){
 			}
 		}
 	}
+}
+function limpiaMarcadores(){
+	for(var i=0; i<marcadores.length; i++){marcadores[i].setMap(null);}
+	marcadores=[];
+	ubicalosFirst=1;
 }
 function getPromise(url,data){
 	var request=$.ajax({
