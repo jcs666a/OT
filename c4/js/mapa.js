@@ -1,1 +1,558 @@
-eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)r[e(c)]=k[c]||e(c);k=[function(e){return r[e]}];e=function(){return'\\w+'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('q 1f(a){u b=a.5t("-"),k=[];j(b[0]==1){k[\'V\']=\'5e\';j(b[1]==1)k[\'l\']=\'5c\';j(b[1]==2)k[\'l\']=\'4W\';j(b[1]==3)k[\'l\']=\'4R\';j(b[1]==4)k[\'l\']=\'4P-2q\';j(b[1]==5)k[\'l\']=\'4M-4I\';j(b[1]==6)k[\'l\']=\'4D\';j(b[1]==7)k[\'l\']=\'4y\';j(b[1]==8)k[\'l\']=\'4s\';j(b[1]==9)k[\'l\']=\'2q\';j(b[1]==10)k[\'l\']=\'3Zé3F\';j(b[1]==11)k[\'l\']=\'3S\';j(b[1]==12)k[\'l\']=\'3R-3Q\';j(b[1]==13)k[\'l\']=\'3O\';j(b[1]==14)k[\'l\']=\'3N\';j(b[1]==15)k[\'l\']=\'3L-2Y 2Xán\'}D j(b[0]==2){k[\'V\']=\'3I\';j(b[1]==16)k[\'l\']=\'5F\';j(b[1]==17)k[\'l\']=\'5T\';j(b[1]==18)k[\'l\']=\'1L 4z\';j(b[1]==19)k[\'l\']=\'5j\';j(b[1]==20)k[\'l\']=\'5yón\';j(b[1]==21)k[\'l\']=\'5J\';j(b[1]==22)k[\'l\']=\'1E 1\';j(b[1]==23)k[\'l\']=\'1E 2\';j(b[1]==24)k[\'l\']=\'1E 3G\';j(b[1]==25)k[\'l\']=\'3J 3K\';j(b[1]==26)k[\'l\']=\'3Pé3T\';j(b[1]==27)k[\'l\']=\'3V\';j(b[1]==28)k[\'l\']=\'4a\';j(b[1]==29)k[\'l\']=\'4d\';j(b[1]==30)k[\'l\']=\'2Y 4h 4ií\';j(b[1]==31)k[\'l\']=\'4j\';j(b[1]==32)k[\'l\']=\'4kón\';j(b[1]==33)k[\'l\']=\'4l\'}D j(b[0]==3){k[\'V\']=\'4m\';j(b[1]==34)k[\'l\']=\'4o\';j(b[1]==35)k[\'l\']=\'1L 2Xá4r\';j(b[1]==36)k[\'l\']=\'1L 4tón\';j(b[1]==37)k[\'l\']=\'4u\';j(b[1]==38)k[\'l\']=\'4wán\';j(b[1]==39)k[\'l\']=\'4x\';j(b[1]==40)k[\'l\']=\'1S 4A\';j(b[1]==41)k[\'l\']=\'1S 4B\';j(b[1]==42)k[\'l\']=\'1S 4C\';j(b[1]==43)k[\'l\']=\'4E\';j(b[1]==44)k[\'l\']=\'4F\';j(b[1]==45)k[\'l\']=\'4G 4H\';j(b[1]==46)k[\'l\']=\'4J 4K\';j(b[1]==47)k[\'l\']=\'4L\';j(b[1]==48)k[\'l\']=\'4N\';j(b[1]==49)k[\'l\']=\'4O\';j(b[1]==50)k[\'l\']=\'4Q 4S\';j(b[1]==51)k[\'l\']=\'4T\';j(b[1]==52)k[\'l\']=\'4U\'}D j(b[0]==4){k[\'V\']=\'4V\';j(b[1]==53)k[\'l\']=\'4X\';j(b[1]==54)k[\'l\']=\'4Yún\';j(b[1]==55)k[\'l\']=\'4Z\';j(b[1]==56)k[\'l\']=\'Có5a\';j(b[1]==57)k[\'l\']=\'5b\';j(b[1]==58)k[\'l\']=\'Mé5d\';j(b[1]==59)k[\'l\']=\'5f\';j(b[1]==60)k[\'l\']=\'5g\';j(b[1]==61)k[\'l\']=\'5h 5i\';j(b[1]==62)k[\'l\']=\'2r\';j(b[1]==63)k[\'l\']=\'2N-2r\';j(b[1]==64)k[\'l\']=\'5k 5l\';j(b[1]==65)k[\'l\']=\'5múz\';j(b[1]==66)k[\'l\']=\'5n\';j(b[1]==5o)k[\'l\']=\'2N\'}D j(b[0]==5){k[\'V\']=\'5p\';j(b[1]==67)k[\'l\']=\'5q\';j(b[1]==68)k[\'l\']=\'5r\';j(b[1]==69)k[\'l\']=\'5s\'}k[\'2O\']=b[2];k[\'E\']=k[\'V\']+\' - \'+k[\'l\']+\' - \'+b[2];k[\'5x\']=a;2U k}q 5z(a){5A(u i=0,1I=\'\',2n="5KÑ5Nñ5R,. ";i<a.1J;i++)j(2n.5S(a.2v(i))!=-1)1I+=a.2v(i);2U 1I}q 5U(){$("#5V").5W(\'2M\')}$(q(){$(1q).X("1X",".3H",q(){u c=$(r).x(),P=$(r);3A=$(r).m().m().m().3M(\'1b\');P.m().m().m().s(\'.U\').K(\'\');2e=c;$(\'#I,#G\').J();u d=$.Q({T:"Q/3U.2o",1H:"3W",3X:"o="+c,2u:P});d.3Y(q(a){$(P).m().m().v(\'o\').1g();$(P).m().m().v(\'o\').v(\'o\').J();$(P).m().m().v(\'o\').v(\'o\').v(\'o\').J();$(P).m().m().v(\'o\').s(\'2u\').4b().1h().4c().1K(a)});d.4e(q(a,b){1M("4f 4g: "+b)})});$(1q).X("1X",".2S",q(){1N=$(r).x();$(r).m().m().v(\'o\').s(".2V").x(\'0\');$(r).m().m().m().s(\'.U\').K(\'\');$(r).m().m().v(\'o\').1g();$(r).m().m().v(\'o\').v(\'o\').s(".1c").x(\'\');$(r).m().m().v(\'o\').v(\'o\').1O();$(\'#I,#G\').J()});$(1q).X("1X",".2V",q(){u h=$(r).x(),P=$(r),3z=$(r).m().m().m().s(\'.2S\').x(),1i=$(r).m().m().m().s(\'.1c\'),3B=$(r).m().m().m().s(\'.U\'),1Q=$(r).m().m().m().s(\'.4n\'),E=\'\',1R=1j+\'/4p/\'+3z+\'/4q\';1i.2p({1T:q(a,b){}});1i.x(\'\');$(\'#I\').J();j(h=="1"){$.Q({F:"Z",T:1R,1U:"1W",2F:2G,Y:q(a){1i.2p({4v:a})}});$(r).m().m().v(\'o\').1g();2J=[];3B.K(\'\')}D j(h=="2"){1Q.1O();$.Q({F:"Z",T:1R,1U:"1W",2F:2G,Y:q(g){1Y.1Z(g,q(i,f){E=2e+\'-\'+1N+\'-\'+f;1k.1l(E);1P{$.Q({F:"Z",T:1j+"/1F/1G/3l/"+E,Y:q(c,a,b){u d=c.1d[0],3o=$("#G"),W=$("#G o 3p.3s"),1m=$("#G 1n.1o");u e=2h.2i(d).1J;1k.1l(d);$("#G 1n.1o H").2j(\':2k\').1h();j(e>0){W.K(\'2l 2m: \'+e);1Y.1Z(d,q(i,a){u b=1f(a[5]);1m.1K(\'<H>\'+\'<1p 1b="\'+a[0]+\'" N="" 1H="2f">\'+\'<A p="S-t">2s: </A>\'+\'<w p="2t R-t">\'+a[2]+\'</w>\'+\'<o p="1r"></o>\'+\'<A p="S-t">2w:</A>\'+\'<w  p="2x R-t">\'+a[6]+\'</w>\'+\'<o p="1r"></o>\'+\'<A p="S-t">2y: </A>\'+\'<w p="R-t">\'+b.E+\'</w>\'+\'<o p="2z">\'+\'<1a 2A="3" 1b="2B" N="2C" 2D="2E"></1a>\'+\'<1s F="1t" p="2H" N="2I" 1u="\'+a[1]+\'"/>\'+\'<1s F="1t" p="2K" N="2L" 1u="\'+a[11]+\'"/>\'+\'<O p="1v L-1w L-1x 2P 2Q-1 2R" F="1V">2T\'+\'<i p="1y-1z-2W 1A 1B-t"></i>\'+\'</O> &2Z; \'+\'<O p="1v L-1w L-1x 3a 3b-4 3c 3d" 3e="3f">3g\'+\'<i p="1y-1z-1T 1A 1B-t"></i>\'+\'</O>\'+\'</o>\'+\'</1p>\'+\'</H>\')})}D{$(\'#I\').J();W.K(\'3h 3i 3j 3k 2a 3m 3nón\')}},B:q(a,b,c){1k.1l(c,a,b)}})}2b(B){1k.1l(B)}})}})}D 1Q.1O()});$(1q).X("2c","5u.5v",q(){u f=$(r).m().s(\'.1c\').x(),5w=$(r).m(),E=2e+\'-\'+1N+\'-\'+f;u g=1f(E);j(f==""){1M("3q 3r 2d 3t 2a 2O")}D{2J.5B(f);$(r).m().s(\'.U\').K("<H>"+f+"</H>");$(r).m().s(\'.1c\').x("");$(r).m().s(\'.1c\').5C();j(3A==\'5D-5E\'){$(r).m().s(".U > H").J();$(\'#I\').s(\'3u.3v w\').K(g.E);$(\'#I\').s(\'1a\').x(\'\');$(\'#I\').1g();$(\'#I\').s(\'3u.3v w\').2c(q(a){$(\'#I\').J()});$("#G").5G(\'2M\',q(){1P{$.Q({F:"Z",T:1j+"/1F/1G/3l/"+E,Y:q(c,a,b){u d=c.1d[0],3o=$("#G"),W=$("#G o 3p.3s"),1m=$("#G 1n.1o");u e=2h.2i(d).1J;$("#G 1n.1o H").2j(\':2k\').1h();j(e>0){W.K(\'2l 2m: \'+e);1Y.1Z(d,q(i,a){u b=1f(a[5]);1m.1K(\'<H>\'+\'<1p 1b="\'+a[0]+\'" N="" 1H="2f">\'+\'<A p="S-t">2s: </A>\'+\'<w p="2t R-t">\'+a[2]+\'</w>\'+\'<o p="1r"></o>\'+\'<A p="S-t">2w:</A>\'+\'<w  p="2x R-t">\'+a[6]+\'</w>\'+\'<o p="1r"></o>\'+\'<A p="S-t">2y: </A>\'+\'<w p="R-t">\'+b.E+\'</w>\'+\'<o p="2z">\'+\'<1a 2A="3" 1b="2B" N="2C" 2D="2E"></1a>\'+\'<1s F="1t" p="2H" N="2I" 1u="\'+a[1]+\'"/>\'+\'<1s F="1t" p="2K" N="2L" 1u="\'+a[11]+\'"/>\'+\'<O p="1v L-1w L-1x 2P 2Q-1 2R" F="1V">2T\'+\'<i p="1y-1z-2W 1A 1B-t"></i>\'+\'</O> &2Z; \'+\'<O p="1v L-1w L-1x 3a 3b-4 3c 3d" 3e="3f">3g\'+\'<i p="1y-1z-1T 1A 1B-t"></i>\'+\'</O>\'+\'</o>\'+\'</1p>\'+\'</H>\')})}D{$(\'#I\').J();W.K(\'3h 3i 3j 3k 2a 3m 3nón\')}},B:q(a,b,c){}})}2b(B){}})}}$(r).m().s(".U > H").2c(q(a){$(r).1h()})});$("#5H").X("1V",q(e){e.5I();j($("#3w").x()==""||$("#3x").x()==""){1M("3q 3r 2d 5L y 2d 5M")}D{u f=$("#3w").x(),3y=$("#3x").x();1P{$.Q({F:"Z",T:1j+"/1F/1G/5O/"+f+"/"+3y,Y:q(c,a,b){u d=c;j(d.5P!=5Q){$(\'#1C-1D o.1e\').3C(\'B\');3D(q(){$(\'#1C-1D o.1e\').3E(\'B\')},2g)}D{5X.5Y="5Z.2o?6a="+d.1d[0].3t+"&6b="+d.1d[0].6c.6d+"&6e="+d.1d[0].6f}},B:q(a,b,c){$(\'#1C-1D o.1e\').3C(\'B\');3D(q(){$(\'#1C-1D o.1e\').3E(\'B\')},2g)},1U:\'1W\'})}2b(B){}}})});',62,388,'|||||||||||||||||||if|regiones|area|parent||div|class|function|this|find|text|var|next|span|val|||label|error||else|region|type|showUP|li|container_mensajes|hide|html|waves||name|button|ap|ajax|black|blue|url|listaDist|division|title|on|success|GET|||||||||||textarea|id|distritosGeoTel|apiResponse|inner|regisdivareas|slideDown|remove|dG|ip_services|console|log|devic|ul|devices|form|document|clear|input|hidden|value|btn|effect|light|mdi|content|right|white|login|wrapper|Monterrey|telmex|get|method|output|length|append|Ciudad|alert|nvoArea|slideUp|try|dT|urldisc|Guadalajara|create|dataType|submit|json|change|jQuery|each|||||||||||de|catch|click|un|nvoDivi|post|2500|Object|keys|not|first|Dispositivos|Registrados|validos|php|autocomplete|Morelos|Puebla|Nombre|sempleado|select|charAt|Exp|sexp|Distrito|send_container|rows|mensaje|message|placeholder|Mensaje|cache|false|IDform|Id|tags|regIDform|regId|fast|Tlaxcala|distrito|red|darken|mensajes|areasGeoTel|Enviar|return|districtOpcGeoTel|send|Ju|San|nbsp|||||||||||green|accent|triggerOverlay|editar|archivo|edit|Editar|No|se|encontraron|dispositivos|gcm|esa|regi|conte|h2|Debes|escribir|text_h2|nombre|h3|header|usr|pwd|clave|ar|todosdiv|lD|addClass|setTimeout|removeClass|lite|Foraneas|divisionesGeoTel|Norte|Nuevo|Laredo|Valle|attr|Universidad|Toluca|Quer|Zaragoza|Texcoco|Sotelo|taro|registro|Reynosa|POST|data|done|Sat|||||||||||Sabinas|children|end|Saltillo|fail|Request|failed|Luis|Potos|Tampico|Torre|Zacatecas|Occidente|distritosText|Chihuahua|getDistritosBySearch|TODO|rez|Mixcoac|Obreg|Colima|source|Culiac|Durango|Lomas|Victoria|Centro|Oriente|Poniente|Lindavista|Hermosillo|Jalisco|La|Paz|Tlahuac|Los|Mochis|Mazatlan|Ermita|Morelia|Nogales|Cuautitlan|Puerto|Chilpancingo|Vallarta|Tepic|Zamora|Sur|Balbuena|Campeche|Canc|Coatzacoalcos|||||||||||rdoba|Jalapa|Acapulco|rida|Metro|Oaxaca|Pachuca|Poza|Rica|Irapuato|Tuxtla|Guitierrez|Veracr|Villahermosa|70|Telnor|Ensenada|Mexicali|Tijuana|split|small|agregarDistrito|divi|original|Le|validar|for|push|focus|filter|box|Aguascalientes|fadeIn|homeLoading|preventDefault|Matamoros|ABCDEFGHIJKLMN|usuario|password|OPQRSTUVWXYZabcdefghijklmn|user|errorMessage|null|opqrstuvwxyz1234567890|indexOf|Celaya|overlayClose|overlay|fadeOut|window|location|loginP|||||||||||us|ni|role|idRole|idJefe|idUsuario'.split('|'),0,{}))
+var div_eli_region,li_eli_region,gcm_reg_usr_id,idDelJefe,tipoUser="6",textAreaG,activadistrito=0,busca_col_o_dist='',ubicalosFirst=1,intervaloMarcadores;
+function regisdivareas(region){
+	var res=region.split("-"),
+		regiones=[];
+	if(res[2]===undefined)
+		res[2]=0;
+	if(res[3]===undefined)
+		res[3]=0;
+	if(res[0]==1){
+		regiones['division']='Metro';
+		if(res[1]==1) regiones['area']='Acapulco';
+		if(res[1]==2) regiones['area']='Balbuena';
+		if(res[1]==3) regiones['area']='Chilpancingo';
+		if(res[1]==4) regiones['area']='Cuautitlan-Morelos';
+		if(res[1]==5) regiones['area']='Ermita-Tlahuac';
+		if(res[1]==6) regiones['area']='Lindavista';
+		if(res[1]==7) regiones['area']='Lomas';
+		if(res[1]==8) regiones['area']='Mixcoac';
+		if(res[1]==9) regiones['area']='Morelos';
+		if(res[1]==10)regiones['area']='Satélite';
+		if(res[1]==11)regiones['area']='Sotelo';
+		if(res[1]==12)regiones['area']='Texcoco-Zaragoza';
+		if(res[1]==13)regiones['area']='Toluca';
+		if(res[1]==14)regiones['area']='Universidad';
+		if(res[1]==15)regiones['area']='Valle-San Juán';
+	}
+	else if(res[0]==2){
+		regiones['division']='Norte';
+		if(res[1]==16)regiones['area']='Aguascalientes';
+		if(res[1]==17)regiones['area']='Celaya';
+		if(res[1]==18)regiones['area']='Ciudad Victoria';
+		if(res[1]==19)regiones['area']='Irapuato';
+		if(res[1]==20)regiones['area']='León';
+		if(res[1]==21)regiones['area']='Matamoros';
+		if(res[1]==22)regiones['area']='Monterrey 1';
+		if(res[1]==23)regiones['area']='Monterrey 2';
+		if(res[1]==24)regiones['area']='Monterrey Foraneas';
+		if(res[1]==25)regiones['area']='Nuevo Laredo';
+		if(res[1]==26)regiones['area']='Querétaro';
+		if(res[1]==27)regiones['area']='Reynosa';
+		if(res[1]==28)regiones['area']='Sabinas';
+		if(res[1]==29)regiones['area']='Saltillo';
+		if(res[1]==30)regiones['area']='San Luis Potosí';
+		if(res[1]==31)regiones['area']='Tampico';
+		if(res[1]==32)regiones['area']='Torreón';
+		if(res[1]==33)regiones['area']='Zacatecas';
+	}
+	else if(res[0]==3){
+		regiones['division']='Occidente';
+		if(res[1]==34)regiones['area']='Chihuahua';
+		if(res[1]==35)regiones['area']='Ciudad Juárez';
+		if(res[1]==36)regiones['area']='Ciudad Obregón';
+		if(res[1]==37)regiones['area']='Colima';
+		if(res[1]==38)regiones['area']='Culiacán';
+		if(res[1]==39)regiones['area']='Durango';
+		if(res[1]==40)regiones['area']='Guadalajara Centro';
+		if(res[1]==41)regiones['area']='Guadalajara Oriente';
+		if(res[1]==42)regiones['area']='Guadalajara Poniente';
+		if(res[1]==43)regiones['area']='Hermosillo';
+		if(res[1]==44)regiones['area']='Jalisco';
+		if(res[1]==45)regiones['area']='La Paz';
+		if(res[1]==46)regiones['area']='Los Mochis';
+		if(res[1]==47)regiones['area']='Mazatlan';
+		if(res[1]==48)regiones['area']='Morelia';
+		if(res[1]==49)regiones['area']='Nogales';
+		if(res[1]==50)regiones['area']='Puerto Vallarta';
+		if(res[1]==51)regiones['area']='Tepic';
+		if(res[1]==52)regiones['area']='Zamora';
+	}
+	else if(res[0]==4){
+		regiones['division']='Sur';
+		if(res[1]==53)regiones['area']='Campeche';
+		if(res[1]==54)regiones['area']='Cancún';
+		if(res[1]==55)regiones['area']='Coatzacoalcos';
+		if(res[1]==56)regiones['area']='Córdoba';
+		if(res[1]==57)regiones['area']='Jalapa';
+		if(res[1]==58)regiones['area']='Mérida';
+		if(res[1]==59)regiones['area']='Oaxaca';
+		if(res[1]==60)regiones['area']='Pachuca';
+		if(res[1]==61)regiones['area']='Poza Rica';
+		if(res[1]==62)regiones['area']='Puebla';
+		if(res[1]==63)regiones['area']='Tlaxcala-Puebla';
+		if(res[1]==64)regiones['area']='Tuxtla Guitierrez';
+		if(res[1]==65)regiones['area']='Veracrúz';
+		if(res[1]==66)regiones['area']='Villahermosa';
+		if(res[1]==70)regiones['area']='Tlaxcala';
+	}
+	else if(res[0]==5){
+		regiones['division']='Telnor';
+		if(res[1]==67)regiones['area']='Ensenada';
+		if(res[1]==68)regiones['area']='Mexicali';
+		if(res[1]==69)regiones['area']='Tijuana';
+	}
+	regiones['distrito']='';
+	regiones['colonia']='';
+	if(res[2]!=0)
+		regiones['distrito']=res[2];
+	if(res[3]!=0)
+		regiones['colonia']=res[3];
+	if(res[2]!=0 && res[3]==0){
+		regiones['region']=regiones['division'] + '-' + regiones['area'] + '-' + res[2];
+		regiones['regionT']='<span>Distrito:</span> ' + regiones['division'] + '-' + regiones['area'] + '-' + res[2];
+	}
+	else if(res[2]==0 && res[3]==0){
+		regiones['region']=regiones['division'] + '-' + regiones['area'];
+		regiones['regionT']='<span>Área:</span> ' + regiones['division'] + '-' + regiones['area'];
+	}
+	else if(res[2]==0 && res[3]!=0){
+		regiones['region']=regiones['division'] + '-' + regiones['area'] + '-' + res[3];
+		regiones['regionT']='<span>Colonia:</span> ' + regiones['division'] + '-' + regiones['area'] + '-' + res[3];
+	}
+	else if(res[2]!=0 && res[3]!=0){
+		regiones['region']=regiones['division'] + '-' + regiones['area'] + '-' + res[3] + '-' + res[2];
+		regiones['regionT']='<span>Distrito/Colonia:</span> ' + regiones['division'] + '-' + regiones['area'] + '-' + res[3] + '-' + res[2];
+	}
+	regiones['original']=region;
+	return regiones;
+}
+function validar(string){
+	for(var i=0,output='',validos="ABCDEFGHIJKLMNÑOPQRSTUVWXYZabcdefghijklmnñopqrstuvwxyz1234567890,. ";i<string.length;i++)
+		if(validos.indexOf(string.charAt(i))!= -1)
+			output += string.charAt(i);
+	return output;
+}
+function overlayClose(){
+	$("#overlay").fadeOut('fast');
+}
+function quitame(li){
+	li_eli_region=li;
+	div_eli_region=li.parent().parent().find('.mensaje_elimina');
+	$(div_eli_region).show();
+}
+function creanotificacion(titulo,mensaje,error,textStatus,clase){
+	var op=''; if(error!='') op='<p>' + error + ' ' + textStatus + '</p>';
+	$('#notificaciones').append('<div class="tn ' + clase + '">' +
+		'<h2>' + titulo + '</h2>' +
+		'<p>' + mensaje + '</p>' + op +
+		'<div class="tn-progress"></div>' +
+	'</div>');
+	setTimeout(function(){$('#notificaciones').find(".tn").first().remove();},5000);
+}
+function mapaselecta(div){
+	var url = "http://10.105.116.52:9090/getDivisionByName/geoJson/" + div,
+		llave = "Division-"+trimer(div);
+	obtieneAreasDivis(llave,url,'2196F3');
+}
+function mapaselectb(reg){
+	var url = "http://10.105.116.52:9090/getAreaByName/geoJson/" + reg,
+		llave = "Area-"+trimer(reg);
+	obtieneAreasDivis(llave,url,'2196F3');
+}
+function mapaselectc(distri){
+	if(busca_col_o_dist=='distritos'){
+		var url = "http://10.105.116.52:9090/telmex/necropsia/reporte/distrito";
+			llave="Distritos-"+trimer(textAreaG),
+			dtags=[distri];
+		obtieneDistrics(llave,url,nvoArea,dtags,'F4F328');
+	}
+	else if(busca_col_o_dist=='colonias'){
+		limpiaDistricts();
+	}
+}
+$(function(){
+	$(document).on("change",".divisionesGeoTel",function(){
+		var	op=$(this).val(),
+			ap=$(this),
+			tc=$(this).children("option").filter(":selected").text();
+		todosdiv=$(this).parent().parent().parent().attr('id');
+		nvoDivi=op;
+		$("#mapaggg").slideDown(500);
+		limpiaMarcadores();
+		clearInterval(intervaloMarcadores);
+		mapaselecta(tc);
+		if(todosdiv=='filter-box'){
+			$('#container_mensajes,#showUP').hide();
+			ap.parent().parent().parent().find('.listaDist').html('');
+		}
+		else
+			$(this).parent().parent().find(".distritosText").removeClass('ya');
+		var divisiones=$.ajax({
+			url:"ajax/registro.php",
+			method:"POST",
+			data:"div=" + op,
+			select:ap
+		});
+		divisiones.done(function(msg){
+			$(ap).parent().parent().next('div').slideDown();
+			$(ap).parent().parent().next('div').next('div').hide();
+			$(ap).parent().parent().next('div').next('div').next('div').hide();
+			$(ap).parent().parent().next('div').find('select').children().remove().end().append(msg);
+		});
+		divisiones.fail(function(jqXHR,textStatus,error){
+			creanotificacion('Error:',
+				'No se pudo conectar al servicio para obtener las areas.',
+				error,textStatus,'error');
+		});
+	});
+	$(document).on("change",".areasGeoTel",function(){
+		nvoArea=$(this).val();
+		textAreaG=$(this).children("option").filter(":selected").text();
+		todosdiv=$(this).parent().parent().parent().attr('id');
+		limpiaMarcadores();
+		clearInterval(intervaloMarcadores);
+		mapaselectb(textAreaG);
+		$(this).parent().parent().next('div').find(".districtOpcGeoTel").val('0');
+		$(this).parent().parent().next('div').slideDown();
+		$(this).parent().parent().next('div').next('div').find(".distritosGeoTel").val('');
+		if(todosdiv!='fcambiar_distro')
+			$(this).parent().parent().next('div').next('div').slideUp();
+		if(todosdiv=='filter-box'){
+			$('#container_mensajes,#showUP').hide();
+			$(this).parent().parent().parent().find('.listaDist').html('');
+		}
+		else
+			$(this).parent().parent().find(".distritosText").removeClass('ya');
+	});
+	$(document).on("change",".districtOpcGeoTel",function(){
+		var op=$(this).val(),
+			ap=$(this),
+			ar=$(this).parent().parent().parent().find('.areasGeoTel').val(),
+			dG=$(this).parent().parent().parent().find('.distritosGeoTel'),
+			lD=$(this).parent().parent().parent().find('.listaDist'),
+			dT=$(this).parent().parent().parent().find('.distritosText'),
+		region='',
+		urldis=ip_services + '/getDistritosBySearch/'+ar+'/TODO',
+		urlcol=ip_services + '/telmex/necropsia/getNecropsiaColoniaByArea/'+ar;
+		todosdiv=$(this).parent().parent().parent().attr('id');
+		limpiaMarcadores();
+		clearInterval(intervaloMarcadores);
+		dG.autocomplete({ create:function(event,ui){} });
+		dG.val('');
+		if(todosdiv=='filter-box'){
+			$('#container_mensajes,#showUP').hide();
+			lD.html('');
+		}
+		else
+			dT.addClass('ya');
+		$('#container_mensajes').hide();
+		if(op == "1"){
+			$.ajax({
+				type:"GET",
+				url: urldis,
+				dataType:"json",
+				success:function(html){
+					busca_col_o_dist='distritos';
+					dG.attr("placeholder","Buscar distrito").autocomplete({source:html});
+				},
+				error: function(jqXHR, textStatus, error){
+					creanotificacion('Error:',
+						'No se pudo conectar al servicio para obtener los distritos.',
+						error,textStatus,'error');
+				}
+			});
+			$(this).parent().parent().next('div').slideDown();
+			dis_o_col='distritos';
+		}
+		else if(op=="3"){
+			$.ajax({
+				type:"GET",
+				url: urlcol,
+				dataType:"json",
+				cache:false,
+				success:function(html){
+					busca_col_o_dist='colonias';
+					dG.attr("placeholder","Buscar colonia").autocomplete({source:html.apiResponse});
+				},
+				error: function(jqXHR, textStatus, error){
+					creanotificacion('Error:',
+						'No se pudo conectar al servicio para obtener las colonias.',
+						error,textStatus,'error');
+				}
+			});
+			$(this).parent().parent().next('div').slideDown();
+			dis_o_col='colonias';
+		}
+		else if(op=="2"){
+			var region_solo_area=nvoDivi + '-' + nvoArea + '-',
+				xyregion=regisdivareas(nvoDivi + '-' + nvoArea + '-');
+			limpiaDistricts();
+			$("#showUP").fadeIn('fast',function(){
+				$.ajax({
+					type:"GET",
+					url:ip_services + "/telmex/get/usuariosarea/" + region_solo_area,
+					success:function(data,a,b){
+						var datos=data.apiResponse[0],
+							conte=$("#showUP"),
+							title=$("#showUP div h2.text_h2"),
+							devic=$("#showUP ul.devices"),
+							marks='',
+							markI=1;
+						var cntos=Object.keys(datos).length;
+						$("#showUP ul.devices li").not(':first').remove();
+						if(cntos>0){
+							title.html(cntos + ' en ' + xyregion.region);
+							jQuery.each(datos,function(i,item){
+								if(markI<cntos)
+									marks=marks+item[0]+',';
+								else{
+									marks=marks+item[0];
+									creaMarcadores(marks);
+									intervaloMarcadores=setInterval(function(){
+										limpiaMarcadores();
+										creaMarcadores(marks);
+										ubicalosFirst=2;
+									},15000);
+								}
+								markI++;
+								devic.append(
+									'<li>' +
+										'<form id="' + item[0] + '" name="" method="post">' +
+											'<label class="blue-text">Nombre:</label>' +
+											'<span class="sempleado black-text"> ' + item[2] + '</span>' +
+											'<div class="clear"></div>' +
+											'<label class="blue-text">Exp:</label>' +
+											'<span class="sexp black-text"> ' + item[5] + '</span>' +
+											'<div class="clear"></div>' +
+											'<div class="send_container">' +
+												'<textarea rows="3" id="mensaje" name="message" placeholder="Mensaje"></textarea>' +
+												'<input type="hidden" class="IDform" name="Id" value="' + item[0] + '"/>' +
+												'<input type="hidden" class="regIDform" name="regId" value="' + item[9] + '"/>' +
+												'<button class="btn waves-effect waves-light red darken-1 mensajes" type="submit">Enviar' +
+													'<i class="mdi-content-send right white-text"></i>' +
+												'</button> &nbsp; ' +
+												'<button class="btn waves-effect waves-light green accent-4 triggerOverlay editar">Reasignar' +
+													'<i class="mdi-navigation-refresh right white-text"></i>' +
+												'</button>' +
+											'</div>' +
+										'</form>' +
+									'</li>');
+							});
+						}
+						else{
+							$('#container_mensajes').hide();
+							title.html('No se encontraron dispositivos de esa región');
+						}
+					},
+					error: function(jqXHR, textStatus, error){
+						creanotificacion('Error:',
+							'No se pudo conectar al servicio para obtener los usuarios de la region seleccionada.',
+							error,textStatus,'error');
+					}
+				});
+			});
+		}
+		else dT.slideUp();
+	});
+	$(document).on("keypress",".distritosGeoTel",function(){
+		activadistrito=0;
+	});
+	$(document).on("click",".ui-autocomplete li",function(){
+		activadistrito=1;
+	});
+	$(document).on("click","small.agregarDistrito",function(){
+		if(activadistrito==1){
+			var dist=$(this).parent().find('.distritosGeoTel').val(),
+				divi=$(this).parent(),
+			  region,reer,
+			elformul=$(this).parent().parent(),
+			todosdiv=$(this).parent().parent().attr('id');
+			if(dist==""){
+				creanotificacion('Notificación:',
+					'Debes seleccionar un distrito o colonia de la lista.','','','');
+			}else{
+				limpiaMarcadores();
+				clearInterval(intervaloMarcadores);
+				$(this).parent().find('.distritosGeoTel').val("");
+				$(this).parent().find('.distritosGeoTel').focus();
+				if(dis_o_col=='distritos')
+					region=nvoDivi + '-' + nvoArea + '-' + dist+'-0';
+				else if(dis_o_col=='colonias')
+					region=nvoDivi + '-' + nvoArea + '-0-' + dist;
+				reer=regisdivareas(region);
+				if(todosdiv=='filter-box'){
+					mapaselectc(reer.distrito);
+					$(this).parent().find('.listaDist').html("<li>"+dist+"</li>");
+					$(this).parent().find(".listaDist > li").hide();
+					$('#container_mensajes').find('h3.header span').html(reer.region);
+					$('#container_mensajes').find('textarea').val('');
+					$('#container_mensajes').slideDown();
+					$('#container_mensajes').find('h3.header span').click(function(event){
+						$('#container_mensajes').hide();
+					});
+					$("#showUP").fadeIn('fast',function(){
+						$.ajax({
+							type:"GET",
+							url:ip_services + "/telmex/get/usuariosregion/" + region,
+							success:function(data,a,b){
+								var datos=data.apiResponse[0],
+									conte=$("#showUP"),
+									title=$("#showUP div h2.text_h2"),
+									devic=$("#showUP ul.devices"),
+									markI=1,
+									marks='';
+								var cntos=Object.keys(datos).length;
+								$("#showUP ul.devices li").not(':first').remove();
+								if(cntos>0){
+									title.html(cntos + ' en ' + reer.region);
+									jQuery.each(datos,function(i,item){
+										if(markI<cntos)
+											marks=marks+item[0]+',';
+										else{
+											marks=marks+item[0];
+											creaMarcadores(marks);
+											intervaloMarcadores=setInterval(function(){
+												limpiaMarcadores();
+												creaMarcadores(marks);
+												ubicalosFirst=2;
+											},15000);
+										}
+										markI++;
+										devic.append(
+											'<li>' +
+												'<form id="' + item[0] + '" name="" method="post">' +
+													'<label class="blue-text">Nombre:</label>' +
+													'<span class="sempleado black-text"> ' + item[2] + '</span>' +
+													'<div class="clear"></div>' +
+													'<label class="blue-text">Exp:</label>' +
+													'<span class="sexp black-text"> ' + item[5] + '</span>' +
+													'<div class="clear"></div>' +
+													'<div class="send_container">' +
+														'<textarea rows="3" id="mensaje" name="message" placeholder="Mensaje"></textarea>' +
+														'<input type="hidden" class="IDform" name="Id" value="' + item[0] + '"/>' +
+														'<input type="hidden" class="regIDform" name="regId" value="' + item[9] + '"/>' +
+														'<button class="btn waves-effect waves-light red darken-1 mensajes" type="submit">Enviar' +
+															'<i class="mdi-content-send right white-text"></i>' +
+														'</button> &nbsp; ' +
+														'<button class="btn waves-effect waves-light green accent-4 triggerOverlay editar">Reasignar' +
+															'<i class="mdi-navigation-refresh right white-text"></i>' +
+														'</button>' +
+													'</div>' +
+												'</form>' +
+											'</li>');
+									});
+								}
+								else{
+									$('#container_mensajes').hide();
+									title.html('No se encontraron dispositivos.');
+								}
+							},
+							error:function(jqXHR,textStatus,error){
+								creanotificacion('Error:',
+									'No se pudo conectar al servicio para regresar la lista de usuarios de la región seleccionada.',
+									error,textStatus,'error');
+							}
+						});
+					});
+				}
+				else if(todosdiv=='fcambiar_distro'){
+					var laregi=regisdivareas(region),
+						idEmpleado=$(elformul).find('#id-usuario').val();
+					$(elformul).addClass('cambiando');
+					if(gcm_reg_usr_id!='' && region!='' && idDelJefe!='' && idEmpleado!=''){
+						function envia_mensaje(){
+							$.ajax({
+								method:"POST",
+								url:"edit_b.php",
+								data:{
+									idJefe:idDelJefe,
+									empleado:idEmpleado,
+									distrito:region,
+									regIDform:gcm_reg_usr_id
+								}
+							}).done(function(msg){
+								$(elformul).removeClass('cambiando');
+								$(elformul).find('.listaDist').append("<li reg='" + region + "'>"+laregi.region+"</li>");
+							}).fail(function(jqXHR,textStatus,error){
+								creanotificacion('Error:',
+									'No se recibió respuesta del programa que envía la notificación de cambio de region al usuario.',
+									error,textStatus,'error');
+							});
+						}
+						function crea_region(){
+							var upnreg={idUsuario:{idUsuario:idEmpleado},regionTrabajo:region};
+							$.ajax({
+								type:"POST",
+								url:ip_services + "/telmex/add/region",
+								data:JSON.stringify(upnreg),
+								contentType:"application/json",
+								dataType:"json",
+								success:function(data,a,b){
+									envia_mensaje();
+								},
+								error:function(jqXHR,textStatus,error){
+									creanotificacion('Error:',
+										'No se pudo conectar al servicio que agrega la region al usuario',
+										error,textStatus,'error');
+								}
+							});
+						}
+						$.post("postgre.php?hago=3",{
+							id:idEmpleado,
+							reg:region
+						}).done(function(data){
+							var ex=parseInt(data);
+							if(ex==0)
+								crea_region();
+							else{
+								$(elformul).removeClass('cambiando');
+								creanotificacion('Notificación:',
+									'Ya estaba asignado a ' + laregi.region,'','','');
+							}
+						}).fail(function(jqXHR,textStatus,error){
+							creanotificacion('Error:',
+								'No se pudo verificar si ya estaba asignado a esa region',
+								error,textStatus,'error');
+						});
+					}
+					else{
+						creanotificacion('Nota:','Selecciona un distrito para el usuario.','','','');
+					}
+
+				}
+				else{
+					var laregi=regisdivareas(region);
+					$(this).parent().find('.listaDist').append("<li reg='" + region + "'>"+laregi.region+"</li>");
+				}
+			}
+			$(this).parent().find(".listaDist > li").click(function(event){
+				quitame($(this));
+			});
+		}
+		else{
+			creanotificacion('Advertencia:','Por favor selecciona un distrito de la lista desplegable.','','','advertencia');
+		}
+	});
+	$("#homeLoading").on("submit",function(event){
+		event.preventDefault();
+		if($("#usr").val()=="" || $("#pwd").val()==""){
+			creanotificacion('Advertencia:',
+				'Debes escribir tu usuario y contraseña','','','advertencia');
+		}else{
+			var usuario=$("#usr").val(),
+				clave=$("#pwd").val();
+			$.ajax({
+				type:"GET",
+				url: ip_services + "/telmex/get/user/"+usuario+"/"+clave,
+				success:function(data,a,b){
+					var respuesta = data;
+					if(respuesta.errorMessage!= null){
+						creanotificacion('Error:',
+							'Nombre de usuario o contraseña incorrecto.','','','error');
+					}
+					else{
+						window.location="loginP.php?us=" + respuesta.apiResponse[0].nombre +
+										"&ni=" + respuesta.apiResponse[0].role.idRole +
+										"&idJefe=" + respuesta.apiResponse[0].idUsuario;
+					}
+				},
+				error:function(jqXHR,textStatus,error){
+					creanotificacion('Error:',
+						'No se recibió respuesta del servicio de acceso.',
+						error,textStatus,'error');
+				},
+				dataType: 'json'
+			});
+		}
+	});
+});

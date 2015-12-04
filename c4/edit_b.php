@@ -5,17 +5,18 @@
 		$distrito = $_POST["distrito"];
 		$regIDform = $_POST["regIDform"];
 		include_once 'db_postgre.php';
-		$db = new db_Postgre();
-		$result = $db->history_change($idJefe,$empleado,$distrito);
+//		$db = new db_Postgre();
+		$region=regiones($distrito);
+//		$result=$db->storeRegion($empleado,$distrito);
+//		$result=$db->history_change($idJefe,$empleado,$distrito);
 		$result=$idJefe.' + '.$empleado.' + '.$distrito;
-		$message='Has sido asignado al distrito '.$distrito;
-
+		$result='J:'.$idJefe.' - E:'.$empleado.' - D:'.$distrito.' - R:'.$regIDform;
+		$message='Has sido asignado a la region '.$region['region'];
 		include_once './GCM.php';
 		$gcm = new GCM();
 		$registatoin_ids = array($regIDform);
-		$message = array("mensaje" => $message);
-		$result = $gcm->send_notification($registatoin_ids, $message);
-
+		$message=array("mensaje" => $message);
+		$gcm->send_notification($registatoin_ids, $message);
 		echo $result;
 	}
 ?>

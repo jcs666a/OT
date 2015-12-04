@@ -2,7 +2,7 @@
 	<nav>
 		<div id="au_menu" class="nav-wrapper">
 			<a id="au_cierra" href="#" class="brand-logo right">x</a>
-			<ul id="nav-mobile" class="left hide-on-med-and-down">
+			<ul id="nav-mobile-b" class="left hide-on-med-and-down">
 				<li class="active"><a href="#au_usuarios">Usuarios</a></li>
 				<li><a href="#au_newusr">Nuevo Usuario</a></li>
 			</ul>
@@ -13,13 +13,11 @@
 			<thead>
 				<tr>
 					<th>id</th>
-					<th>División</th>
-					<th>Área</th>
-					<th>Distrito</th>
-					<th>Usuario</th>
 					<th>Nombre</th>
 					<th>Rol</th>
 					<th>Expediente</th>
+					<th>Usuario</th>
+					<th>Region</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -31,25 +29,33 @@
 					$resp=$data->{'apiResponse'};
 					foreach ($resp[0] as $key => $value){
 						if($value->role->idRole > 3){ // && $value->role->idRole !=5){
-							$d_json = '"usr_id":"'.$value->idUsuario.
-									'","region_trabajo":"'.$value->regionTrabajo.
+							$jsonB=file_get_contents('http://10.105.116.52:9090/telmex/get/region/'.$value->idUsuario);
+							$dataB=json_decode($jsonB);
+							$respB=$dataB->{'apiResponse'};
+							$regiones=array();
+							$regi=array();
+							foreach($respB[0] as $keyB => $valueB){
+								$regiones[]=regiones($valueB->regionTrabajo);
+							} $i=1;
+							foreach($regiones as $keyC => $valueC){
+								$regi[]='<li>'.$valueC['regionT'].'</li>';
+								$i++;
+							}
+							$d_json='"usr_id":"'.$value->idUsuario.
 									'","usr_nombre":"'.$value->nombre.
 									'","usr_user":"'.$value->usuario.
 									'","id_role":"'.$value->role->idRole.
 									'","expediente":"'.$value->expediente.'"';
 							$role=roles($value->role->idRole);
-							$regi=regiones($value->regionTrabajo);
 							echo '<tr>
 									<td>'.$value->idUsuario.'</td>
-									<td>'.$regi['division'].'</td>
-									<td>'.$regi['area'].'</td>
-									<td>'.$regi['distrito'].'</td>
-									<td>'.$value->usuario.'</td>
 									<td>'.$value->nombre.'</td>
 									<td>'.$role['na'].'</td>
 									<td>'.$value->expediente.'</td>
+									<td>'.$value->usuario.'</td>
+									<td><ul>'.implode(" ",$regi).'</ul></td>
 									<td>
-										<a href="#" class="au_editar" data=\''.$d_json.'\'>Editar</a>
+										<a href="#adminUsers" class="au_editar" data=\''.$d_json.'\'>Editar</a>
 											/
 										<a href="#" class="au_eliminar" data="'.$value->idUsuario.'">Eliminar</a>
 									</td>
@@ -59,6 +65,21 @@
 				?>
 			</tbody>
 		</table>
+		<div id="pager" class="pager">
+			<form>
+				<span class="first mdi-av-skip-previous"></span>
+				<span class="prev mdi-image-navigate-before"></span>
+				<input type="text" class="pagedisplay" readonly="readonly" disabled="disabled" />
+				<span class="next mdi-image-navigate-next"></span>
+				<span class="last mdi-av-skip-next"></span>
+				<label><select class="pagesize">
+					<option selected="selected"  value="10">10</option>
+					<option value="20">20</option>
+					<option value="30">30</option>
+					<option  value="40">40</option>
+				</select></label>
+			</form>
+		</div>
 	</div>
 	<div id="au_newusr" style="display:none;">
 		<h3 style="display:none;">Editando usuario</h3>
@@ -79,15 +100,14 @@
 						<option value="7">Promotor</option>
 					</select></label>
 				</div>
-				<h4 class="rol_actual" style="display:none;">Region actual: <span></span></h4>
 				<input type="hidden" name="sigo_la_misma_region" id="sigo_la_misma_region" value="" />
 				<div class="holder-block">
-					<p>Eliga el distrito de pertencia:</p>
+					<p>&nbsp;</p>
 					<?php include 'distritos.php';?>
 				</div>
 				<div style="padding:20px 0;text-align:center;">
 					<button class="btn waves-effect waves-light red darken-1" type="submit">
-						 Registrar <i class="mdi-content-send right white-text"></i>
+						 Guardar <i class="mdi-content-save right white-text"></i>
 					</button>
 				</div>
 			</div>
