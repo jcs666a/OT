@@ -1,8 +1,0 @@
-var sets = [
-         {"sets": [0], "label": "Radiohead - 7000", "size": 7000},
-         {"sets": [1], "label": "Thom Yorke - 5000", "size": 5000},
-         {"sets": [2], "label": "John Lennon - 7000", "size": 7000},
-		 {"sets": [0, 1], "size": 2000, label: "2000"},
-         {"sets": [0, 2], "size": 1500, label: "1500"},
-         {"sets": [1, 2], "size": 2000, label: "2000"},
-         {"sets": [0, 1, 2], "size": 500, label: "500"}];
