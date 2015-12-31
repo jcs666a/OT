@@ -29,6 +29,7 @@
         <div class="container">
             <div class="nav-wrapper"><a id="logo-container" href="#top" class="brand-logo">Telmex C4</a>
             <ul id="nav-mobile" class="right side-nav">
+                <li><a href="#campanas" id="campanas">Campañas</a></li>
                 <li><a href="#intro">Fielders</a></li>
                 <li><a href="#work">Proyectos</a></li>
                 <li><a href="#team">Team</a></li>
@@ -159,51 +160,6 @@
                     </div>
                 </div>
             </div>
-            <!-- div class="col s12 m4 l4">
-                <div class="card">
-                    <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" src="img/playa.png">
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title activator grey-text text-darken-4">Project Title <i class="mdi-navigation-more-vert right"></i></span>
-                        <p><a href="#" target="_blank">Project link</a></p>
-                    </div>
-                    <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4">Project Title <i class="mdi-navigation-close right"></i></span>
-                        <p>Here is some more information about this project that is only revealed once clicked on.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 m4 l4">
-                <div class="card">
-                    <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" src="img/parque.png">
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title activator grey-text text-darken-4">Project Title <i class="mdi-navigation-more-vert right"></i></span>
-                        <p><a href="#" target="_blank">Project link</a></p>
-                    </div>
-                    <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4">Project Title <i class="mdi-navigation-close right"></i></span>
-                        <p>Here is some more information about this project that is only revealed once clicked on.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 m4 l4">
-                <div class="card">
-                    <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" src="img/puente.png">
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title activator grey-text text-darken-4">Project Title <i class="mdi-navigation-more-vert right"></i></span>
-                        <p><a href="#" target="_blank">Project link</a></p>
-                    </div>
-                    <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4">Project Title <i class="mdi-navigation-close right"></i></span>
-                        <p>Here is some more information about this project that is only revealed once clicked on.</p>
-                    </div>
-                </div>
-            </div -->
         </div>
     </div>
 </div>
@@ -322,8 +278,9 @@
 <footer id="contact" class="page-footer default_color scrollspy">
     <div class="container">  
         <div class="row">
-            <div class="col l6 s12">
-                <form class="col s12" action="contact.php" method="post">
+            <div id="contieneFormMails" class="col l6 s12">
+                <div id="msjE" style="display:none;"></div>
+                <form id="enviameMails" class="col s12" action="#" method="post">
                     <div class="row">
                         <div class="input-field col s6">
                             <i class="mdi-action-account-circle prefix white-text"></i>

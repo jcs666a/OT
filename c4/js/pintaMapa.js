@@ -25,8 +25,8 @@ function initialize(){
 		scrollwheel:false,
 		zoomControl:true,
 		zoom:7,
-		center:{lat:19.3907336,lng:-99.1436126},
-		styles:[{"stylers":[{"hue":"#2c3e50"},{"saturation":250}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":50},{"visibility":"simplified"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]}]
+		center:{lat:19.3907336,lng:-99.1436126}
+//		styles:[{"stylers":[{"hue":"#2c3e50"},{"saturation":250}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":50},{"visibility":"simplified"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]}]
 	});
 }
 google.maps.event.addDomListener(window,'load',initialize);
@@ -66,6 +66,18 @@ function obtieneDistrics(llave,url,reg,dtags,color){
 							fillOpacity: 0.35
 						});
 						dataCartografica[llave].apiResponse[i].poligonos[distrito].setMap(map);
+// Tooltip de distrito
+var addListenersOnPolygon = function(polygon,llave, distrito, ventana){
+  google.maps.event.addListener(polygon, 'click', function (event){
+	contentInfoPoly = '<div style="font-family:Arial, Helvetica, sans-serif; font-size:10px;"><div>' + distrito + '</div>';
+	ventana.setContent(contentInfoPoly);
+	ventana.setPosition(event.latLng);
+	ventana.open(map);
+  });
+}
+dataCartografica[llave].apiResponse[i].infowindows[distrito] = new google.maps.InfoWindow({});
+addListenersOnPolygon(dataCartografica[llave].apiResponse[i].poligonos[distrito], llave, distrito, dataCartografica[llave].apiResponse[i].infowindows[distrito]);
+
 					}
 				}
 			}
@@ -78,47 +90,42 @@ function obtieneAreasDivis(llave,url,color){
 		coordenadas=[],
 		bounds=new google.maps.LatLngBounds();
 	limpiaDistricts();limpiaAreas();limpiaDivs();
-	$.ajax({
-		type:"GET",
-		url: url,
-		dataType: "json",
-		cache: false,
-		success: function(html){
-			dataCartografica[llave] = html.apiResponse[0];
-			dataCartografica[llave].markers = [];
-			dataCartografica[llave].capas = {};
-			dataCartografica[llave].infowindows = {};
-			dataCartografica[llave].poligonosCords = {};
-			dataCartografica[llave].poligonos = {};
-			dataCartografica[llave].capas[llave] = new google.maps.Data();
-			dataCartografica[llave].capas[llave].addGeoJson(html.apiResponse[0]);
-			var featureStyle={
-				fillColor: '#' + color,
-				strokeWeight: 1,
-				strokeOpacity: 0.4,
-				fillOpacity: 0.2
-			}
-			dataCartografica[llave].capas[llave].setStyle(featureStyle);
-			dataCartografica[llave].capas[llave].setMap(map);
-			var capita = dataCartografica[llave].capas[llave];
-			for (var i = 0; i < dataCartografica[llave].features[0].geometry.coordinates.length; i++){
-				for (var j = 0; j < dataCartografica[llave].features[0].geometry.coordinates[i].length; j++){
-					var coordenada = new google.maps.LatLng(dataCartografica[llave].features[0].geometry.coordinates[i][j][1], dataCartografica[llave].features[0].geometry.coordinates[i][j][0]);
-					coordenadas.push(coordenada);
-					bounds.extend(coordenada);
-				}
-			}
-			dataCartografica[llave].poligonosCords[llave] = coordenadas;
-			dataCartografica[llave].poligonos[llave] = new google.maps.Polygon({
-				paths:dataCartografica[llave].poligonosCords[llave],
-				strokeColor: '#D0FA58',
-				strokeOpacity: 0.4,
-				strokeWeight: 1,
-				fillColor: '#' + color,
-				fillOpacity: 0.2
-			});
-			map.fitBounds(bounds);
+	var pgert=getgetPromise(url);
+	pgert.done(function(html){
+		dataCartografica[llave] = html.apiResponse[0];
+		dataCartografica[llave].markers = [];
+		dataCartografica[llave].capas = {};
+		dataCartografica[llave].infowindows = {};
+		dataCartografica[llave].poligonosCords = {};
+		dataCartografica[llave].poligonos = {};
+		dataCartografica[llave].capas[llave] = new google.maps.Data();
+		dataCartografica[llave].capas[llave].addGeoJson(html.apiResponse[0]);
+		var featureStyle={
+			fillColor: '#' + color,
+			strokeWeight: 1,
+			strokeOpacity: 0.4,
+			fillOpacity: 0.2
 		}
+		dataCartografica[llave].capas[llave].setStyle(featureStyle);
+		dataCartografica[llave].capas[llave].setMap(map);
+		var capita = dataCartografica[llave].capas[llave];
+		for (var i = 0; i < dataCartografica[llave].features[0].geometry.coordinates.length; i++){
+			for (var j = 0; j < dataCartografica[llave].features[0].geometry.coordinates[i].length; j++){
+				var coordenada = new google.maps.LatLng(dataCartografica[llave].features[0].geometry.coordinates[i][j][1], dataCartografica[llave].features[0].geometry.coordinates[i][j][0]);
+				coordenadas.push(coordenada);
+				bounds.extend(coordenada);
+			}
+		}
+		dataCartografica[llave].poligonosCords[llave] = coordenadas;
+		dataCartografica[llave].poligonos[llave] = new google.maps.Polygon({
+			paths:dataCartografica[llave].poligonosCords[llave],
+			strokeColor: '#D0FA58',
+			strokeOpacity: 0.4,
+			strokeWeight: 1,
+			fillColor: '#' + color,
+			fillOpacity: 0.2
+		});
+		map.fitBounds(bounds);
 	});
 }
 function creaMarcadores(marcas){
@@ -127,19 +134,15 @@ function creaMarcadores(marcas){
 	$.each(todos,function(inx,uno){
 		marcax.push({"idFielder":uno});
 	});
-	$.ajax({
-		type:"POST",
-		url:ip_services + "/telmex/get/coordn",
-		data:JSON.stringify(marcax),
-		contentType:"application/json",
-		dataType:"json"
-	}).done(function(data){
+	var pmarcas=getPromise(ip_services + "/telmex/get/coordn",marcax);
+	pmarcas.done(function(data){
 		var x=data.apiResponse[0],
 			centro,
 			datosMarker,
 			i=0,
 			infowindow=new google.maps.InfoWindow({content:'Espere por favor, cargando...'}),
 			fecha;
+		console.log(x);
 		$.each(x,function(index,mark){
 			fecha=mark.createAt.slice(0,19);
 			horas=fecha.slice(11,19);
@@ -165,7 +168,9 @@ function creaMarcadores(marcas){
 				infowindow.open(map, this);
 			});
 			i++;
-		}); // map.setCenter(centro);
+		});
+		if(ubicalosFirst==1)
+			map.setCenter(centro);
 	}).fail(function(jqXHR,textStatus,error){
 		creanoti('Error:',
 			'No se pudo conectar al servicio para recibir la ubicación de los usuarios',
@@ -242,6 +247,14 @@ function getPromise(url,data){
 		contentType:"application/json",
 		data:JSON.stringify(data),
 		processData:false
+	});
+	return request;
+}
+function getgetPromise(url){
+	var request=$.ajax({
+		type:"GET",
+		url: url,
+		dataType: "json"
 	});
 	return request;
 }

@@ -95,12 +95,59 @@ class db_Postgre{
 			WHERE usr_id=".$id.";") or die('ERROR AL ACTUALIZAR CUENTA: '.pg_last_error());
 		return 'Usuario '.$id.' revivido';
 	}
+	public function getTecnologias(){
+		$this->i=0;$this->ar=array();
+		$this->result=pg_query("SELECT DISTINCT ON (equipo_acceso_tecnologia_catalog.id_equipo_acceso_tecnologia)
+			accesos.id_acceso,
+			distrito_tmx.id_distrito,
+			distrito_tmx.clave_distrito,
+			equipo_acceso_tecnologia_catalog.id_equipo_acceso_tecnologia,
+			equipo_acceso_tecnologia_catalog.tecnologia_acceso,
+			solucion.latitud,
+			solucion.longitud
+			FROM accesos,distrito_tmx,equipo_acceso_tecnologia_catalog,solucion
+			WHERE
+			distrito_tmx.id_distrito=accesos.id_distrito
+			AND accesos.id_equipo_acceso_tecnologia=equipo_acceso_tecnologia_catalog.id_equipo_acceso_tecnologia
+			AND solucion.identity = distrito_tmx.id_distrito
+			AND distrito_tmx.id_area=6
+			AND distrito_tmx.clave_distrito ='zds0004'
+			order by equipo_acceso_tecnologia_catalog.id_equipo_acceso_tecnologia,distrito_tmx.id_distrito;") or die('ERROR: '.pg_last_error());
+		while($this->row_db = pg_fetch_array($this->result,NULL,PGSQL_ASSOC)){
+			$this->ar[$this->i]=$this->row_db;
+			$this->i++;
+		}
+		return $this->ar;
+	}
+	public function getAreasTecnologias(){
+		$this->i=0;$this->ar=array(); //  DISTINCT ON (accesos.id_distrito)
+		$this->result=pg_query("SELECT
+			accesos.id_acceso, accesos.id_distrito,
+			equipo_acceso_tecnologia_catalog.id_equipo_acceso_tecnologia,
+			equipo_acceso_tecnologia_catalog.tecnologia_acceso, solucion.latitud, solucion.longitud,
+			distrito_tmx.clave_distrito
+			FROM distrito_tmx,accesos,equipo_acceso_tecnologia_catalog,solucion
+			WHERE distrito_tmx.id_area=6
+			AND distrito_tmx.id_distrito=accesos.id_distrito
+			AND accesos.id_equipo_acceso_tecnologia=equipo_acceso_tecnologia_catalog.id_equipo_acceso_tecnologia
+			AND solucion.identity = distrito_tmx.id_distrito
+			order by accesos.id_distrito,equipo_acceso_tecnologia_catalog.tecnologia_acceso;") or die('ERROR: '.pg_last_error());
+/*
+			AND solucion.id_tag=':tag'
+			AND solucion.latitud!=':wrongLat {0}'
+*/
+		while($this->row_db = pg_fetch_array($this->result,NULL,PGSQL_ASSOC)){
+			$this->ar[$this->i]=$this->row_db;
+			$this->i++;
+		}
+		return $this->ar;
+	}
 // mensajes: id - id_jefe - id_usr - mensaje - created_at - status_leido
 	public function storeMensajes($id_jefe,$id_usr,$mensaje){
 		$this->result=pg_query("INSERT INTO mensajes(id_jefe,id_usr,mensaje,created_at,status_leido)
 				VALUES('".$id_jefe."','".$id_usr."','".$mensaje."',NOW(),'N');") or die('ERROR AL INSERTAR DATOS: '.pg_last_error());
-		$this->oid = pg_last_oid($this->result);
-		return $result;
+		$this->oid=pg_last_oid($this->result);
+		return $this->oid;
 	}
 	public function getMensajes(){
 		$this->i=0;$this->ar=array();
@@ -121,14 +168,14 @@ class db_Postgre{
 		return $this->ar;
 	}
 	public function setMensajesFalse($id_usr){
-		$this->i=0;$this->ar=array();
 		$this->result=pg_query("UPDATE mensajes SET status_leido='N'
 								WHERE id_usr=".$id_usr.";") or die('ERROR: '.pg_last_error());
-		while($this->row_db = pg_fetch_array($this->result,NULL,PGSQL_ASSOC)){
-			$this->ar[$this->i]=$this->row_db;
-			$this->i++;
-		}
 		return $this->ar;
+	}
+	public function setUserDesconectado($id_usr){
+		$this->result=pg_query("UPDATE usuarios SET conectado='N'
+								WHERE usr_id=".$id_usr.";") or die('ERROR: '.pg_last_error());
+		return 'Usuario '.$id_usr.' ahora esta desconectado.';
 	}
 // gcm_users: id - gcm_regid - id_usr - created_at
 	public function storeGcm_users($gcm_regid,$id_usr,$created_at){

@@ -15,7 +15,7 @@ if(isset($_POST["idJefe"]) && isset($_POST["message_all"]) && isset($_POST["regI
 		$envio=$gcm->send_notification($registatoin_ids,$messageb);
 		$result.=$row["gcm_regid"].' ';
 	}
-//	echo $result;
+	echo $result;
 //	print_r($regIds);
 }
 ?>

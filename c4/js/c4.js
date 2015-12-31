@@ -61,7 +61,7 @@ $(function(){
 					message:mensaje,
 					regId:regId
 				}
-			}).done(function(msg){
+			}).done(function(msg){ console.log(msg);
 				$("ul.devices li.over").removeClass('s');
 				textarea.val('Mensaje enviado');
 				setTimeout(function(){
@@ -96,7 +96,7 @@ $(function(){
 			$("#fcambiar_distro .districtOpcGeoTel option[value='2']").remove();
 			$.ajax({
 				type:"GET",
-				url:"http://10.105.116.52:9090/telmex/get/region/" + idEmpleado,
+				url:ip_services+"/telmex/get/region/" + idEmpleado,
 				dataType:"json",
 				success:function(html){
 					var regiones_de=html.apiResponse[0];
@@ -149,15 +149,6 @@ $(function(){
 			});
 		});
 	});
-/*	$("#navigation a").stop().animate({"marginLeft":"-85px"},1000);
-	$("#navigation > li").hover(
-		function(){
-			$("a",$(this)).stop().animate({"marginLeft":"-2px"},200);
-		},
-		function(){
-			$("a",$(this)).stop().animate({"marginLeft":"-85px"},200);
-		}
-	); */
 	if(tipoUser==5)
 		$('.mensajes').hide();
 	if(tipoUser==6)
@@ -315,7 +306,7 @@ $(function(){
 					var obj=jQuery.parseJSON('{' + ide + '}');
 					$.ajax({
 						type:"GET",
-						url:"http://10.105.116.52:9090/telmex/get/region/" + obj.usr_id,
+						url:ip_services+"/telmex/get/region/" + obj.usr_id,
 						dataType:"json",
 						success:function(html){
 							var regiones_de=html.apiResponse[0];
@@ -380,6 +371,149 @@ $(function(){
 				}).tablesorterPager({container:$("#pager")});
 			});
 		}
+		else{
+			adminUsersBolean=0;
+			$(document).find('#adminUsers').remove();
+		}
+	});
+	$(document).on("click","#campanas",function(event){
+		event.preventDefault();
+		$("html,body").animate({scrollTop:180},400);
+		if(adminUsersBolean==0){
+			adminUsersBolean=1;
+			var divadminusers=$("<div id='adminUsers'/>");
+			$("#intro").before(divadminusers);
+			divadminusers.load("administraCampas.php",function(){
+				$("#FormNewCamp").find(".districtOpcGeoTel option[value='2']").remove();
+				$("#au_cierra").on("click",function(event){
+					event.preventDefault();
+					adminUsersBolean=0;
+					$(document).find('#adminUsers').remove();
+				});
+				$("#au_menu a").on("click",function(event){
+					event.preventDefault();
+					var id_div=$(this).attr('href');
+					$("#au_menu a").parent().removeClass('active');
+					$(this).parent().addClass('active');
+					$("#au_usuarios,#au_newusr,#au_newusr h3").hide();
+					$(id_div).show();
+					$(".FNtitulo,.FNtCode,.FNcampaignCode,.FNofferCode,.FNdescripcion,.FNUeDI").val('');
+				});
+				$("#FormNewCamp").on("submit",function(event){
+					event.preventDefault();
+					var  titulo=$('.FNtitulo').val(),
+						  tCode=$('.FNtCode').val(),
+						camCode=$('.FNcampaignCode').val(),
+						offCode=$('.FNofferCode').val(),
+						   desc=$('.FNdescripcion').val(),
+						   edit=$('.FNUeDI').val(),
+						    nvo;
+					if(titulo!='' && tCode!='' && camCode!='' && offCode!='' && desc!='' && edit==''){
+						var arrSend={
+									tcode:tCode,
+									campaigncode:camCode,
+									offercode:offCode,
+									titulo:titulo,
+									descripcion:desc
+									};
+						$.ajax({ // ip_services
+							type:"POST",
+							url:"http://10.105.116.202:9090/telmex/add/campaña",
+							data:JSON.stringify(arrSend),
+							contentType:"application/json",
+							dataType:"json",
+							success:function(data,a,b){
+								adminUsersBolean=0;
+								$(document).find('#adminUsers').remove();
+							},
+							error: function(jqXHR,textStatus,error){
+								creanotificacion('Error:',
+									'No se recibió respuesta del servicio para crear una campaña.',
+									error,textStatus,'error');
+							}
+						});
+					}
+					else if(titulo!='' && tCode!='' && camCode!='' && offCode!='' && desc!='' && edit!=''){
+						var update={
+									id:edit,
+									tcode:tCode,
+									campaigncode:camCode,
+									offercode:offCode,
+									titulo:titulo,
+									descripcion:desc
+								};
+						$.ajax({ // ip_services
+							type:"PUT",
+							url:"http://10.105.116.202:9090/telmex/campañaUp",
+							data:JSON.stringify(update),
+							contentType:"application/json",
+							dataType:"json",
+							success:function(data,a,b){
+								adminUsersBolean=0;
+								$(document).find('#adminUsers').remove();
+							},
+							error:function(jqXHR,textStatus,error){
+								creanotificacion('Error:',
+									'No se recibió respuesta del servicio para editar la campaña.',
+									error,textStatus,'error');
+							}
+						});
+					}
+					else alert('Por favor llena correctamente los campos.');
+				});
+				$(".au_eliminar").on("click",function(event){
+					event.preventDefault();
+					var ide=$(this).attr('data'),
+						tre=$(this);
+					$.ajax({ // ip_services
+						type:"DELETE",
+						url:"http://10.105.116.202:9090/telmex/del/campaña/"+ide,
+						success:function(data,a,b){
+							tre.closest('tr').remove();
+						},
+						error:function(jqXHR,textStatus,error){
+							creanotificacion('Error:',
+								'No se recibió respuesta del servicio para eliminar la campaña.',
+								error,textStatus,'error');
+						}
+					});
+				});
+				$(".au_editar").on("click",function(){
+					var obj=jQuery.parseJSON('{' + $(this).attr('data') + '}');
+					$.ajax({ // ip_services
+						type:"GET",
+						url:"http://10.105.116.202:9090/telmex/get/campname/" + obj.titulo,
+						success:function(data){
+							var desc=data.apiResponse[0];
+							$("#au_menu a").parent().removeClass('active');
+							$("#au_usuarios").hide();
+							$("#au_newusr,#au_newusr h3").show();
+							$(".FNtitulo").val(obj.titulo);
+							$(".FNtCode").val(obj.tcode);
+							$(".FNcampaignCode").val(obj.campaigncode);
+							$(".FNofferCode").val(obj.offercode);
+							$(".FNdescripcion").val(desc.descripcion);
+							$(".FNUeDI").val(obj.id);
+						},
+						error:function(jqXHR,textStatus,error){
+							creanotificacion('Error:',
+								'No se recibió respuesta del servicio para obtener la region del usuario.',
+								error,textStatus,'error');
+						}
+					});
+				});
+				$("table").tablesorter({
+					theme : 'blue',
+					sortList : [[1,0]],
+					headerTemplate : '{content}{icon}',
+					headers:{5:{sorter:false},6:{sorter:false}}
+				}).tablesorterPager({container:$("#pager")});
+			});
+		}
+		else{
+			adminUsersBolean=0;
+			$(document).find('#adminUsers').remove();
+		}
 	});
 	$("#broad_msg").on("submit",function(event){
 		event.preventDefault();
@@ -395,7 +529,7 @@ $(function(){
 					message_all:message_all,
 					regId_all:regId_all
 				}
-			}).done(function(msg){
+			}).done(function(msg){ console.log(msg);
 				$('#message_all').val('Mensaje enviado');
 				setTimeout(function(){
 					$('#message_all').val('');
@@ -409,20 +543,60 @@ $(function(){
 	});
 	$("#salir").on("click",function(event){
 		event.preventDefault();
+		$.ajax({type:"PUT",
+			url:ip_services + "/telmex/usuario/desconectado",
+			data:JSON.stringify({idUsuario:idJefe}),
+			contentType:"application/json",
+			dataType:"json"
+		}).done(function(data){ console.log(data); });
 		document.cookie = "cCuatroV=; expires=Thu, 01-Jan-70 00:00:01 GMT;";
 		$.get("logout.php");
 		console.log('sali');
-		window.location="./"
+		window.location="./";
+	});
+	$(document).on("submit","form#enviameMails",function(event){
+		event.preventDefault();
+		var nombre=$('#enviameMails #icon_prefix').val(),
+			para=$('#enviameMails #icon_email').val(),
+			mensaje=$('#enviameMails #icon_prefix2').val(),
+			tipo=1;
+		$.post("controlers/mail.php",{
+			nombre:nombre,
+			para:para,
+			mensaje:mensaje,
+			tipo:tipo
+		}).done(function(data){
+			var ex=parseInt(data);
+			$('#enviameMails #icon_prefix').val('');
+			$('#enviameMails #icon_email').val('');
+			$('#enviameMails #icon_prefix2').val('');
+			$('form#enviameMails').hide();
+			$('#msjE').show().html(data);
+			$('form#enviameMails')[0].reset();
+			setTimeout(function(){
+				$('form#enviameMails').show();
+				$('#msjE').hide();
+			}, 2000);
+		}).fail(function(jqXHR,textStatus,error){
+			creanotificacion('Error:',
+				'No se recibió respuesta del servicio para enviar mails.',
+				error,textStatus,'error');
+		});
 	});
 });
-//window.onbeforeunload = confirmExit;
+window.onbeforeunload=confirmExit;
 function confirmExit(){
+	$.ajax({type:"PUT",
+		url:ip_services + "/telmex/usuario/desconectado",
+		data:JSON.stringify({idUsuario:idJefe}),
+		contentType:"application/json",
+		dataType:"json"
+	}).done(function(data){ console.log(data); });
 	document.cookie = "cCuatroV=; expires=Thu, 01-Jan-70 00:00:01 GMT;";
 	$.get("logout.php");
 	console.log('sali');
-//  return false;
 }
-//document.oncontextmenu=new Function("return false;");
+// document.oncontextmenu=new Function("return false;");
 $(window).load(function(){
 	setTimeout(function(){
 		$("#mapaggg").hide();

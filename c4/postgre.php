@@ -11,15 +11,33 @@
 			$mensajes=$db->getMensajes();
 			$Gcm_user=$db->getGcm_users();
 			$RegTraba=$db->getAllRegionesTrabajo();
+			$RegAreao=$db->getAreasTecnologias();
+			$getTecno=$db->getTecnologias();
 	//		$AllTabla=$db->getAllTablas();
 	//		echo $db->reviveUser(46);
 			$History_=$db->getHistory_change();
 			$last_msg=$db->getLastMensajes(5);
+			$desconecA=$db->setUserDesconectado(8);
+			$desconecB=$db->setUserDesconectado(96);
 	//		$db->setMensajesFalse(8);
 	//		$db->eliminaRegiones(75);
 	//		$db->eliminaRegiones(76);
 	//		$db->storeRegion(47,'1-6-zds0004');
 	//		$db->updateGcm_users('432ewrf3wfwesrw433f3wfr',8,3);
+
+/*			echo '<pre>';
+				print_r($getTecno);
+			echo '</pre>';
+			echo '<pre>';
+				print_r($RegAreao);
+			echo '</pre>';
+*/
+			echo '<pre>';
+			print_r($desconecA);
+			echo '</pre>';
+			echo '<pre>';
+			print_r($desconecB);
+			echo '</pre>';
 			echo '<h2>Usuarios S:</h2><pre>';
 				print_r($Ssuarios);
 			echo '</pre><p>&nbsp;</p><h2>Usuarios id:</h2><pre>';

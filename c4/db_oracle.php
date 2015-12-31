@@ -22,6 +22,7 @@ class db_Postgre{
 	function __destruct(){ }
 	public function storeUnik($ary){
 		$this->ar=array();
+		include_once "functions.php";
 		pg_query("TRUNCATE ut_contact_ot_unica;") or die('ERROR AL TRUNCAR: '.pg_last_error());
 		foreach ($ary as $key => $value){
 			$this->i++;
@@ -44,19 +45,53 @@ class db_Postgre{
 				}
 			}
 			else{ */
-				$this->ar[$this->i]=array($value['TELEFONO']=>'Insertado');
-				$this->result=pg_query("INSERT INTO ut_contact_ot_unica
-					(telefono,distrito,tcode,campaign_code,offer_code,contact_datetime,processed,campoa,campob,campoc)
-					VALUES(	'".trim($value['TELEFONO'])."',
-							'".trim($value['DISTRITO'])."',
-							'".trim($value['TCODE'])."',
-							'".trim($value['CAMPAIGNCODE'])."',
-							'".trim($value['OFFERCODE'])."',
-							'".trim($value['CONTACTDATETIME'])."',
-							'".trim($value['PROCESSED'])."',
-							'".trim($value['CAMPOA'])."',
-							'".trim($value['CAMPOB'])."',
-							'".trim($value['CAMPOC'])."');") or die('ERROR AL INSERTAR DATOS: '.pg_last_error());
+				$separados=array(
+							trim($value['DIVISION']),
+							trim($value['AREA']),
+							trim($value['DISTRITO']),
+							0
+						);
+				if(trim($value['TELEFONO'])=='5557187929' && $this->i!=990){
+					$this->ar[$this->i]=array($value['TELEFONO']=>'No Insertado, repetido:
+								'.trim($value['CAMPOA']).',
+								'.trim($value['CAMPOB']).',
+								'.trim($value['CAMPOC']));
+				}
+				else{
+					$juntos=regionesNum($separados);
+					$this->result=pg_query("INSERT INTO ut_contact_ot_unica
+						(telefono,
+						 region,
+						 tcode,
+						 campaign_code,
+						 offer_code,
+						 contact_datetime,
+						 processed,
+						 campoa,
+						 campob,
+						 campoc,
+						 id_division,
+						 id_area,
+	 					 distrito,
+	 					 colonia,
+	 					 status_cliente)
+						VALUES(	'".trim($value['TELEFONO'])."',
+								'".$juntos['division'].'-'.$juntos['area'].'-'.$juntos['distrito'].'-0'."',
+								'".trim($value['TCODE'])."',
+								'".trim($value['CAMPAIGNCODE'])."',
+								'".trim($value['OFFERCODE'])."',
+								'".trim($value['CONTACTDATETIME'])."',
+								'".trim($value['PROCESSED'])."',
+								'".trim($value['CAMPOA'])."',
+								'".trim($value['CAMPOB'])."',
+								'".trim($value['CAMPOC'])."',
+								'".$juntos['division']."',
+								'".$juntos['area']."',
+								'".$juntos['distrito']."',
+								'0',
+								true);") or die('Postgre, ERROR AL INSERTAR DATOS: '.pg_last_error());
+					$this->ar[$this->i]=array($value['TELEFONO']=>'Insertado');
+				}
 //			}
 		}
 		return $this->ar;
@@ -169,10 +204,10 @@ class db_Oracle{
 //$res=$oracle_db->copyUsuariosUnikaPostgre();
 //print_r($res);
 
-$postgre_db=new db_Postgre();
-$res=$postgre_db->getUnik();
+//$postgre_db=new db_Postgre();
+//$res=$postgre_db->getUnik();
 
-print_r($res);
+//print_r($res);
 
 /*
 $fin = microtime(true);
