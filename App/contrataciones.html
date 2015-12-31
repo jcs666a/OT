@@ -1,0 +1,200 @@
+<div id="xpress" data-page="1" >
+<h3>Registro nueva contratación</h3>
+<div id="block-1">
+	<div class="ventaType" data-path="1" onclick="path(this);">
+		<p>Nueva contratación</p>
+	</div>
+</div>
+<div id="block-2" style="display:none;">
+	<div class="ventaType" data-path="2" onclick="path(this);">
+		<p>Linea Pura</p>
+	</div>
+	<div class="ventaType" data-path="2" onclick="path(this);">
+		<p>Linea Paquete</p>
+	</div>
+	<div class="ventaType" data-path="2" onclick="path(this);">
+		<p>Linea Adicional</p>
+	</div>
+	<div class="ventaType" data-path="2" onclick="path(this);">
+		<p>Claro video</p>
+	</div>
+</div>
+<div id="block-3" style="display:none;">
+	<div class="ventaType" data-path="3" onclick="path(this);">
+		<p>paquete 1</p>
+	</div>
+	<div class="ventaType" data-path="3" onclick="path(this);">
+		<p>paquete 2</p>
+	</div>
+	<div class="ventaType" data-path="3" onclick="path(this);">
+		<p>paquete 3</p>
+	</div>
+	<div class="ventaType" data-path="3" onclick="path(this);">
+		<p>paquete 4</p>
+	</div>
+</div>
+<div id="block-4" style="display:none;">
+<form id="checkOut">
+		<input type="hidden" value="A1" name="servicioTipo" />
+		<input type="hidden" value="389" name="servicioId" />
+		<div class="error-tip">
+			<input type="text" name="nombre" placeholder="nombre" class="mandatory"/>
+			<div class="tooltip"> este campo es obligatorio.</div>
+		</div>
+		<div class="error-tip">
+			<input name="paterno" placeholder="apellido paterno" type="text"  class="mandatory"/>
+			<div class="tooltip"> este campo es obligatorio.</div>
+		</div>
+		<div class="error-tip">
+			<input name="materno" placeholder="apellido materno" type="text"  class="mandatory"/>
+			<div class="tooltip"> este campo es obligatorio.</div>
+		</div>
+		<div class="error-tip">
+			<input name="telefono" placeholder="telefono" type="text"  />
+			<div class="tooltip"> este campo es obligatorio.</div>
+		</div>
+		<div class="error-tip">
+			<input name="celular" placeholder="celular" type="text"  />
+			<div class="tooltip"> este campo es obligatorio.</div>
+		</div>
+		<div class="error-tip">
+			<input name="email" placeholder="email" type="email"  />
+			<div class="tooltip"> este campo es obligatorio.</div>
+		</div>
+		<div class="error-tip">
+			<input name="rfc" placeholder="rfc" type="text"  />
+			<div class="tooltip"> este campo es obligatorio.</div>
+		</div>
+		<div class="error-tip">
+		<select name="tipoCalle" placeholder="tipo calle" id="" class="mandatory">
+			<option value="null"> tipo calle</option>
+			<option value="ACCESO">ACCESO</option>
+			<option value="AEROPUERTO">AEROPUERTO</option>
+			<option value="AMPLIACION">AMPLIACION</option>
+			<option value="ANDADOR">ANDADOR</option>
+			<option value="AVENIDA">AVENIDA</option>
+			<option value="BLOQUE">BLOQUE</option>
+			<option value="BOULEVARD">BOULEVARD</option>
+			<option value="CALLE">CALLE</option>
+			<option value="CALLEJON">CALLEJON</option>
+			<option value="CALZADA">CALZADA</option>
+			<option value="CAMINO">CAMINO</option>
+			<option value="CARRETERA">CARRETERA</option>
+			<option value="CARRIL">CARRIL</option>
+			<option value="CENTRO COMERCIAL">CENTRO COMERCIAL</option>
+			<option value="CERRADA">CERRADA</option>
+			<option value="CERRO">CERRO</option>
+			<option value="CIRCUITO">CIRCUITO</option>
+			<option value="CIRCUNVALACION">CIRCUNVALACION</option>
+			<option value="CLASE">CLASE</option>
+			<option value="COMPLEJO">COMPLEJO</option>
+			<option value="CONTINUACION">CONTINUACION</option>
+			<option value="CRUCERO">CRUCERO</option>
+			<option value="CUCHILLA">CUCHILLA</option>
+			<option value="DIAGONAL">DIAGONAL</option>
+			<option value="EDIFICIO">EDIFICIO</option>
+			<option value="EJE">EJE</option>
+			<option value="EJIDO">EJIDO</option>
+			<option value="ENTRONQUE">ENTRONQUE</option>
+			<option value="ESQUINA">ESQUINA</option>
+			<option value="KILOMETRO">KILOMETRO</option>
+			<option value="LATERAL">LATERAL</option>
+			<option value="LIBRAMIENTO">LIBRAMIENTO</option>
+			<option value="MALECON">MALECON</option>
+			<option value="MERCADO">MERCADO</option>
+			<option value="PARQUE INDUSTRIAL">PARQUE INDUSTRIAL</option>
+			<option value="PASAJE">PASAJE</option>
+			<option value="PEATONAL">PEATONAL</option>
+			<option value="PERIFERICO">PERIFERICO</option>
+			<option value="PERIMETRAL">PERIMETRAL</option>
+			<option value="PLAZA">PLAZA</option>
+			<option value="PLAZUELA">PLAZUELA</option>
+			<option value="PORTAL">PORTAL</option>
+			<option value="PRIVADA">PRIVADA</option>
+			<option value="PROLONGACION">PROLONGACION</option>
+			<option value="PUENTE">PUENTE</option>
+			<option value="RAMPA">RAMPA</option>
+			<option value="RETORNO">RETORNO</option>
+			<option value="RIVERA">RIVERA</option>
+			<option value="VIA">VIA</option>
+			<option value="VIADUCTO">VIADUCTO</option>
+		</select>
+			<div class="tooltip"> este campo es obligatorio.</div>
+		</div>
+		<div class="error-tip">
+			<input name="calle" placeholder="calle" type="text"  class="mandatory"/>
+			<div class="tooltip"> este campo es obligatorio.</div>
+		</div>
+		<div class="error-tip">
+			<input name="numExt" placeholder="número exterior" type="text"  class="mandatory"/>
+			<div class="tooltip"> este campo es obligatorio.</div>
+		</div>
+		<div class="error-tip">
+			<input name="numInt" placeholder="número interior" type="text"/>
+			<div class="tooltip"> este campo es obligatorio.</div>
+		</div>
+		<div class="error-tip">
+			<input name="entreCalle1" placeholder="entre calle 1" type="text" />
+			<div class="tooltip"> este campo es obligatorio.</div>
+		</div>
+		<div class="error-tip">
+			<input name="entreCalle2" placeholder="entre calle 2" type="text" />
+			<div class="tooltip"> este campo es obligatorio.</div>
+		</div>
+		<div class="error-tip">
+			<input name="colonia" placeholder="colonia" type="text"  class="mandatory"/>
+			<div class="tooltip"> este campo es obligatorio.</div>
+		</div>
+		<div class="error-tip">
+			<input name="cp" placeholder="cp"  class="mandatory"/>
+			<div class="tooltip"> este campo es obligatorio.</div>
+		</div>
+		<select name="estado" id="noShit" onchange="loadThat(this.value);">
+			<option value="sinValor">ESTADO</option>
+		</select>
+		<div id="municipio"></div>
+   		<input type="hidden" name="latlong" id="geoId" >
+		<span onclick="sendGeo();">Enviar </span>
+	</form>
+</div>
+<div id="historyNav">
+	<div id="backNav" onclick="backNav();">
+		<i class="fa fa-chevron-left"></i>
+	</div>
+</div>
+</div>
+<div id="shure">
+	<div class="inner">
+		<h1>¿Esto es correcto?</h1>
+		<div id="shureContent"></div>	
+		<div id="so">
+			<div class="left" onclick="closeCheckOut();">
+				<p><i class="fa fa-times"></i> no</p>
+			</div>
+			<div class="right" onclick="checkOut();">
+				<p><i class="fa fa-check"></i> si</p>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+/*	  var servicioTipo  = document.getElementsByName('servicioTipo')[0].value,
+      servicioId = document.getElementsByName('servicioId')[0].value,
+      nombre = document.getElementsByName('nombre')[0].value,
+      paterno = document.getElementsByName('paterno')[0].value, 
+      materno = document.getElementsByName('materno')[0].value,
+      telefono = document.getElementsByName('telefono')[0].value,
+      celular = document.getElementsByName('celular')[0].value,
+      email = document.getElementsByName('email')[0].value, 
+      rfc = document.getElementsByName('rfc')[0].value,
+      tipoCalle = document.getElementsByName('tipoCalle')[0].value,
+      calle = document.getElementsByName('calle')[0].value,
+      numExt = document.getElementsByName('numExt')[0].value,
+      numInt = document.getElementsByName('numInt')[0].value,
+      entreCalle1 = document.getElementsByName('entreCalle1').value, 
+      entreCalle2 = document.getElementsByName('entreCalle2').value, 
+      colonia = document.getElementsByName('colonia')[0].value, 
+      cp = document.getElementsByName('cp')[0].value, 
+      estado = document.getElementsByName('estado')[0].value,
+      municipio = document.getElementsByName('municipio')[0].value;*/
+</script>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello WebSocket</title>
+    <script src="js/sockjs-0.3.4.js"></script>
+    <script src="js/stomp.min.js"></script>
+    <script type="text/javascript">
+
+        var stompClient = null;
+        var userID = 7;
+        
+        function setConnected(connected) {
+            document.getElementById('connect').disabled = connected;
+            document.getElementById('disconnect').disabled = !connected;
+            document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
+            document.getElementById('response').innerHTML = '';
+        }
+        type = 0;
+        function connect() {
+            var socket = new SockJS('http://10.105.116.202:8080/messaging');
+            stompClient = Stomp.over(socket);            
+            stompClient.connect({}, function(frame) {
+                setConnected(true);
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/user/'+userID+'/topic/region', function(greeting){
+                    type = 0;
+                    showGreeting(greeting.body, type);
+                });
+                stompClient.subscribe('/user/'+userID+'/topic/usuario', function(greeting){ 
+                    type = 1;
+                        showGreeting(greeting.body, type);
+                });
+                stompClient.subscribe('/user/'+userID+'/topic/campaña', function(greeting){ 
+                    type = 2;
+                        showGreeting(greeting.body, type);
+                });
+                stompClient.subscribe('/user/'+userID+'/topic/mensaje', function(greeting){ 
+                    type = 3;
+                        showGreeting(greeting.body, type);
+                });
+            });
+        }
+        
+        function disconnect() {
+            if (stompClient != null) {
+                stompClient.disconnect();
+            }
+            setConnected(false);
+            console.log("Disconnected");
+        }
+        
+        function sendName() {
+            var name = document.getElementById('name').value;
+            stompClient.send("/app/messaging", {}, JSON.stringify({ 'name': name }));
+        }
+        
+        function showGreeting(message, type) {
+            alert('menasje push from stomp '+message+' type: '+type);
+        }
+    </script>
+</head>
+<body onload="disconnect()">
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable
+    Javascript and reload this page!</h2></noscript> <div>
+    <div>
+        <button id="connect" onclick="connect();">Connect</button>
+        <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
+    </div>
+    <div id="conversationDiv">
+        <label>What is your name?</label><input type="text" id="name" />
+        <button id="sendName" onclick="sendName();">Send</button>
+        <p id="response"></p>
+    </div>
+</div>
+</body>
+</html>
