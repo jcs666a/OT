@@ -1,0 +1,56 @@
+                <div class="homeInner">
+                  <p>Bienvenido <strong class="triggers" onclick="pritThis(this, userName);"></strong></p>
+                  <small>Elige tu actividad:</small>
+                  <br>
+                  <div class="activity menu">
+                    <div class="boxSlide active2">        
+                       <i class="fa fa-home"></i>
+                       <p>Home</p>
+                    </div>
+                    <div class="boxSlide">
+                      <a href="#mapa">
+                        <div class="inner">
+                          <i class="fa fa-map-o"></i>
+                          <p>Mapa</p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="boxSlide">
+                      <a href="#mensajeria">
+                        <div class="inner">
+                          <i class="fa fa-envelope-o">
+                            <span></span>
+                          </i>
+                          <p>Mensajería</p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="boxSlide">
+                      <a href="#campanias">
+                        <div class="inner">
+                          <i class="fa fa-star"></i>
+                          <p>Campañas</p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="boxSlide">
+                      <a href="#contrataciones">
+                        <div class="inner">
+                          <i class="fa fa-pencil-square-o"></i>
+                          <p>Contrataciones</p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="boxSlide">
+                      <a href="#" onclick="logout();">
+                          <div class="inner">
+                            <i class="fa fa-key"></i>
+                            <p>Cerrar Sesión</p>
+                          </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+<script>
+    document.querySelector(".triggers").onclick();
+</script>
