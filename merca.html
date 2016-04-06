@@ -1,0 +1,100 @@
+<div id="mercaBox">
+
+</div>
+<div id="showStuff">
+	<div id="closeShow" data-type="close" onclick="more(this)"><span>+</span></div>
+	<div id="buy" onclick="express(this)"><i class="fa fa-shopping-cart"></i></div>
+	<div class="inner"></div>
+</div>
+	<div id="typeCliente">
+		<a href="#home" style="display:block;">
+			<div id="closeMerca"><span>+</span></div>
+		</a>
+		<div class="inner">
+			<div class="cliente" data-type="cliente" data-steep="0" onclick="reportBox(this)">
+				<div class="image"></div>
+				<p>Soy cliente Telmex</p>
+			</div>
+			<div class="cliente" data-type="no cliente" data-steep="0" onclick="reportBox(this)">
+				<div class="image"></div>
+				<p>No soy cliente Telmex</p>
+			</div>
+		</div>
+		<div id="notInHome" onclick="savePointFallback()">
+			<p>No se encuentra.</p>
+		</div>
+		<div id="phoneDialog">
+			<div class="inner">
+				<p>Por favor ingrese su número Telmex</p>
+				<div class="errorHolder">
+					<i class="fa fa-phone"></i><input type="tel" id="ClientNumber">
+					<div class="error">
+						<small>dato incorrecto.</small>
+					</div>
+				</div>
+				<button id="verify">aceptar <i class="fa fa-check"></i></button>
+				<a href="#home">regresar <i class="fa fa-times"></i></a>
+
+			</div>
+		</div>
+	</div>
+	<div id="clientPosition">
+		<div id="mapaPush">
+			<div id="closeMap">
+				<i class="fa fa-check"></i>
+			</div>
+			<div id="fixedMarker"></div>
+		</div>
+		<div class="holderSelect">
+				<div class="getData">
+					<h3>Llena los datos para contratar</h3>
+					<div class="group">
+						<input type="text" name="nombre" id="nameSend" class="used" /><span class="highlight"></span><span class="bar"></span>
+						<label><i class="fa fa-user-plus"></i> Nombre completo</label>
+					</div>
+					<div class="group">
+						<input type="text" name="telefono" id="telefonoSend" class="used" /><span class="highlight"></span><span class="bar"></span>
+						<label><i class="fa fa-phone"></i> Teléfono</label>
+					</div>
+					<div class="textcontent">
+						<textarea name="direccion" id="direccion" disabled  class="ok"></textarea>
+						<button id="btn" onclick="editText()"><i class="fa fa-pencil"></i></button>
+						<button onclick="chooseAdress()"><i class="fa fa-crosshairs"></i>
+						</button>
+					</div>
+					<input type="hidden" name="geo" id="geoSend" value=""/>
+					<p class="end sendReport getData">Terminar <i class="fa fa-times"></i></p>
+					<p class="getData2">Siguiente <i class="fa fa-check"></i></p>
+				</div>
+			</div>
+	</div>
+	<div id="footer" onclick="footerAction()"></div>
+	<div id="holderFooter">
+		<div id="finalizarVisita" onclick="finishRepo()">
+			<p>Terminar visita</p>
+		</div>
+		<div id="express" onclick="expressPlug()">
+			<p><a href="#express">Otras ventas</a></p>
+		</div>
+	</div>
+<div id="shure">
+	<div class="inner">
+		<h1>¿Esto es correcto?</h1>
+		<div id="shureContent"></div>	
+		<div id="so">
+			<div class="left" onclick="closeCheckOut();">
+				<p><i class="fa fa-times"></i> no</p>
+			</div>
+			<div class="right" onclick="checkOut2();">
+				<p><i class="fa fa-check"></i> si</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+	
+
+
+
