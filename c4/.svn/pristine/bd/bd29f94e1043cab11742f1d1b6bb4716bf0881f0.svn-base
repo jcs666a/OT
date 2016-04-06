@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Telmex C4-OT Dashboard</title>
+	<link href='../css/style.css' rel='stylesheet' type='text/css'>
+	<link href='../css/fullcalendar.print.css' rel='stylesheet' media='print'>
+	<link rel="icon" href="favicon.ico">
+	<script charset="UTF-8">var Ñ="../bak/functions.php";</script>
+</head>
+<body>
+	<div class="container">
+		<ul id="gn-menu" class="gn-menu-main">
+			<li class="gn-trigger">
+				<a class="gn-icon gn-icon-menu" alt="Abrir/Cerrar menú" title="Abrir/Cerrar menú"><span>Menu</span></a>
+				<nav class="gn-menu-wrapper gn-open-part">
+					<div class="gn-scroller">
+						<ul class="gn-menu">
+							<li>
+								<a class="gn-icon gn-icon-home" alt="Regresar a vista de inicio" title="Regresar a vista de inicio">Home</a>
+							</li>
+							<li>
+								<a class="gn-icon gn-icon-campana" alt="Administrar campañas" title="Administrar campañas">Campañas</a>
+								<ul class="gn-submenu">
+									<li><a class="gn-icon gn-icon-ncampana" alt="Añadir una nueva campaña" title="Añadir una nueva campaña">Nueva Campaña</a></li>
+								</ul>
+							</li>
+							<li><i class="gn-icon gn-icon-colormap"></i>
+								<select class="ChangeColorMapa" alt="Cambiar color del mapa" title="Cambiar color del mapa">
+									<option value="">Default</option>
+									<option value="Aquamarina">Aquamarina</option>
+									<option value="Blanco">Blanco</option>
+									<option selected="selected" value="Blue">Blue</option>
+									<option value="Green">Green</option>
+									<option value="Night Blue">Night Blue</option>
+									<option value="Night Cop">Night Cop</option>
+								</select>
+							</li>
+							<li>
+								<a href="#" id="losUsers" class="gn-icon gn-icon-usuarios" alt="Administrar usuarios" title="Administrar usuarios">Usuarios</a>
+								<ul class="gn-submenu">
+									<li><a class="gn-icon gn-icon-nuser" alt="Añadir un nuevo usuario" title="Añadir un nuevo usuario">Nuevo usuario</a></li>
+									<li><a class="gn-icon gn-icon-calendar" alt="Calendario de actividades de usuarios" title="Calendario de actividades de usuarios">Calendario</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</li>
+			<li class="titulo"><img src="../img/logo.png" alt="Telmex" title="Telmex" /> C4</li>
+			<li class="principal">
+				<select class="divisiones" title="Selecciona una división" alt="Selecciona una división"></select>
+				<select class="areas" title="Selecciona un área" alt="Selecciona un área" disabled="disabled">
+					<option> --- </option>
+					<option value="2">Todas las areas</option>
+				</select>
+				<select class="distritos" title="Selecciona una opción" alt="Selecciona una opción" disabled="disabled">
+					<option value="0"> --- </option>
+					<option value="1">Distritos</option>
+					<option value="2">Todos los distritos</option>
+					<option value="3">Colonias</option>
+				</select>
+				<input type="text" class="ui-autocomplete-input" autocomplete="off" name="ui-autocomplete-input" value="" placeholder="Buscar" />
+				<button class="busca" title="Buscar" alt="Buscar"></button>
+				<button class="broadcast" title="Enviar mensaje a todos en la región seleccionada" alt="Enviar mensaje a todos en la región seleccionada">Mensaje</button>
+			</li>
+			<li><a class="gn-icon gn-icon-salir" href="#"><span>Salir</span></a></li>
+		</ul>
+		<div id="wraper">
+			<div id="generico">
+				<div class="contenedor">
+					<div id="ctable">
+						<h2>Título</h2>
+						<table id="tablaFielders" class="display" cellspacing="0" width="100%">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Nombre</th>
+									<th>Expediente</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+					<div id="calendar"></div>
+				</div>
+			</div>
+			<div id="top">
+				<div id="midatos">
+					<div class="contenedor">
+						<div class="ui"></div>
+						<div class="data">
+							<span class="n"></span>
+							<span class="id"></span>
+							<span class="u"></span>
+							<span class="r"></span>
+						</div>
+					</div>
+				</div>
+				<div id="grafico"></div>
+			</div>
+			<div id="mapa"></div>
+		</div>
+	</div>
+	<div id="notificaciones"></div>
+	<div id="loading">
+		<ul class="bokeh">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp" charset="UTF-8"></script>
+	<script src="../js/moment.min.js" charset="UTF-8"></script>
+	<script src="../js/jquery.js" charset="UTF-8"></script>
+	<script src="../js/plugs.js" charset="UTF-8"></script>
+	<script src="../js/global.js" charset="UTF-8"></script>
+	<script src="../js/dash.js" charset="UTF-8"></script>
+</body>
+</html>
