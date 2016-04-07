@@ -17,7 +17,7 @@ var loadPage = $(".map-go"),
     tope=0,
     reportObj = {}, 
     imagesPlaces  = 'http://187.217.179.35/c4/imgCamps/',
-    hostVar = 'http://187.217.179.35',//'http://10.105.116.69'
+    hostVar = 'http://10.105.116.52',//'http://187.217.179.35'
     expressPhone = 0,
     urlVars=function(){
       var query_string={};
@@ -55,7 +55,7 @@ function global(){
         return true;
       }
     });
-  connect();
+  //connect();
   geoRefer();
   core();
 }
@@ -166,7 +166,7 @@ function getCampanias(){
 }
 function geoRefer(){
   if(navigator.geolocation){
-      navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
+      navigator.geolocation.getCurrentPosition(geo_success, geo_error, geo_options);
   }
   else{
     console.log('not support');  
@@ -174,16 +174,23 @@ function geoRefer(){
 }
 var positionCounter = 0;
 function geo_success(position) {
+  console.log(position);
   latitude = position.coords.latitude;
   longitude = position.coords.longitude;
-    savePosition();
+    //savePosition();
     if($("#map-canvas").length){
       newPosition();
     }
+    setTimeout(function(){
+      navigator.geolocation.getCurrentPosition(geo_success,geo_error, geo_options);
+    }, 60000);
 }
 
 function geo_error() {
   masterAlert("Posición no disponible");
+  setTimeout(function(){
+    navigator.geolocation.getCurrentPosition(geo_success,geo_error, geo_options);
+  }, 60000);
 }
 
 var geo_options = {
@@ -364,7 +371,16 @@ function NewContent(url, Obj, r, name){
             fielderCamp.splice(c,1);
           }
         }
-        if(window.location.hash == "#campanias"){
+        $.each(fielderCalendar, function(index, val) {
+          $.each(fielderCalendar[index], function(index2, val) {
+            $.each(fielderCalendar[index][index2], function(index3, val) {
+              if(r.idCr == fielderCalendar[index][index2][index3].idCr){
+                delete fielderCalendar[index][index2][index3];
+              }
+            });
+          });
+        });
+        if(window.location.hash == "#campanias" || window.location.hash == "#calendario"){
           location.reload();
         }
       }
@@ -1101,6 +1117,13 @@ function printCamps(){
         //se envia el formulario
         $("#shure").addClass('active');
         $("#shureContent").html('');
+        for(var i = 0; i <= fielderCamp.length-1; i++){
+          if(reportObj.campañas[0] == fielderCamp[i].campana.id){
+            $("#shureContent").append('<span>Adquisicón:</span>'+fielderCamp[i].campana.titulo+'');
+            break;
+          }
+        }
+
         $("#shureContent").append('<span>Usuario:</span>'+ document.getElementsByName("nombre")[0].value+' '+document.getElementsByName("paterno")[0].value +' '+document.getElementsByName("materno")[0].value+'');
         $("#shureContent").append('<span>Direccion:</span>'+ document.getElementsByName("calle")[0].value+' '+document.getElementsByName("numExt")[0].value +' '+document.getElementsByName("numInt")[0].value+' '+document.getElementsByName("colonia")[0].value+'');
           for(var i = 0; i < formHistory.length; i++){
@@ -1197,6 +1220,7 @@ function printCamps(){
           document.getElementById('region').value = reportObj.llave;
           document.getElementById('geoId').value  = latitude+","+longitude;
           document.getElementById('idCamp').value =  reportObj.usuario[0];
+          document.getElementById('vivo').value =  reportObj.tipo;
         if(split.length == 4){
             document.getElementsByName('nombre')[0].value = split[0] +" "+ split[1];
             document.getElementsByName('paterno')[0].value = split[2];
@@ -1454,16 +1478,18 @@ function devSave2(idOk){
       colonia = document.getElementsByName('colonia')[0].value, 
       cp = document.getElementsByName('cp')[0].value;
       if(document.getElementsByName('estado')[0]){
-        estado = document.getElementsByName('estado')[0].value;
+        var selIndex = document.getElementsByName('estado')[0].selectedIndex,
+             estado = document.getElementsByName('estado')[0].options[selIndex].innerHTML;
       }
-      municipio = document.getElementsByName('municipio')[0].value,
+      selIndex2 = document.getElementsByName('estado')[0].selectedIndex,
+      municipio = document.getElementsByName('municipio')[0].options[selIndex2].innerHTML,
       ine = document.getElementById('ine').value,
       comp = document.getElementById('comp').value,
       parts = geoPosition.split(',', 2), 
-      region = document.getElementById('region').value;
-      data = {"idContrato":""+idOk+"","latitud":""+parts[0]+"","longitud":""+parts[1]+"","servicioTipo": ""+servicioTipo+"","servicioId":""+servicioId+"","nombre":""+nombre+"","paterno":""+paterno+"","materno":""+materno+"","telefono":""+telefono+"","email":""+email+"","rfc":""+rfc+"","tipoCalle":""+tipoCalle+"","calle":""+calle+"","numExt":""+numExt+"","numInt":""+numInt+"","entreCalle1":""+entreCalle1+"","entreCalle2":""+entreCalle2+"","colonia":""+colonia+"","delMun":""+municipio+"","cp":""+cp+"","estado":""+estado+"","modemEntrega":" ","reciboSinpapel":" ","fecha":"","latitud":""+parts[0]+"", "longitud":""+parts[1]+"","idtipo":" ","identifica":" ","celular":""+celular+"","idFielder":""+userId+"","imagenIfe": ""+ine+"", "imagenComprobanteDe":""+comp+"","region":""+region+"","idCampaign":""+camp+""};
-      console.log(data);
-      //persistencia(data);
+      region = document.getElementById('region').value, 
+      vivo = document.getElementById('vivo').value;
+      data = {"idContrato":""+idOk+"","latitud":""+parts[0]+"","longitud":""+parts[1]+"","servicioTipo": ""+servicioTipo+"","servicioId":""+servicioId+"","nombre":""+nombre+"","paterno":""+paterno+"","materno":""+materno+"","telefono":""+telefono+"","email":""+email+"","rfc":""+rfc+"","tipoCalle":""+tipoCalle+"","calle":""+calle+"","numExt":""+numExt+"","numInt":""+numInt+"","entreCalle1":""+entreCalle1+"","entreCalle2":""+entreCalle2+"","colonia":""+colonia+"","delMun":""+municipio+"","cp":""+cp+"","estado":""+estado+"","modemEntrega":" ","reciboSinpapel":" ","fecha":"","latitud":""+parts[0]+"", "longitud":""+parts[1]+"","idtipo":" ","identifica":" ","celular":""+celular+"","idFielder":""+userId+"","imagenIfe": ""+ine+"", "imagenComprobanteDe":""+comp+"","region":""+region+"","idCampaign":""+camp+"", "vivo":""+vivo+""};
+      persistencia(data);
 }
 $(document).on("click","#campaniasAsignadas .row",function(){
   var color=$(this).attr('data-id'), 
@@ -1602,36 +1628,43 @@ function mercaCrossModul(t){
 	}	
 }
 function campCrossModul(t){
-   idAdq = t.dataset.camp;
    loadPageCore("#merca");
    if(!document.getElementById('clientPosition')){
       setTimeout(function(){
        data = document.getElementById('clientPosition');
        data.classList.add('open');
-      document.getElementsByClassName('getData')[0].addEventListener('click',getInfoEnd);
+      idAdq = t.dataset.camp,
+      geo = document.getElementById('geoSend'),
+      name= document.getElementById('nameSend'),
+      telefono= document.getElementById('telefonoSend'),
+      address= document.getElementById('direccion'),
+      document.getElementsByClassName('getData')[0].addEventListener('click',getInfoEnd),
       document.getElementsByClassName('getData2')[0].addEventListener('click',getInfo);
       },500);
    }
    else{
      data = document.getElementById('clientPosition');
      data.classList.add('open');
-      document.getElementsByClassName('getData2')[0].addEventListener('click',getInfo);
+      idAdq = t.dataset.camp,
+      geo = document.getElementById('geoSend'),
+      name = document.getElementById('nameSend'),
+      telefono = document.getElementById('telefonoSend'),
+      address = document.getElementById('direccion'),
+      document.getElementsByClassName('getData2')[0].addEventListener('click',getInfo),
       document.getElementsByClassName('getData')[0].addEventListener('click',getInfoEnd);
    }
       function getInfoEnd(){
-        var datos = [idAdq,name.value,telefono.value,address.value,geo.value];
+        var datos = [idAdq,document.getElementById('nameSend').value,telefono.value,address.value,geo.value];
         reportObj["usuario"] = datos;
       }
       function getInfo(){
-        masterLogin();
-          setTimeout(function(){
-            var datos = [idAdq,name.value,telefono.value,address.value,geo.value];
+            masterLogin();
+            var datos = [idAdq,document.getElementById('nameSend').value,telefono.value,address.value,geo.value];
             reportObj["usuario"] = datos;
             document.getElementById('clientPosition').classList.remove('open');
             $("#mercaBox").load("formularios.html #expressTelmex", function(){
               loadInfo();
             });
-          },1000);
           setTimeout(function(){
             document.getElementById('masterLogin').style.display = "none";
           },1000);
