@@ -205,7 +205,8 @@ var path=window.location.pathname,myCookie=getCookie("Cinf"),Nombre='',Usuario='
 		UpdateCpm:function(D){return $.ajax({url:Ñ,method:'POST',data:D,processData:false});},
 		AddingCpm:function(D){return $.ajax({method:"POST",url:Ñ,data:D});},
 		UbicaFiel:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'-Ñp0?2.3d',P:p}});},
-		Conversas:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:',&44jÑ{',P:p}});}
+		Conversas:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:',&44jÑ{',P:p}});},
+		Mail:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'b.4{d2xA',P:p}});}
 	};
 function creanotificacion(titulo,mensaje,error,textStatus,clase){
 	var op=''; if(error!='') op='<p>' + error + ' ' + textStatus + '</p>';

@@ -76,6 +76,11 @@ function connect(){
 			reintento=setInterval(function(){connect()},20000);
 		},3000);
 }
+function sendMail(){
+	$.when(promesas.Mail(9)).done(function(x){
+		console.log(x);
+	});
+}
 function creaMapa(s,t){
 	function estilos(){
 		var estilo=[{"featureType":"landscape","stylers":[{"hue":"#FFBB00"},{"saturation":43.400000000000006},{"lightness":37.599999999999994},{"gamma":1}]},{"featureType":"road.highway","stylers":[{"hue":"#FFC200"},{"saturation":-61.8},{"lightness":45.599999999999994},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":51.19999999999999},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":52},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#0078FF"},{"saturation":-13.200000000000003},{"lightness":2.4000000000000057},{"gamma":1}]},{"featureType":"poi","stylers":[{"hue":"#00FF6A"},{"saturation":-1.0989010989011234},{"lightness":11.200000000000017},{"gamma":1}]}];
@@ -619,7 +624,7 @@ function muestraCalendario(){
 		eventClick:function(calEvent,jsEvent,view){formCalendarA(calEvent,'');}
 	});
 	calendario.fullCalendar('removeEvents');
-	$.when(promesas.GetCalAct('1-6-0-0')).done(function(x){
+	$.when(promesas.GetCalAct(misRegiones)).done(function(x){
 		x=jQuery.parseJSON(x);
 		if(x.Error=='')
 			$.each(x.Eventos,function(k,v){
@@ -644,7 +649,6 @@ function muestraCalendario(){
 		else
 			creanotificacion('Error','<b>'+x.Error,'','','error');
 	});
-
 }
 function updateEvent(s,d,e,f){
 	var ndate,
@@ -1442,6 +1446,7 @@ function editarUsuario(e){ //id,reggcm,nombre
 		abrNu=0;
 		if(idRol=="6"){
 			dire='';admi='';dise='';lide='';}
+		else prom='';
 		var forma='<form class="edUS'+spr+'" data="Usuarios" title="Editando a '+d.nombre+'">'+
 			'<fieldset><h4>Información:</h4>'+
 			'<input type="hidden" class="id_editado" value="'+e.idUser+'" />'+
@@ -1533,7 +1538,6 @@ function inicia(){
 	if(typeof google!=='undefined'){
 		google.maps.event.addDomListener(window,'load',creaMapa("",""));
 		$('#midatos .data .n').text(Nombre);
-//		$('#midatos .data .id').text('id: '+idBoss);
 		$.each(misRegiones,function(i,v){
 			$('#midatos .data .u').append('<i>'+v+'</i>');
 		});
@@ -1552,6 +1556,15 @@ function inicia(){
 }inicia();
 $(document).on("change",".ChangeColorMapa",function(event){event.preventDefault();creaMapa($(this).val(),"");});
 $(document).on("click",".gn-icon.gn-icon-salir",function(event){event.preventDefault();salir();});
+$(document).on("change",".smpr .rol",function(){
+	if(Rol!="Lider Promotor"){
+		if($(this).val()==4 || $(this).val()==8)
+			$(this).parent().parent().parent().find('fieldset:nth-child(2)').hide();
+		else
+			$(this).parent().parent().parent().find('fieldset:nth-child(2)').show();
+	}
+	console.log($(this).val());
+});
 $(document).on("change",".divisiones",function(){
 	$("#loading").show();
 	var	ap=$(this),
@@ -1560,8 +1573,6 @@ $(document).on("change",".divisiones",function(){
 	nvoDivi=$(this).val();
 	dG.add(aG).removeClass("c");
 	if(todosdiv=='principal'){
-//		$('#mapa').dialog('option','title',tc);
-//		$("#mapa").dialogExtend("restore");
 		$('#top,#generico').removeClass("open");
 		$('#generico').removeClass("openB");
 		limpiaMarcadores();viendo='Divisiones';
@@ -1574,6 +1585,15 @@ $(document).on("change",".divisiones",function(){
 		if(typeof todosdiv==='undefined'){
 			todosdiv=$(this).parent().parent().parent().attr('class');
 			$(this).parent().parent().find('.busca').removeClass('c');
+			var roleS=$(this).parent().parent().parent().find('.rol').val();
+			if(roleS==5){
+				$(this).parent().parent().parent().find('fieldset:nth-child(2) label:nth-child(3)').hide();
+				$(this).parent().parent().parent().find('fieldset:nth-child(2) label:nth-child(4)').hide();
+				if(todosdiv=='edUS arc ui-dialog-content ui-widget-content')
+					$(this).parent().parent().find('.busca').addClass('c');
+				else if(todosdiv=='edUS smpr ui-dialog-content ui-widget-content')
+					$(this).parent().parent().find('.busca').addClass('c');
+			}
 		}
 		ap.parent().parent().find('.areas').html('').prop("disabled",false);
 		ap.parent().parent().find('.distritos').val('0').prop("disabled",true);
@@ -1588,7 +1608,6 @@ $(document).on("change",".areas",function(){
 	nvoArea=$(this).val();
 	dG.add(aG).removeClass("c");
 	if(todosdiv=='principal'){
-//		$('#mapa').dialog('option','title',tc);
 		$('#top,#generico').removeClass("open");
 		limpiaMarcadores();viendo='Areas';
 		clearInterval(intervaloMarcadores);
@@ -1598,11 +1617,15 @@ $(document).on("change",".areas",function(){
 	else{
 		if(typeof todosdiv==='undefined'){
 			todosdiv=$(this).parent().parent().parent().attr('class');
-			if(todosdiv=='edUS arc ui-dialog-content ui-widget-content')
-				$(this).parent().parent().find('.busca').addClass('c');
-			else if(todosdiv=='edUS smpr ui-dialog-content ui-widget-content'){
-				$(this).parent().parent().find('button.busca').addClass('c');
-				$(this).parent().parent().find('.ui-autocomplete-input').val('smpr');
+			var roleS=$(this).parent().parent().parent().find('.rol').val();
+			if(roleS==6){
+				$(this).parent().parent().parent().find('fieldset:nth-child(2) label:nth-child(4)').hide();
+				if(todosdiv=='edUS arc ui-dialog-content ui-widget-content')
+					$(this).parent().parent().find('.busca').addClass('c');
+				else if(todosdiv=='edUS smpr ui-dialog-content ui-widget-content'){
+					$(this).parent().parent().find('button.busca').addClass('c');
+					$(this).parent().parent().find('.ui-autocomplete-input').val('smpr');
+				}
 			}
 		}
 		ap.parent().parent().find('.distritos').val('0').prop("disabled",false);

@@ -185,7 +185,7 @@ if($pky=='}54ñj?='){ //Login
 							$object['regiones'][]=$v->regionTrabajo;
 						else if($v->role==8)
 							$object['regiones'][]='Todas las campañas';
-						else if($v->role==4 || $v->role==5)
+						else if($v->role==4)
 							$object['regiones'][]='Todas las regiones';
 						else
 							$object['regiones'][]='Ninguna';
@@ -213,6 +213,37 @@ else if($pky=='4g?$eRt='){ //logout
 	$data=array('idUsuario'=>$_POST['P']);
 	logout($data);
 }
+else if($pky=='b.4{d2xA'){//Enviar mails
+	$templa=file_get_contents('mailer/temp.html', FILE_USE_INCLUDE_PATH);
+	$templa=str_replace("{{titulo}}","Tu cuenta de Telmex c4",$templa);
+	$templa=str_replace("{{usuario}}","lider",$templa);
+	$templa=str_replace("{{contraseña}}","kkkk",$templa);
+	require 'mailer/PHPMailerAutoload.php';
+	$mail = new PHPMailer;
+	$mail->isSMTP();
+	$mail->SMTPDebug=0; // 0=off, 1=client messages, 2=client and server messages
+	$mail->Debugoutput='html';
+	$mail->Host='smtp.gmail.com';
+	$mail->Port=587;
+	$mail->SMTPSecure='tls';
+	$mail->SMTPAuth=true;
+	$mail->Username="jcottelmex@gmail.com";
+	$mail->Password="Blitz2016";
+	$mail->setFrom('jcottelmex@gmail.com','Julio S.');
+//	$mail->addReplyTo('jcottelmex@gmail.com','Julio S.');
+	$mail->addAddress('jcsavila@gmail.com','Julio');
+//	$mail->addAddress('EVIVANCO@telmex.com','Rafaelo');
+	$mail->Subject='Llamado a Rafaelo';
+//	$mail->msgHTML(file_get_contents('mailer/temp.html'), dirname(__FILE__));
+	$mail->msgHTML($templa);
+	$mail->AltBody='Tu cuenta de Telmex c4 /r/n/r/n Usuario: lider /r/n Contraseña: kkk';
+//	$mail->addAttachment('../img/estacontigo.png');
+	if (!$mail->send()){
+		echo "Mailer Error: " . $mail->ErrorInfo;
+	} else {
+		echo "Message sent!";
+	}
+}
 else if($pky=='46%6&fyR'){ //Obtiene divisiones para menu
 	$ctx=stream_context_create(array('http'=>array('timeout'=>5,)));
 	$abj=file_get_contents($ipServ.'getCatalog/CatalogoDivisiones',false,$ctx);
@@ -236,6 +267,9 @@ else if($pky=='ñhj/4"1z'){ //Pinta poligonos de divisiones
 	else{
 		foreach($_POST['X'] as $k=>$v){
 			$r=substr($v,0,1);
+			$q=substr($v,2,1);
+			if($q==0)
+				$derecho[]='Todas';
 			if($r==$_POST['U'])
 				$derecho[]=substr($v,2,1);
 		}
@@ -251,7 +285,7 @@ else if($pky=='ñhj/4"1z'){ //Pinta poligonos de divisiones
 		$abj=$abj->apiResponse;
 		$opciones='<option value="0" disabled selected>Áreas</option>';
 		foreach($abj as $k=>$vl){
-			if(($_POST['X'][0]=='Todas las regiones' || $_POST['X'][0]=='Todas las campañas') ||
+			if(($_POST['X'][0]=='Todas las regiones' || $_POST['X'][0]=='Todas las campañas' || $derecho[0]=='Todas') ||
 				in_array($vl->id,$derecho))
 					$opciones.='<option value="'.$vl->id.'">'.$vl->descripcion.'</option>';
 		}
@@ -427,6 +461,11 @@ else if($pky=='-*6+¿dyF'){ //Traigo todos los usuarios
 						foreach($rb as $kix=>$vix){
 							if(strpos($vx->regionTrabajo,$vix)!==false)
 								$no_tengo='Si';
+							else{
+								$vix='1-';
+								if(strpos($vx->regionTrabajo,$vix)!==false)
+									$no_tengo='Si';
+							}
 						}
 					}
 					if($no_tengo=='Si' && $v->role=='7'){
@@ -1136,18 +1175,20 @@ else if($pky=='/*-+%4dG'){ //Obtengo los fielders mas los fielders que ya estan 
 	echo json_encode($obj,JSON_UNESCAPED_UNICODE);
 }
 else if($pky=='hUUrf[,.()'){ // Mostrando calendarios que me asignaron o todos si soy director!
-	$p=trim($_POST['P']);
+	$p=$_POST['P'];
 	$res=file_get_contents($ipServ.'telmex/get/campAllRegs');
 	$obj['Error']='';
-	if($p!='NA'){
+	if($p[0]!='Todas las regiones'){
 		if($res!=''){
 			$res=json_decode($res);
 			foreach($res->apiResponse[0] as $k=>$v){
-				if($v->region==$p) $ibs[]=$v->id;
+				if(in_array($v->region,$p))
+					$ibs[]=$v->id;
 			}
 		}
 		else $obj['Error']='No se logro obtener respuesta del servicio que devuelve las regiones que tienes asignadas como líder.';
 	}
+	else $p='NA';
 	if($p=='NA' || !empty($ibs)){
 		$res=file_get_contents($ipServ.'telmex/get/calendarAll');
 		if($res!=''){
