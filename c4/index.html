@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+	<title>Telmex C4-OT Dashboard</title>
+	<link href='css/style.css' rel='stylesheet' type='text/css'>
+	<link rel="icon" href="favicon.ico">
+	<script charset="UTF-8">var Ñ="bak/functions.php";</script>
+</head>
+<body class="login">
+	<h1 class="intro"><img src="img/logo.png" alt="Telmex" title="Telmex"/><br /><span>C4-OT</span> Dashboard</h1>
+	<div id="loginContenedor">
+		<form id="entrar" method="post" action="./">
+			<p>
+				<input type="text" name="user" id="user" placeholder="Usuario">
+				<i class="fa fa-user"></i>
+				<input type="password" name="password" id="password" placeholder="Contraseña">
+				<i class="fa fa-lock"></i>
+			</p>
+			<button type="submit" name="submit">
+				<i class="fa fa-arrow-right"></i>
+				<span>Ingresar</span>
+			</button>
+		</form>
+	</div>
+	<div id="notificaciones"></div>
+	<div id="loading">
+		<ul class="bokeh">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
+	<script src="js/jquery.js" charset="UTF-8"></script>
+	<script src="js/global.js" charset="UTF-8"></script>
+	<script src="js/login.js" charset="UTF-8"></script>
+</body>
+</html>
