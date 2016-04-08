@@ -1,6 +1,6 @@
 <?php ob_start();
-$ipServ='http://10.105.116.52:9090/';
-//$ipServ='http://187.217.179.35:9090/';
+//$ipServ='http://10.105.116.52:9090/';
+$ipServ='http://187.217.179.35:9090/';
 
 if($_POST['pDf']=='ñrRp3}.'){ //Crea GCM o no
     $data=array(
@@ -236,7 +236,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
         $tecsi=$tecsi->apiResponse;
         $pintaAll=$megaObjeto['Regiones']['Areas'];
         foreach($pintaAll as $ke=>$vol){
-            $tecsa=file_get_contents($ipServ.'telmex/infraestructura/tecnolgia/area/dashboard/'.$ke.'/-99');
+            /* $tecsa=file_get_contents($ipServ.'telmex/infraestructura/tecnolgia/area/dashboard/'.$ke.'/-99');
             $tecsa=json_decode($tecsa);
             foreach($tecsa->apiResponse[0]->distritos as $y=>$v){
                 $megaObjeto['Tecnologias'][$ke][$v->claveDistrito][$v->tecnologias[0]->tecnologia]['id']=$v->tecnologias[0]->idTecnologia;
@@ -249,7 +249,28 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                 $megaObjeto['Tecnologias'][$ke]['PorTipo']['AreaName']=areas($ke);
                 if(in_array($v->claveDistrito,$polDistritos))
                     $megaObjeto['Tecnologias'][$ke]['PorTipo']['Distritos'][$v->claveDistrito][$v->tecnologias[0]->tecnologia]=$v->tecnologias[0]->idTecnologia;
+            } */
+
+            unset($y_oil);
+            unset($v_oil);
+        //Tecnologias sólo por distrito
+            foreach($polDistritos as $y_oil=>$v_oil){
+                $tecsa=file_get_contents($ipServ.'telmex/infraestructura/tecnolgia/distrito/'.$ke.'/'.$v_oil.'/-99');
+                $tecsa=json_decode($tecsa);
+                foreach($tecsa->apiResponse[0]->distritos as $y=>$v){
+                    $megaObjeto['Tecnologias'][$ke][$v->claveDistrito][$v->tecnologias[0]->tecnologia]['id']=$v->tecnologias[0]->idTecnologia;
+                    $megaObjeto['Tecnologias'][$ke][$v->claveDistrito][$v->tecnologias[0]->tecnologia]['color']=colorTecs($v->tecnologias[0]->idTecnologia);
+                    $megaObjeto['Tecnologias'][$ke][$v->claveDistrito][$v->tecnologias[0]->tecnologia]['imagen']=imageTecs($v->tecnologias[0]->idTecnologia);
+                    $megaObjeto['Tecnologias'][$ke][$v->claveDistrito][$v->tecnologias[0]->tecnologia]['centros'][$y]['latitud']=$v->centro->latitud;
+                    $megaObjeto['Tecnologias'][$ke][$v->claveDistrito][$v->tecnologias[0]->tecnologia]['centros'][$y]['longitud']=$v->centro->longitud;
+                    $megaObjeto['Tecnologias'][$ke][$v->claveDistrito][$v->tecnologias[0]->tecnologia]['idDistrito']=$v->idDistrito;
+                    $megaObjeto['Tecnologias'][$ke]['PorTipo']['EnArea'][$v->tecnologias[0]->tecnologia]=$v->tecnologias[0]->idTecnologia;
+                    $megaObjeto['Tecnologias'][$ke]['PorTipo']['AreaName']=areas($ke);
+                    if(in_array($v->claveDistrito,$polDistritos))
+                        $megaObjeto['Tecnologias'][$ke]['PorTipo']['Distritos'][$v->claveDistrito][$v->tecnologias[0]->tecnologia]=$v->tecnologias[0]->idTecnologia;
+                }
             }
+
             $tecsa=file_get_contents($ipServ.'telmex/infraestructura/tecnolgia/distrito/totales/'.$ke.'');
             $tecsa=json_decode($tecsa);
             $megaObjeto['Graficos']['TecDist'][areas($ke)]=$tecsa->apiResponse;
@@ -293,11 +314,12 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
     }
 //Poligonos Areas
     foreach($polAreas as $y=>$v){
-        $jsan=file_get_contents($ipServ.'getAreaByName/geoJson/'.$v);
-        $jsan=str_replace('"color":"blue"','"color":"#E0E4CC"',$jsan);
-        $abj=json_decode($jsan);
-        $dse=$abj->apiResponse[0]; // ->features[0]
-        $megaObjeto['Poligonos']['Areas'][$v]=$dse;
+//        $jsan=file_get_contents($ipServ.'getAreaByName/geoJson/'.$v);
+//        $jsan=str_replace('"color":"blue"','"color":"#E0E4CC"',$jsan);
+//        $abj=json_decode($jsan);
+//        $dse=$abj->apiResponse[0]; // ->features[0]
+//        $megaObjeto['Poligonos']['Areas'][$v]=$dse;
+        $megaObjeto['Poligonos']['Areas'][$v]=array();
         unset($jsan);unset($abj);unset($dse);
     }
 //Camapañas que tengo asignadas... 74 * 52

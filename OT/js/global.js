@@ -16,8 +16,8 @@ var loadPage = $(".map-go"),
     longitude = 0,
     tope=0,
     reportObj = {}, 
-    imagesPlaces  = 'http://187.217.179.35/c4/imgCamps/',
-    hostVar = 'http://10.105.116.52',//'http://187.217.179.35'
+    imagesPlaces  = 'http://10.105.116.52',//'http://187.217.179.35/c4/imgCamps/',
+    hostVar = 'http://187.217.179.35',//'http://10.105.116.207',//
     expressPhone = 0,
     urlVars=function(){
       var query_string={};
@@ -55,7 +55,7 @@ function global(){
         return true;
       }
     });
-  //connect();
+  connect();
   geoRefer();
   core();
 }
@@ -177,7 +177,7 @@ function geo_success(position) {
   console.log(position);
   latitude = position.coords.latitude;
   longitude = position.coords.longitude;
-    //savePosition();
+    savePosition();
     if($("#map-canvas").length){
       newPosition();
     }
@@ -318,8 +318,13 @@ function socketResponse(response, type){
 function NewContent(url, Obj, r, name){
     //$("#brodcast").fadeIn('fast');
     if(url == "mensajeria"){
-      Obj.Todos.unshift(r);
-      Obj.Nuevos = Obj.Nuevos+1;
+      if(r.accion == "Nuevo"){
+        Obj.Todos.unshift(r);
+        Obj.Nuevos = Obj.Nuevos+1;
+      }
+      if(r.accion == "Alerta"){
+        printInfoUser(r);
+      }
     }
     if(url== "mapa"){
       if(r[0].accion == "Eliminado"){
@@ -349,7 +354,7 @@ function NewContent(url, Obj, r, name){
     //esta linea se va y se genera un cuadro de dialogo
     //$("#brodcast").fadeOut('fast');
     if(window.location.hash == "#"+url){
-      location.reload();
+      //location.reload();
     }
     if(window.location.hash == "#home" && url == "mensajeria"){
       location.reload();
@@ -592,13 +597,80 @@ function NewContent(url, Obj, r, name){
         fielderTecs[r[0].area.idArea] = {},
         fielderTecs[r[0].area.idArea]['PorTipo']={}, 
         fielderTecs[r[0].area.idArea].PorTipo['Distritos'] = {};
-        fielderTecs[r[0].area.idArea].PorTipo['Distritos'][r[0].distrito.claveDistrito] = 0;
+        fielderTecs[r[0].area.idArea].PorTipo['Distritos'][r[0].distrito.claveDistrito] = {};
+        fielderTecs[r[0].area.idArea][r[0].distrito.claveDistrito] = {};
       }
       Obj.Areas[r[0].area.idArea].Distritos[r[0].distrito.claveDistrito] = {},
       Obj.Areas[r[0].area.idArea].Distritos[r[0].distrito.claveDistrito].Clientes = r[0].clientes,
       Obj.Areas[r[0].area.idArea].Distritos[r[0].distrito.claveDistrito].NoClientes = 0,
-      fielderPols.Distritos[r[0].distrito.claveDistrito] = r[0].mr.features[0], 
-      fielderTecs[r[0].area.idArea].PorTipo.Distritos[r[0].distrito.claveDistrito] = fielderTecs[r[0].area.idArea][r[0].distrito.claveDistrito];
+      fielderPols.Distritos[r[0].distrito.claveDistrito] = r[0].mr.features[0];
+      for(var i = 0; i <= r[0].tecPoints.distritos.length-1; i++){
+        areas = fielderTecs[r[0].area.idArea][r[0].distrito.claveDistrito];
+        distritos = fielderTecs[r[0].area.idArea].PorTipo['Distritos'][r[0].distrito.claveDistrito];
+        areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia] = {},
+        areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["idTecnologia"] = r[0].tecPoints.distritos[i].tecnologias[0].idTecnologia,
+        areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["centro"] = {}, 
+        areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia].centro[1] = {},
+        areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia].centro[1]["latitud"] = r[0].tecPoints.distritos[i].centro.latitud, 
+        areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia].centro[1]["longitud"] = r[0].tecPoints.distritos[i].centro.longitud,
+        areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["idDistrito"]= r[0].tecPoints.distritos[i].idDistrito;
+        switch(areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia].idTecnologia) {
+            case 1:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["color"] = "5FB404";
+                break;
+            case 2:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["color"] = "FF8000";
+                break;
+            case 3:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["color"] = "0080FF";
+                break;
+            case 4:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["color"] = "8000FF";
+                break;
+            case 5:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["color"] = "B40404";
+                break;
+            case 6:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["color"] = "FF00FF";
+                break;
+            case 7:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["color"] = "01DFD7";
+                break;
+            case 8:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["color"] = "FFBF00";
+                break;
+            default:
+        } 
+        switch(areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia].idTecnologia) {
+            case 1:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["imagen"] = "poiATM.png";
+                break;
+            case 2:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["imagen"] = "poiFTTH.png";
+                break;
+            case 3:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["imagen"] = "poiIpDislam.png";
+                break;
+            case 4:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["imagen"] = "poiND.png";
+                break;
+            case 5:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["imagen"] = "poiTBA.png";
+                break;
+            case 6:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["imagen"] = "poiVSDLIPD.png";
+                break;
+            case 7:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["imagen"] = "poiVSDLTBA.png";
+                break;
+            case 8:
+                areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["imagen"] = "poiWIMAX.png";
+                break;
+            default:
+        } 
+
+      }
+
     }
     function delateItem(r, Obj){
       var parts = r[0].regionTrabajo.split('-', 4);
@@ -1628,6 +1700,7 @@ function mercaCrossModul(t){
 	}	
 }
 function campCrossModul(t){
+  masterLogin();
    loadPageCore("#merca");
    if(!document.getElementById('clientPosition')){
       setTimeout(function(){
@@ -2113,7 +2186,7 @@ function PutInMapCamp(){
 function masterLogin(){
   setTimeout(function(){
     $('#masterLogin').addClass('small').addClass('ani').fadeIn();
-  },200);
+  },10);
   setTimeout(function(){
     $('#masterLogin').removeClass('small').addClass('end');
   },300);
@@ -2145,11 +2218,18 @@ $(document).on("click",".riples",function(e){
 
 function printInfoUser(r){
   insert = document.getElementById('dns');
-  insert.innerHTML = '<div class="inner"><h3>Navegación de usuarios</h3>'+
-    '<div class="telefono"><span>Teléfono:</span>'+r.telefono+'</div>'+
-    '<div class="url"><span>URL:</span>'+r.url+'</div>'+
-    '<div class="fecha"><span>Fecha:</span>'+r.fecha+'</div>'+
-  '</div>';
+  if(!r.fecha){
+    insert.innerHTML = '<div class="inner"><h3>Mensaje de Alerta:</h3>'+
+      '<div class="url">'+r.mensaje+'</div>'+
+    '</div>';
+  }
+  else{
+    insert.innerHTML = '<div class="inner"><h3>Navegación de usuarios</h3>'+
+      '<div class="telefono"><span>Teléfono:</span>'+r.telefono+'</div>'+
+      '<div class="url"><span>URL:</span>'+r.url+'</div>'+
+      '<div class="fecha"><span>Fecha:</span>'+r.fecha+'</div>'+
+    '</div>';
+  }
   insert.classList.add('open');
    setTimeout(function(){
     insert.classList.remove('open');

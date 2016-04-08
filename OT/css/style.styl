@@ -1134,7 +1134,7 @@ animation ripples .4s ease-in
 				margin 10px
 				top 0
 				position absolute
-				z-index 9
+				//z-index 9
 			h3 
 				display block
 				padding 16px 0px 
@@ -2157,3 +2157,25 @@ animation ripples .4s ease-in
 		background #71859a
 		text-transform uppercase
 		text-align center
+#loadingMap
+	position fixed
+	width 100% 
+	height 100% 
+	background rgba(0,0,0,.5)
+	top 0
+	left 0
+	z-index 99
+	display none
+	.loading
+		position absolute
+		top 50%
+		left 50%
+		width 80px
+		height 40px
+		background transparent url('img/logoT.svg') 0 0 no-repeat
+		background-size cover
+		margin -20px 0 0 -40px
+		animation cargando 1.2s infinite ease-in-out
+		transform translate(-50%,-50%)
+#loadingMap.open 
+	display block

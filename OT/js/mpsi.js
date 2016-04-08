@@ -25,7 +25,7 @@ function startMapa(){
 	$('#map-canvas').height(h-50-40);
 
 	creaFiltroTecs();
-	pintaAreas();
+	//pintaAreas();
 	pintaDistritos();
 	pintaClientes();
 	newPosition();
@@ -48,10 +48,11 @@ function limpiaPosition(){
   miposicion=[];
 }
 function centraMapa(){
-
+var position = new google.maps.LatLng(latitude,longitude);
 	var bounds=new google.maps.LatLngBounds();
 	map.data.addListener('addfeature',function(e){
 		procesaPoints(e.feature.getGeometry(),bounds.extend,bounds);
+		bounds.extend(position);
 		map.fitBounds(bounds);
 	});
 }
@@ -638,6 +639,7 @@ function meteFiltro(){
 	});
 }
 $(document).on("change","#nameDistrict #loadInMap .row :checkbox",function(){
+	loadingMap(true);
 	var a=$(this).parent().parent().attr('id'),
 		b=$(this).attr('name'),
 		d='';
@@ -657,6 +659,7 @@ $(document).on("change","#nameDistrict #loadInMap .row :checkbox",function(){
 		$(this).parent().removeClass("checked");
 		marcaCheckBoxes(a,b,'UnChecked',d);
 	}
+	loadingMap(false);
 });
 $(document).on("click","#nameDistrict .inner,#nameDistrict #loadInMap .row label.abre",function(){
 	var uso=$(this).parent();
@@ -960,3 +963,14 @@ function pintaTienda(){
 	});
 }
 
+function loadingMap(v){
+	loading = document.getElementById('loadingMap').classList;
+	if(v == true){
+		loading.add('open');
+	}
+	if(v == false){
+		setTimeout(function(){
+			loading.remove('open');
+		},1000);
+	}
+}
