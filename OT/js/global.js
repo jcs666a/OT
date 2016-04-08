@@ -38,6 +38,7 @@ var loadPage = $(".map-go"),
     }();
 function global(){
     appMenu.click(function(event){
+        document.getElementById('iframeDisplay').classList.remove('open');
         appMenu.addClass('active');
         menuDisplay.addClass('active');
         wrapper.addClass('active');
@@ -1680,7 +1681,7 @@ function getCampDist(v){
             '<div class="t">'+titulo+'</div>'+
             '<img class="row" src="'+img+'" data-type="image" data-id="w" data-source='+img+' onclick="more(this);" />'+
             '<div class="descripcion">'+descripcion+'</div>'+
-            '<a class="buy" data-id="'+id+'" data-steep="1" onclick="getCampDist(this);"> Contratar</a>'+
+            '<a class="buy" data-id="'+id+'" data-steep="1" onclick="reportBox(this);"> Contratar</a>'+
           '</div>';
         }
       }

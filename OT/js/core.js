@@ -38,26 +38,43 @@ $('.menu a').click(function(){
   var Hash=window.location.hash;
   if(Hash!=$(this).attr('href')) masterLogin();
 });
-$(window).on('hashchange',function(){masterLogin();checkURL()});
+$(window).on('hashchange',function(){checkURL()});
 function checkURL(){
   var Hash =window.location.hash;
   $("#wrapper").attr('class','');
   if(Hash=='' || Hash=='#' || Hash=="#home"){
+    masterLogin();
     Hash='#home';$('#wrapper').addClass('big'); 
+    document.getElementById('iframeDisplay').classList.remove('open');
     //$("#merca a").attr("href", "#express");
   }
   else $('#wrapper').removeClass('big');
   $('#menuDisplay a').removeClass('active');
-  if(Hash=='#mapa') $('#menuDisplay a:nth-child(3)').addClass('active');
-  else if(Hash=='#mensajeria') $('#menuDisplay a:nth-child(4)').addClass('active');
-  else if(Hash=='#campanias') $('#menuDisplay a:nth-child(5)').addClass('active');
-  else if(Hash=='#calendario') $('#menuDisplay a:nth-child(6)').addClass('active');
-  else if(Hash == '#express'){
-    //setTimeout(function(){
-       // document.getElementById('loadIframe').innerHTML = '<iframe src="https://187.217.179.35:81/tcd/?fielder='+userId+'" allowtransparency="true"></iframe>';
-        //$("#merca a").attr("href", "#home");
-    //},1000);
-    
+  if(Hash=='#mapa'){
+    masterLogin();
+    $('#menuDisplay a:nth-child(3)').addClass('active');
+    document.getElementById('iframeDisplay').classList.remove('open');
+  }
+  else if(Hash=='#mensajeria'){
+    masterLogin();
+   $('#menuDisplay a:nth-child(4)').addClass('active');
+   document.getElementById('iframeDisplay').classList.remove('open');
+  }
+  else if(Hash=='#campanias'){
+    masterLogin();
+    $('#menuDisplay a:nth-child(5)').addClass('active');
+    document.getElementById('iframeDisplay').classList.remove('open');
+  }
+  else if(Hash=='#calendario'){
+    masterLogin();
+   $('#menuDisplay a:nth-child(6)').addClass('active');
+   document.getElementById('iframeDisplay').classList.remove('open');
+  }
+  else if(Hash != '#iframe'){
+      document.getElementById('iframeDisplay').classList.remove('open');
+  }
+  else if(Hash == '#guia'){
+    masterLogin();
   }
   setTimeout(function(){
     loadPageCore(Hash);
@@ -71,7 +88,7 @@ function loadPageCore(url){
       $('.fa.fa-envelope-o span').html(fielderMsgs.Nuevos);
     setTimeout(function(){
       $('#masterLogin').removeClass('ani').fadeOut();
-    },500);
+    },1000);
   });
   howToLoad(url);
 }
@@ -268,6 +285,7 @@ function devSave(j){
 }
 
 function loadIframe(){
+   window.location.hash = '#iframe';
   insert = document.getElementById('iframeDisplay'); 
   if(!insert.classList.contains('open')){
     insert.classList.add('open');
