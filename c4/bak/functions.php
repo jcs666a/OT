@@ -185,7 +185,7 @@ if($pky=='}54ñj?='){ //Login
 							$object['regiones'][]=$v->regionTrabajo;
 						else if($v->role==8)
 							$object['regiones'][]='Todas las campañas';
-						else if($v->role==4 || $v->role==5)
+						else if($v->role==4)
 							$object['regiones'][]='Todas las regiones';
 						else
 							$object['regiones'][]='Ninguna';
@@ -213,6 +213,37 @@ else if($pky=='4g?$eRt='){ //logout
 	$data=array('idUsuario'=>$_POST['P']);
 	logout($data);
 }
+else if($pky=='b.4{d2xA'){//Enviar mails
+	$templa=file_get_contents('mailer/temp.html', FILE_USE_INCLUDE_PATH);
+	$templa=str_replace("{{titulo}}","Tu cuenta de Telmex c4",$templa);
+	$templa=str_replace("{{usuario}}","lider",$templa);
+	$templa=str_replace("{{contraseña}}","kkkk",$templa);
+	require 'mailer/PHPMailerAutoload.php';
+	$mail = new PHPMailer;
+	$mail->isSMTP();
+	$mail->SMTPDebug=0; // 0=off, 1=client messages, 2=client and server messages
+	$mail->Debugoutput='html';
+	$mail->Host='smtp.gmail.com';
+	$mail->Port=587;
+	$mail->SMTPSecure='tls';
+	$mail->SMTPAuth=true;
+	$mail->Username="jcottelmex@gmail.com";
+	$mail->Password="Blitz2016";
+	$mail->setFrom('jcottelmex@gmail.com','Julio S.');
+//	$mail->addReplyTo('jcottelmex@gmail.com','Julio S.');
+	$mail->addAddress('jcsavila@gmail.com','Julio');
+//	$mail->addAddress('EVIVANCO@telmex.com','Rafaelo');
+	$mail->Subject='Llamado a Rafaelo';
+//	$mail->msgHTML(file_get_contents('mailer/temp.html'), dirname(__FILE__));
+	$mail->msgHTML($templa);
+	$mail->AltBody='Tu cuenta de Telmex c4 /r/n/r/n Usuario: lider /r/n Contraseña: kkk';
+//	$mail->addAttachment('../img/estacontigo.png');
+	if (!$mail->send()){
+		echo "Mailer Error: " . $mail->ErrorInfo;
+	} else {
+		echo "Message sent!";
+	}
+}
 else if($pky=='46%6&fyR'){ //Obtiene divisiones para menu
 	$ctx=stream_context_create(array('http'=>array('timeout'=>5,)));
 	$abj=file_get_contents($ipServ.'getCatalog/CatalogoDivisiones',false,$ctx);
@@ -236,6 +267,9 @@ else if($pky=='ñhj/4"1z'){ //Pinta poligonos de divisiones
 	else{
 		foreach($_POST['X'] as $k=>$v){
 			$r=substr($v,0,1);
+			$q=substr($v,2,1);
+			if($q==0)
+				$derecho[]='Todas';
 			if($r==$_POST['U'])
 				$derecho[]=substr($v,2,1);
 		}
@@ -251,7 +285,7 @@ else if($pky=='ñhj/4"1z'){ //Pinta poligonos de divisiones
 		$abj=$abj->apiResponse;
 		$opciones='<option value="0" disabled selected>Áreas</option>';
 		foreach($abj as $k=>$vl){
-			if(($_POST['X'][0]=='Todas las regiones' || $_POST['X'][0]=='Todas las campañas') ||
+			if(($_POST['X'][0]=='Todas las regiones' || $_POST['X'][0]=='Todas las campañas' || $derecho[0]=='Todas') ||
 				in_array($vl->id,$derecho))
 					$opciones.='<option value="'.$vl->id.'">'.$vl->descripcion.'</option>';
 		}
@@ -381,23 +415,27 @@ else if($pky=='t6U.ño/'){ //Envia un mensaje a una area (broadcast)
 }
 else if($pky=='-*6+¿dyF'){ //Traigo todos los usuarios
 	$r=$_POST['R'];
+	$p=$_POST['P'];
 	foreach($r as $k=>$v){
 		$w=substr($v,0,1);
-		if(is_numeric($w))
+		if(is_numeric($w)){
 			$rb[]=substr($v,0,4);
-		else
+			$ra[]=substr($v,0,2);
+		}
+		else{
 			$rb[]=$v;
+			$ra[]=$v;
+		}
 	}
-	$p=$_POST['P'];
 	$abj=file_get_contents($ipServ.'telmex/get/userAllRegs');
 	if($abj=='')
 		$obj['errorMessage']='No hay respuesta del servidor para obtener usuarios. NO RESPONSE';
 	else{
 		$abj=json_decode($abj);
 		$abj=$abj->apiResponse[0];
-		$no_tengo='No';
 		$i=0;
 		foreach($abj as $k=>$v){
+			$no_tengo='No';
 			if($v->role > 3 && $v->cuenta==1){
 				if($p=='Administrador' || in_array('Todas las regiones',$rb) || in_array('Todas las campañas',$rb)){
 					$obj[$i]['idUsuario']=$v->idUsuario;
@@ -424,25 +462,60 @@ else if($pky=='-*6+¿dyF'){ //Traigo todos los usuarios
 					$ibj=$ibj->apiResponse[0];
 					$o=0;
 					foreach($ibj as $kx=>$vx){
-						foreach($rb as $kix=>$vix){
-							if(strpos($vx->regionTrabajo,$vix)!==false)
-								$no_tengo='Si';
+						if($p=='Director'){
+							foreach($ra as $kix=>$vix){
+								if(strpos($vx->regionTrabajo,$vix)!==false)
+									$no_tengo='Si';
+								else{
+									$vix='1-';
+									if(strpos($vx->regionTrabajo,$vix)!==false)
+										$no_tengo='Si';
+								}
+							}
+						}
+						else{
+							foreach($rb as $kix=>$vix){
+								if(strpos($vx->regionTrabajo,$vix)!==false)
+									$no_tengo='Si';
+								else{
+									$vix='1-';
+									if(strpos($vx->regionTrabajo,$vix)!==false)
+										$no_tengo='Si';
+								}
+							}
 						}
 					}
-					if($no_tengo=='Si' && $v->role=='7'){
-						foreach($ibj as $ky=>$vy){
-							$obj[$i]['regiones'][$o]=$vy->regionTrabajo;
-							$o++;
+					if($no_tengo=='Si'){
+						if($p=='Director' && $v->role=='6'){
+							foreach($ibj as $ky=>$vy){
+								$obj[$i]['regiones'][$o]=$vy->regionTrabajo;
+								$o++;
+							}
+							$obj[$i]['idUsuario']=$v->idUsuario;
+							$obj[$i]['role']=$v->role;
+							$obj[$i]['idRole']=$v->role;
+							$obj[$i]['nombre']=$v->nombre;
+							$obj[$i]['usuario']=$v->usuario;
+							$obj[$i]['expediente']=$v->expediente;
+							$obj[$i]['conectado']=$v->conectado;
+							$obj[$i]['gcm']=$v->gcm;
+							$i++;
 						}
-						$obj[$i]['idUsuario']=$v->idUsuario;
-						$obj[$i]['role']=$v->role;
-						$obj[$i]['idRole']=$v->role;
-						$obj[$i]['nombre']=$v->nombre;
-						$obj[$i]['usuario']=$v->usuario;
-						$obj[$i]['expediente']=$v->expediente;
-						$obj[$i]['conectado']=$v->conectado;
-						$obj[$i]['gcm']=$v->gcm;
-						$i++;
+						else if($p=='Lider Promotor' && $v->role=='7'){
+							foreach($ibj as $ky=>$vy){
+								$obj[$i]['regiones'][$o]=$vy->regionTrabajo;
+								$o++;
+							}
+							$obj[$i]['idUsuario']=$v->idUsuario;
+							$obj[$i]['role']=$v->role;
+							$obj[$i]['idRole']=$v->role;
+							$obj[$i]['nombre']=$v->nombre;
+							$obj[$i]['usuario']=$v->usuario;
+							$obj[$i]['expediente']=$v->expediente;
+							$obj[$i]['conectado']=$v->conectado;
+							$obj[$i]['gcm']=$v->gcm;
+							$i++;
+						}
 					}
 				}
 			}
@@ -963,6 +1036,39 @@ else if($pky=='g.-&3eGD'){ //Guardo edición de campaña o también campaña nue
 		$obj['Error']=$response->errorMessage;
 	echo json_encode($obj);
 }
+else if($pky=='-:Ñ_6%fC'){ // Mostrando regiones asignadas a campaña en select cuando asigno fielders a campaña
+	$p=$_POST['P'];
+	$r=$_POST['R'];
+	$res=file_get_contents($ipServ.'telmex/get/campAllRegs');
+	if($res!=''){
+		$res=json_decode($res);$i=0;
+		foreach($res->apiResponse[0] as $k=>$v){
+			if($v->estado==true && $v->idCampaña==$p && in_array($v->region,$r)){
+				$obj['Regiones'][$i]['id_CR']=$v->id;
+				$obj['Regiones'][$i]['id_C']=$v->idCampaña;
+				$obj['Regiones'][$i]['Region']=$v->region;
+				$obj['Regiones'][$i]['createAt']=$v->createAt;
+				$ras=file_get_contents($ipServ.'telmex/get/campInformacion/'.$v->id);
+				if($ras!=''){
+					$ras=json_decode($ras);
+					$obj['Regiones'][$i]['titulo']=$ras->apiResponse[0][0]->titulo;
+					$obj['Regiones'][$i]['offercode']=$ras->apiResponse[0][0]->offer_code;
+					$obj['Regiones'][$i]['campaigncode']=$ras->apiResponse[0][0]->campaign_code;
+					$obj['Regiones'][$i]['tcode']=$ras->apiResponse[0][0]->tcode;
+					$obj['Regiones'][$i]['region']=$ras->apiResponse[0][0]->region;
+					$obj['Regiones'][$i]['createAt']=$v->createAt;
+				}
+				$i++;
+			}
+		}
+		if($i==0)
+			$obj['Sin']='No hay regiones asignadas a la campaña.';
+	}
+	else{
+		$obj['Error']='No se encontró el servicio para obtener las regiones asignadas a esta campaña.';
+	}
+	echo json_encode($obj,JSON_UNESCAPED_UNICODE);
+}
 else if($pky=='lj.m,-/5tD'){ // Mostrando regiones asignadas a campaña, DIRECTOR
 	$p=$_POST['P'];
 	$res=file_get_contents($ipServ.'telmex/get/campAllRegs');
@@ -973,6 +1079,8 @@ else if($pky=='lj.m,-/5tD'){ // Mostrando regiones asignadas a campaña, DIRECTO
 		foreach ($res->apiResponse[0] as $k=>$v){
 			if($v->estado==true)
 				if($v->idCampaña==$p || in_array($v->region,$p) || $p[0]=='Todas las regiones' || $p[0]=='Todas las campañas'){
+					if($v->idCampaña==$p || $p[0]=='Todas las regiones' || $p[0]=='Todas las campañas'){}
+					else $i=$v->idCampaña; // Le pega cuando veo que regiones tiene la campaña, al admin o director
 					$obj['Regiones'][$i]['id_CR']=$v->id;
 					$obj['Regiones'][$i]['id_C']=$v->idCampaña;
 					$obj['Regiones'][$i]['Region']=$v->region;
@@ -1043,10 +1151,11 @@ else if($pky=='}-.Ygf#44'){ //Guardo nueva relacion CR
 	$obj=$response->apiResponse[0];
 	echo json_encode($obj,JSON_UNESCAPED_UNICODE);
 }
-else if($pky=='/*-+%4dG'){ //Obtengo los fielders mas los fielders que ya estan asignados a un CFR
-	$p=trim($_POST['P']);
-	$y=trim($_POST['Y']);
-	$z=$_POST['Z'];
+else if($pky=='/*-+%4dG'){ // Obtengo los fielders mas los fielders que ya estan asignados a un CFR
+	$p=trim($_POST['P']);	// Id cr
+	$y=trim($_POST['Y']); // GetAllCFR=N - GetACalFi=Y
+	$z=$_POST['Z'];	// Mis regiones
+	$r=$_POST['R'];	// Region a comparar o bien NA
 	foreach($z as $k=>$v){
 		$w=substr($v,0,1);
 		if(is_numeric($w))
@@ -1101,53 +1210,70 @@ else if($pky=='/*-+%4dG'){ //Obtengo los fielders mas los fielders que ya estan 
 			}
 		}
 	}
-
-	$abj=file_get_contents($ipServ.'telmex/get/userAllRegs');
-	if($abj=='')
-		$obj['errorMessageB']='No hay respuesta del servidor para obtener usuarios. NO RESPONSE';
-	else{
-		$abj=json_decode($abj);
-		$abj=$abj->apiResponse[0];
-		$i=0;
-		foreach($abj as $k=>$v){
-			if(!in_array($v->idUsuario,$com))
-				if($v->role==7 && $v->cuenta==1){
-					$paso=0;
-					if($zz[0]!='Todas las regiones'){
-						$subj=file_get_contents($ipServ.'telmex/get/userandregiones/'.$v->idUsuario);
-						$subj=json_decode($subj);
-						$subj=$subj->apiResponse[0];
-						foreach($subj as $j=>$w){
-							if(in_array(substr($w->regionTrabajo,0,4),$zz))
-								$paso=1;
-						}
-					}
-					else
-						$paso=1;
-					if($paso==1){
+	$obj['com']=$com;
+	if($zz[0]=='Todas las regiones'){
+		$abj=file_get_contents($ipServ.'telmex/get/userAllRegs');
+		if($abj=='')
+			$obj['errorMessageB']='No hay respuesta del servidor para obtener usuarios. NO RESPONSE';
+		else{
+			$abj=json_decode($abj);
+			$abj=$abj->apiResponse[0];
+			$i=0;
+			foreach($abj as $k=>$v){
+				if(!in_array($v->idUsuario,$com))
+					if($v->role==7 && $v->cuenta==1){
 						$obj['Fuera'][$i]['idUsuario']=$v->idUsuario;
 						$obj['Fuera'][$i]['nombre']=$v->nombre;
 						$obj['Fuera'][$i]['role']=$v->role;
 						$i++;
 					}
+			}
+		}
+	}
+	else{
+		$r=explode('-',$r);
+		$r=$r[0].'-'.$r[1];
+		foreach($zz as $k=>$v){
+			$iz=explode('-',$v);
+			$iy[]=$iz[0].'-'.$iz[1];
+		}
+		$ix=implode(',',$iy);
+		$abj=file_get_contents($ipServ.'telmex/get/userAllByRegiones/'.$ix);
+		if($abj=='')
+			$obj['errorMessageB']='No hay respuesta del servidor para obtener usuarios. NO RESPONSE';
+		else{
+			$abj=json_decode($abj);
+			$abj=$abj->apiResponse[0];
+			foreach($abj as $k=>$v){
+				$bat=explode('-',$v->region);
+				$bet=$bat[1].'-'.$bat[2];
+				if(!in_array($bat[0],$com)){
+					if($bet==$r){
+						$obj['Fuera'][$bat[0]]['idUsuario']=$bat[0];
+						$obj['Fuera'][$bat[0]]['nombre']=$v->usrNombre;
+						$obj['Fuera'][$bat[0]]['role']=7;
+					}
 				}
+			}
 		}
 	}
 	echo json_encode($obj,JSON_UNESCAPED_UNICODE);
 }
 else if($pky=='hUUrf[,.()'){ // Mostrando calendarios que me asignaron o todos si soy director!
-	$p=trim($_POST['P']);
+	$p=$_POST['P'];
 	$res=file_get_contents($ipServ.'telmex/get/campAllRegs');
 	$obj['Error']='';
-	if($p!='NA'){
+	if($p[0]!='Todas las regiones'){
 		if($res!=''){
 			$res=json_decode($res);
 			foreach($res->apiResponse[0] as $k=>$v){
-				if($v->region==$p) $ibs[]=$v->id;
+				if(in_array($v->region,$p))
+					$ibs[]=$v->id;
 			}
 		}
 		else $obj['Error']='No se logro obtener respuesta del servicio que devuelve las regiones que tienes asignadas como líder.';
 	}
+	else $p='NA';
 	if($p=='NA' || !empty($ibs)){
 		$res=file_get_contents($ipServ.'telmex/get/calendarAll');
 		if($res!=''){

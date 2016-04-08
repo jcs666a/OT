@@ -76,6 +76,11 @@ function connect(){
 			reintento=setInterval(function(){connect()},20000);
 		},3000);
 }
+function sendMail(){
+	$.when(promesas.Mail(9)).done(function(x){
+		console.log(x);
+	});
+}
 function creaMapa(s,t){
 	function estilos(){
 		var estilo=[{"featureType":"landscape","stylers":[{"hue":"#FFBB00"},{"saturation":43.400000000000006},{"lightness":37.599999999999994},{"gamma":1}]},{"featureType":"road.highway","stylers":[{"hue":"#FFC200"},{"saturation":-61.8},{"lightness":45.599999999999994},{"gamma":1}]},{"featureType":"road.arterial","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":51.19999999999999},{"gamma":1}]},{"featureType":"road.local","stylers":[{"hue":"#FF0300"},{"saturation":-100},{"lightness":52},{"gamma":1}]},{"featureType":"water","stylers":[{"hue":"#0078FF"},{"saturation":-13.200000000000003},{"lightness":2.4000000000000057},{"gamma":1}]},{"featureType":"poi","stylers":[{"hue":"#00FF6A"},{"saturation":-1.0989010989011234},{"lightness":11.200000000000017},{"gamma":1}]}];
@@ -204,7 +209,7 @@ function muestraUsuarios(){
 	'</tr>');
 	function metelosTodos(x){
 		if(x!=null && x!='null'){
-			x=jQuery.parseJSON(x);
+			x=jQuery.parseJSON(x);console.log(x);
 			if(x.hasOwnProperty("errorMessage"))
 				creanotificacion('Error','<b>'+x.errorMessage,'','','error');
 			else{ var muetralo=1;
@@ -619,7 +624,7 @@ function muestraCalendario(){
 		eventClick:function(calEvent,jsEvent,view){formCalendarA(calEvent,'');}
 	});
 	calendario.fullCalendar('removeEvents');
-	$.when(promesas.GetCalAct('1-6-0-0')).done(function(x){
+	$.when(promesas.GetCalAct(misRegiones)).done(function(x){
 		x=jQuery.parseJSON(x);
 		if(x.Error=='')
 			$.each(x.Eventos,function(k,v){
@@ -644,7 +649,6 @@ function muestraCalendario(){
 		else
 			creanotificacion('Error','<b>'+x.Error,'','','error');
 	});
-
 }
 function updateEvent(s,d,e,f){
 	var ndate,
@@ -805,7 +809,6 @@ function muestraCampanas(){
 			'<th>tCode</th>'+
 			'<th>CampaignCode</th>'+
 			'<th>OfferCode</th>'+
-			'<th>Region</th>'+
 			'<th></th>'+
 		'</tr>');
 	else
@@ -839,9 +842,7 @@ function muestraCampanas(){
 					a.tcode+'</td><td>'+
 					a.campaigncode+'</td><td>'+
 					a.offercode+'</td><td>'+
-					a.region+'</td><td>'+
-					'<a data=\'{"x":"AddFieldersC","id":'+a.id_CR+',"titulo":"'+a.titulo+'"}\' title="Añadir Fielders a campaña '+a.titulo+'"><i class="fa fa-users"></i></a>'+
-//					'<a data=\'{"x":"EliminarCamp","id":'+a.id_CR+',"titulo":"'+a.titulo+'"}\' title="Eliminar campaña '+a.titulo+'"><i class="fa fa-trash"></i></a>'+
+					'<a data=\'{"x":"AddFieldersC","id":'+a.id_C+',"region":"'+a.region+'","titulo":"'+a.titulo+'"}\' title="Añadir Fielders a campaña '+a.titulo+'"><i class="fa fa-users"></i></a>'+
 					'</td></tr>');
 			});
 			creaTablaYa(4,0);
@@ -865,7 +866,7 @@ function muestraCampanas(){
 						a.fecha_fin+'</td><td>'+
 						'<a data=\'{"x":"EditarCamp'+
 							'","id":"'+a.id+'"}\' title="Editar campaña '+a.titulo+'"><i class="fa fa-pencil-square"></i></a>'+
-						'<a data=\'{"x":"AddRegionesC","id":'+a.id+',"titulo":"'+a.titulo+'"}\' title="Añadir Regiones a campaña '+a.titulo+'"><i class="fa fa-codiepie"></i></a>'+
+						'<a data=\'{"x":"AddRegionesC","id":'+a.id+',"titulo":"'+a.titulo+'"}\' title="Añadir Regiones a campaña '+a.titulo+'"><i class="fa fa-compass"></i></a>'+
 						'<a data=\'{"x":"EliminarCamp","id":'+a.id+',"titulo":"'+a.titulo+'"}\' title="Eliminar campaña '+a.titulo+'"><i class="fa fa-trash"></i></a>'+
 						'</td></tr>');
 				});
@@ -1208,7 +1209,7 @@ function nuevoUsuario(){
 		size=750;abrNu=0;
 	if(w<740) size=300;
 	if(idRol=="6"){
-		dire='';admi='';dise='';lide='',nvByLider='Si';
+		dire='';admi='';dise='';lide='';nvByLider='Si';
 		formaB='<fieldset><h4>Añadir región:</h4>'+
 			'<label>Divsión<select class="divisiones"></select></label>'+
 			'<label>Área<select class="areas" disabled="disabled"></select></label>'+
@@ -1220,8 +1221,10 @@ function nuevoUsuario(){
 			'<label class="busca">Agregar<input type="text" class="ui-autocomplete-input" value="" /></label>'+
 			'</fieldset>';
 	}
-	else
+	else{
 		prom='';
+		if(idRol==5){dire='';admi='';dise='';}
+	}
 	forma='<form class="edUS" data="Usuarios" title="Nuevo usuario">'+
 	'<fieldset><h4>Información:</h4>'+
 	'<input type="hidden" class="nuevoByLider" value="'+nvByLider+'" />'+
@@ -1361,9 +1364,9 @@ function AddRegionesC(d){
 		$("#loading").hide();
 	});
 }
-function AddFieldersC(d){
-	var size=620;
-	if(w<740) size=300;
+function AddFieldersCC(idCR,misR,Regi){
+	$('#loading').show();
+	$('.edUS .fuera,.edUS .dentro').remove();
 	function meteFielders(x){
 		x=jQuery.parseJSON(x);
 		$.each(x.Dentro,function(k,v){
@@ -1373,27 +1376,49 @@ function AddFieldersC(d){
 			$('select.fue').append('<option value='+v.idUsuario+' cfr="">'+v.nombre+'</option>');
 		});
 	}
-	function pasoA(){
-		$.when(promesas.GetAllCFR(d.id,misRegiones)).done(function(x){
-			$('.edUS .id_editado').after(
-					'<label class="fuera">Disponibles:<select class="fue" multiple></select><a>Agregar</a></label>'+
-					'<label class="dentro">En campaña:<select class="den" multiple></select><a>Eliminar</a></label>');
-			pasoB(x);
-		});
-	}
 	function pasoB(x){
 		$.when(meteFielders(x)).done(function(){$("#loading").hide();});
 	}
-	$.when(
-		dialogos('<form class="edUS" data="FieldersCampanas" title="Fielders asignados a campaña '+d.titulo+'">'+
-			'<fieldset>'+
-			'<input type="hidden" class="id_editado" value="'+d.id+'" />'+
-			'</fieldset>'+
-			'</form>',size)
-	).done(function(){
-		pasoA();
+	$.when(promesas.GetAllCFR(idCR,misR,Regi)).done(function(x){
+		$('.edUS .id_editado').after(
+			'<label class="fuera">Disponibles:<select class="fue" multiple></select><a>Agregar</a></label>'+
+			'<label class="dentro">En campaña:<select class="den" multiple></select><a>Eliminar</a></label>');
+		pasoB(x);
 	});
 }
+function AddFieldersC(d){ var size=620;$('#loading').show();if(w<740) size=300;
+	function pasoY(Px){
+		Px=jQuery.parseJSON(Px);
+		var idCR='',ii=0,Regi='';
+		$.when(
+			$.each(Px.Regiones,function(k,v){
+				if(ii==0){
+					idCR=v.id_CR;Regi=v.Region;
+					$('.edUS .id_editado').val(idCR);
+				}
+				var R=regisdivareas(v.Region);
+				$('.edUS .ids_crs').append('<option value="'+v.id_CR+','+v.Region+'">Region: '+R.region+'</option>');
+				ii++;
+			})
+		).done(function(){AddFieldersCC(idCR,misRegiones,Regi);});
+	}
+	function pasoX(){$.when(promesas.RegFroCam(d.id,misRegiones)).done(function(Px){pasoY(Px);});}
+	$.when(
+		dialogos('<form class="edUS" data="FieldersCampanas" title="Fielders en '+d.titulo+'">'+
+			'<fieldset>'+
+			'<select class="ids_crs"></select>'+
+			'<input type="hidden" class="id_campana" value="'+d.id+'" />'+
+			'<input type="hidden" class="id_editado" value="" />'+
+			'</fieldset>'+
+			'</form>',size)
+	).done(function(){pasoX();});
+}
+$(document).on("change",".edUS .ids_crs",function(){
+	var reg=$(this).val();
+	reg=reg.split(',');
+	$('.id_editado').val(reg[0]);
+	AddFieldersCC(reg[0],misRegiones,reg[1]);
+});
 function editarUsuario(e){ //id,reggcm,nombre
 	var regs='',r_d='',r_a='',r_l='',r_p='',r_q='',spr=' smpr',smpr='smpr',tRegs=0;
 	RegionesUser=[];
@@ -1442,6 +1467,7 @@ function editarUsuario(e){ //id,reggcm,nombre
 		abrNu=0;
 		if(idRol=="6"){
 			dire='';admi='';dise='';lide='';}
+		else prom='';
 		var forma='<form class="edUS'+spr+'" data="Usuarios" title="Editando a '+d.nombre+'">'+
 			'<fieldset><h4>Información:</h4>'+
 			'<input type="hidden" class="id_editado" value="'+e.idUser+'" />'+
@@ -1533,9 +1559,9 @@ function inicia(){
 	if(typeof google!=='undefined'){
 		google.maps.event.addDomListener(window,'load',creaMapa("",""));
 		$('#midatos .data .n').text(Nombre);
-//		$('#midatos .data .id').text('id: '+idBoss);
 		$.each(misRegiones,function(i,v){
-			$('#midatos .data .u').append('<i>'+v+'</i>');
+			var vr=regisdivareas(v);
+			$('#midatos .data .u').append('<i>'+vr.region+'</i>');
 		});
 		$('#midatos .data .r').text(Rol+', '+Usuario);
 		muestraGraficoReal('H');
@@ -1552,6 +1578,15 @@ function inicia(){
 }inicia();
 $(document).on("change",".ChangeColorMapa",function(event){event.preventDefault();creaMapa($(this).val(),"");});
 $(document).on("click",".gn-icon.gn-icon-salir",function(event){event.preventDefault();salir();});
+$(document).on("change",".smpr .rol",function(){
+	if(Rol!="Lider Promotor"){
+		if($(this).val()==4 || $(this).val()==8)
+			$(this).parent().parent().parent().find('fieldset:nth-child(2)').hide();
+		else
+			$(this).parent().parent().parent().find('fieldset:nth-child(2)').show();
+	}
+	console.log($(this).val());
+});
 $(document).on("change",".divisiones",function(){
 	$("#loading").show();
 	var	ap=$(this),
@@ -1560,8 +1595,6 @@ $(document).on("change",".divisiones",function(){
 	nvoDivi=$(this).val();
 	dG.add(aG).removeClass("c");
 	if(todosdiv=='principal'){
-//		$('#mapa').dialog('option','title',tc);
-//		$("#mapa").dialogExtend("restore");
 		$('#top,#generico').removeClass("open");
 		$('#generico').removeClass("openB");
 		limpiaMarcadores();viendo='Divisiones';
@@ -1574,6 +1607,15 @@ $(document).on("change",".divisiones",function(){
 		if(typeof todosdiv==='undefined'){
 			todosdiv=$(this).parent().parent().parent().attr('class');
 			$(this).parent().parent().find('.busca').removeClass('c');
+			var roleS=$(this).parent().parent().parent().find('.rol').val();
+			if(roleS==5){
+				$(this).parent().parent().parent().find('fieldset:nth-child(2) label:nth-child(3)').hide();
+				$(this).parent().parent().parent().find('fieldset:nth-child(2) label:nth-child(4)').hide();
+				if(todosdiv=='edUS arc ui-dialog-content ui-widget-content')
+					$(this).parent().parent().find('.busca').addClass('c');
+				else if(todosdiv=='edUS smpr ui-dialog-content ui-widget-content')
+					$(this).parent().parent().find('.busca').addClass('c');
+			}
 		}
 		ap.parent().parent().find('.areas').html('').prop("disabled",false);
 		ap.parent().parent().find('.distritos').val('0').prop("disabled",true);
@@ -1588,7 +1630,6 @@ $(document).on("change",".areas",function(){
 	nvoArea=$(this).val();
 	dG.add(aG).removeClass("c");
 	if(todosdiv=='principal'){
-//		$('#mapa').dialog('option','title',tc);
 		$('#top,#generico').removeClass("open");
 		limpiaMarcadores();viendo='Areas';
 		clearInterval(intervaloMarcadores);
@@ -1598,11 +1639,15 @@ $(document).on("change",".areas",function(){
 	else{
 		if(typeof todosdiv==='undefined'){
 			todosdiv=$(this).parent().parent().parent().attr('class');
-			if(todosdiv=='edUS arc ui-dialog-content ui-widget-content')
-				$(this).parent().parent().find('.busca').addClass('c');
-			else if(todosdiv=='edUS smpr ui-dialog-content ui-widget-content'){
-				$(this).parent().parent().find('button.busca').addClass('c');
-				$(this).parent().parent().find('.ui-autocomplete-input').val('smpr');
+			var roleS=$(this).parent().parent().parent().find('.rol').val();
+			if(roleS==6){
+				$(this).parent().parent().parent().find('fieldset:nth-child(2) label:nth-child(4)').hide();
+				if(todosdiv=='edUS arc ui-dialog-content ui-widget-content')
+					$(this).parent().parent().find('.busca').addClass('c');
+				else if(todosdiv=='edUS smpr ui-dialog-content ui-widget-content'){
+					$(this).parent().parent().find('button.busca').addClass('c');
+					$(this).parent().parent().find('.ui-autocomplete-input').val('smpr');
+				}
 			}
 		}
 		ap.parent().parent().find('.distritos').val('0').prop("disabled",false);

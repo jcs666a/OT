@@ -179,8 +179,8 @@ var path=window.location.pathname,myCookie=getCookie("Cinf"),Nombre='',Usuario='
 		GetCampas:function(){return $.ajax({method:"POST",url:Ñ,data:{pky:'ñ*}{Lokj'}});},
 		campById:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'.tr/(ydF',P:p}});},
 		GetCRdCam:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'lj.m,-/5tD',P:p}});},
-		GetAllCFR:function(p,z){return $.ajax({method:"POST",url:Ñ,data:{pky:'/*-+%4dG',P:p,Y:'N',Z:z}});},
-		GetACalFi:function(p,z){return $.ajax({method:"POST",url:Ñ,data:{pky:'/*-+%4dG',P:p,Y:'Y',Z:z}});},
+		GetAllCFR:function(p,z,r){return $.ajax({method:"POST",url:Ñ,data:{pky:'/*-+%4dG',P:p,Y:'N',Z:z,R:r}});},
+		GetACalFi:function(p,z){return $.ajax({method:"POST",url:Ñ,data:{pky:'/*-+%4dG',P:p,Y:'Y',Z:z,R:'NA'}});},
 		GetCalAct:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'hUUrf[,.()',P:p}});},
 		CierraSec:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'0Ṕ[RGdf',P:p}});},
 		UpdCalAct:function(a,c,s,e,m,t,d){return $.ajax({method:"POST",url:Ñ,data:{pky:'°1sLp9]+',A:a,C:c,S:s,E:e,M:m,T:t,D:d}});},
@@ -205,7 +205,9 @@ var path=window.location.pathname,myCookie=getCookie("Cinf"),Nombre='',Usuario='
 		UpdateCpm:function(D){return $.ajax({url:Ñ,method:'POST',data:D,processData:false});},
 		AddingCpm:function(D){return $.ajax({method:"POST",url:Ñ,data:D});},
 		UbicaFiel:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'-Ñp0?2.3d',P:p}});},
-		Conversas:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:',&44jÑ{',P:p}});}
+		Conversas:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:',&44jÑ{',P:p}});},
+		RegFroCam:function(p,r){return $.ajax({method:"POST",url:Ñ,data:{pky:'-:Ñ_6%fC',P:p,R:r}});},
+		Mail:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'b.4{d2xA',P:p}});}
 	};
 function creanotificacion(titulo,mensaje,error,textStatus,clase){
 	var op=''; if(error!='') op='<p>' + error + ' ' + textStatus + '</p>';
