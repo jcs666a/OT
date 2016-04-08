@@ -223,7 +223,8 @@ function muestraUsuarios(){
 							var reg='',areg=[];
 							if(a.hasOwnProperty("regiones")){
 								$.each(a.regiones,function(il,al){
-									 reg=reg+al+'<br />';
+									var il=regisdivareas(al);
+									 reg=reg+il.region+'<br />';
 									 areg.push('"'+al+'"');
 								});
 							}
@@ -1393,18 +1394,19 @@ function AddFieldersCC(idCR,misR,Regi){
 	});
 }
 function AddFieldersC(d){ var size=620;$('#loading').show();if(w<740) size=300;
-	console.log(d);
 	function pasoY(Px){
 		Px=jQuery.parseJSON(Px);
 		var idCR='',ii=0,Regi='';
 		$.when(
 			$.each(Px.Regiones,function(k,v){
+				var R=regisdivareas(v.Region);
 				if(ii==0){
 					idCR=v.id_CR;Regi=v.Region;
 					$('.edUS .id_editado').val(idCR);
+					$('.edUS .ids_crs').append('<option selected="selected" value="'+v.id_CR+','+v.Region+'">Region: '+R.region+'</option>');
 				}
-				var R=regisdivareas(v.Region);
-				$('.edUS .ids_crs').append('<option value="'+v.id_CR+','+v.Region+'">Region: '+R.region+'</option>');
+				else
+					$('.edUS .ids_crs').append('<option value="'+v.id_CR+','+v.Region+'">Region: '+R.region+'</option>');
 				ii++;
 			})
 		).done(function(){AddFieldersCC(idCR,misRegiones,Regi);});
@@ -1567,8 +1569,13 @@ function inicia(){
 		google.maps.event.addDomListener(window,'load',creaMapa("",""));
 		$('#midatos .data .n').text(Nombre);
 		$.each(misRegiones,function(i,v){
-			var vr=regisdivareas(v);
-			$('#midatos .data .u').append('<i>'+vr.region+'</i>');
+			if(v=='Todas las regiones' || v=='Todas las campañas'){
+				$('#midatos .data .u').append('<i>'+v+'</i>');
+			}
+			else{
+				var vr=regisdivareas(v);
+				$('#midatos .data .u').append('<i>'+vr.region+'</i>');
+			}
 		});
 		$('#midatos .data .r').text(Rol+', '+Usuario);
 		muestraGraficoReal('H');
@@ -1592,7 +1599,6 @@ $(document).on("change",".smpr .rol",function(){
 		else
 			$(this).parent().parent().parent().find('fieldset:nth-child(2)').show();
 	}
-	console.log($(this).val());
 });
 $(document).on("change",".divisiones",function(){
 	$("#loading").show();
@@ -2148,6 +2154,7 @@ $(document).on("click",".FielderCalTarea .fuera a",function(event){event.prevent
 		$('#loading').show();
 		$.when(promesas.RegACalFi(Q,P,id)).done(function(x){
 			x=jQuery.parseJSON(x);
+			console.log(x);
 			if(x.Error==''){
 				$('.den').append('<option value="'+id+'" cfr="'+x.id+'">'+tx+'</option>');
 				$(v).remove();
@@ -2165,6 +2172,7 @@ $(document).on("click",".FielderCalTarea .dentro a",function(event){event.preven
 			ca=$('.FielderCalTarea .id_calenda').val();
 		$('#loading').show();
 		$.when(promesas.RegDCalFi(fr,ca,id)).done(function(x){
+			console.log(x);
 			if(x!='')
 				creanotificacion('Error',x,'','','error');
 			else{
