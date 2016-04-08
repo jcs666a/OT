@@ -596,8 +596,7 @@ function NewContent(url, Obj, r, name){
         Obj.Areas[r[0].area.idArea].Distritos = {},
         fielderTecs[r[0].area.idArea] = {},
         fielderTecs[r[0].area.idArea]['PorTipo']={}, 
-        fielderTecs[r[0].area.idArea].PorTipo['Distritos'] = {};
-        fielderTecs[r[0].area.idArea].PorTipo['Distritos'][r[0].distrito.claveDistrito] = {};
+        fielderTecs[r[0].area.idArea].PorTipo['EnArea']= {};
         fielderTecs[r[0].area.idArea][r[0].distrito.claveDistrito] = {};
       }
       Obj.Areas[r[0].area.idArea].Distritos[r[0].distrito.claveDistrito] = {},
@@ -606,7 +605,10 @@ function NewContent(url, Obj, r, name){
       fielderPols.Distritos[r[0].distrito.claveDistrito] = r[0].mr.features[0];
       for(var i = 0; i <= r[0].tecPoints.distritos.length-1; i++){
         areas = fielderTecs[r[0].area.idArea][r[0].distrito.claveDistrito];
-        distritos = fielderTecs[r[0].area.idArea].PorTipo['Distritos'][r[0].distrito.claveDistrito];
+        distritos = fielderTecs[r[0].area.idArea].PorTipo;
+        distritos.EnArea[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia] = {},
+        distritos.EnArea[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]= areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["idTecnologia"],
+        //distritos.EnArea['AreaName'] = 
         areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia] = {},
         areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["idTecnologia"] = r[0].tecPoints.distritos[i].tecnologias[0].idTecnologia,
         areas[r[0].tecPoints.distritos[i].tecnologias[0].tecnologia]["centro"] = {}, 
