@@ -209,7 +209,7 @@ function muestraUsuarios(){
 	'</tr>');
 	function metelosTodos(x){
 		if(x!=null && x!='null'){
-			x=jQuery.parseJSON(x);console.log(x);
+			x=jQuery.parseJSON(x);
 			if(x.hasOwnProperty("errorMessage"))
 				creanotificacion('Error','<b>'+x.errorMessage,'','','error');
 			else{ var muetralo=1;
@@ -616,7 +616,7 @@ function muestraCalendario(){
 		lang:'es',
 		selectable:true,
 		selectHelper:true,
-		select:function(start,end,allDay){formCalendarA('',start);calendario.fullCalendar('unselect');},
+		select:function(start,end,allDay){if(Rol=='Lider Promotor')formCalendarA('',start);calendario.fullCalendar('unselect');},
 		eventLimit:false,
 		editable:true,
 		eventDrop:function(event,delta,revertFunc){updateEvent(event.start.format(),event.end.format(),event,'Drop');},
@@ -690,6 +690,7 @@ function formCalendarA(a,b){
 	var edi='',cam='',tit='',des='',met='',fro='',has='',but='',bat='',vfrom,tod=new Date();
 	a=='' ? a='No' : null;
 	b=='' ? b='No' : null;
+	$('#loading').show();
 	if(a!='No'){
 		edi=a.idActividad;
 		cam=a.idCR;
@@ -713,40 +714,45 @@ function formCalendarA(a,b){
 		}
 	}
 	function getmiscampas(){
-		$.when(promesas.GetCRdCam(misRegiones)).done(function(x){ //Region del lider...
+		$.when(promesas.GetCRdCal(misRegiones)).done(function(x){ //Region del lider...
 			x=jQuery.parseJSON(x);
 			if(x.Error!='') creanotificacion('Error 404:',x.Error,'','','error');
 			else if(x.Sin!='') creanotificacion('Sin regiones',x.Sin,'','','advertencia');
 			else $.each(x.Regiones,function(i,v){
-				var sel=' ';
+				var sel=' ',
+					rer=regisdivareas(v.region);
 				if(cam==v.id_CR)sel=' selected="selected" ';
-				$('.edUS fieldset select.camp').append('<option'+sel+'value="'+v.id_CR+'">'+v.titulo+' '+v.tcode+'|'+v.campaigncode+'</option>');
+				$('.edUS fieldset select.camp').append('<option'+sel+'value="'+v.id_CR+','+v.region+'">'+rer.region+' '+v.titulo+'</option>');
 			});
+			$('#loading').hide();
 		});
 	}
-	var size=600;
+	var size=600,read='',disa='',save='<button class="datos" type="submit">Guardar</button>';
 	if(w<740) size=300;
+	if(Rol!='Lider Promotor'){save='';bat='';but='';disa=' disabled="disabled"';read=' readonly="readonly"';}
 	$.when(
 		dialogos('<form class="edUS" title="Crear meta de campaña" data="AddCalendarEvent">'+
 			'<fieldset><input type="hidden" class="editando" value="'+edi+'" />'+
-				'<label>Campaña: <select class="camp"></select></label>'+
-				'<label>Título: <input type="text" class="titulo" value="'+tit+'" /></label>'+
-				'<label>Descripción: <input type="text" class="descripcion" value="'+des+'" /></label>'+
-				'<label>Meta: <input type="text" id="meta" class="meta" value="'+met+'" /></label>'+
+				'<label>Campaña: <select'+disa+' class="camp"></select></label>'+
+				'<label>Título: <input type="text"'+read+' class="titulo" value="'+tit+'" /></label>'+
+				'<label>Descripción: <input type="text"'+read+' class="descripcion" value="'+des+'" /></label>'+
+				'<label>Meta: <input type="text"'+read+' id="meta" class="meta" value="'+met+'" /></label>'+
 				'<label>Desde: <input type="text" class="fromDate" readonly="readonly" value="'+fro+'" /></label>'+
 				'<label>Hasta: <input type="text" class="toDate" readonly="readonly" value="'+has+'" /></label>'+bat+but+
-				'<button class="datos" type="submit">Guardar</button>'+
+				save+
 			'</fieldset>'+
 		'</form>',size)
 	).done(function(x){
-		var meta=new LiveValidation('meta');meta.add(Validate.Presence).add(Validate.Numericality,{onlyInteger:true});
-		$(".edUS .fromDate").datepicker({monthNames:meses,dayNamesMin:diaM,dateFormat:'yy-mm-dd',onSelect:function(selected){
-			var ini=new Date(selected);ini.setDate(ini.getDate()+2);$(".edUS .toDate").datepicker("option","minDate",ini);
-		}});
-		tod.setDate(tod.getDate()+1);$(".edUS .fromDate").datepicker("option","minDate",tod);
-		$(".edUS .toDate").datepicker({monthNames:meses,dayNamesMin:diaM,dateFormat:'yy-mm-dd',onSelect:function(selected){
-			var ini=new Date(selected);ini.setDate(ini.getDate()+0);$(".edUS .fromDate").datepicker("option","maxDate",ini)}});
-		$(".edUS .toDate").datepicker("option","minDate",tod);
+		if(Rol=='Lider Promotor'){
+			var meta=new LiveValidation('meta');meta.add(Validate.Presence).add(Validate.Numericality,{onlyInteger:true});
+			$(".edUS .fromDate").datepicker({monthNames:meses,dayNamesMin:diaM,dateFormat:'yy-mm-dd',onSelect:function(selected){
+				var ini=new Date(selected);ini.setDate(ini.getDate()+2);$(".edUS .toDate").datepicker("option","minDate",ini);
+			}});
+			tod.setDate(tod.getDate()+1);$(".edUS .fromDate").datepicker("option","minDate",tod);
+			$(".edUS .toDate").datepicker({monthNames:meses,dayNamesMin:diaM,dateFormat:'yy-mm-dd',onSelect:function(selected){
+				var ini=new Date(selected);ini.setDate(ini.getDate()+0);$(".edUS .fromDate").datepicker("option","maxDate",ini)}});
+			$(".edUS .toDate").datepicker("option","minDate",tod);
+		}
 		getmiscampas();
 	});
 }
@@ -773,7 +779,7 @@ function AddCalendarEvent(b,c,s,e,m,t,d,i){
 		creanotificacion('No se creó evento','Uno o más campos requeridos están vacios, por favor llénalos e intentalo nuevamente.','','','advertencia');
 	setTimeout(function(){b.removeClass('bad').removeClass('ok').removeClass('guardando');},1500);
 }
-function AddCalendarFielder(c,i){
+function AddCalendarFielder(c,d,i){
 	dialogos('<form class="FielderCalTarea" data="FielderCalTarea" title="Fielders asignados a tarea '+i+' de campaña">'+
 		'<fieldset>'+
 			'<input type="hidden" class="id_campana" value="'+c+'" />'+
@@ -792,10 +798,10 @@ function AddCalendarFielder(c,i){
 	function pasoB(x){
 		$.when(meteFielders(x)).done(function(){$("#loading").hide();});
 	}
-	$.when(promesas.GetACalFi(i,misRegiones)).done(function(x){
+	$.when(promesas.GetACalFi(i,misRegiones,d)).done(function(x){
 		$('.FielderCalTarea fieldset').append(
-				'<label class="fuera">Disponibles:<select class="fue" multiple></select><a>Agregar</a></label>'+
-				'<label class="dentro">En campaña:<select class="den" multiple></select><a>Eliminar</a></label>');
+			'<label class="fuera">Disponibles:<select class="fue" multiple></select><a>Agregar</a></label>'+
+			'<label class="dentro">En campaña:<select class="den" multiple></select><a>Eliminar</a></label>');
 		pasoB(x);
 	});
 }
@@ -1387,6 +1393,7 @@ function AddFieldersCC(idCR,misR,Regi){
 	});
 }
 function AddFieldersC(d){ var size=620;$('#loading').show();if(w<740) size=300;
+	console.log(d);
 	function pasoY(Px){
 		Px=jQuery.parseJSON(Px);
 		var idCR='',ii=0,Regi='';
@@ -1959,8 +1966,13 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 			d=$(this).parent().find('.descripcion').val(),
 			i=$(this).parent().find('.editando').val();
 		$('#loading').show();
-		if(b.attr('class')=='datos addFieldersCalendarAct guardando')
-			AddCalendarFielder(c,i);
+		if(b.attr('class')=='datos addFieldersCalendarAct guardando'){
+			var res=c.split(',');
+/*			console.log(res[0]); // id CR or campaing como le puse
+			console.log(res[1]); // Region
+			console.log(i);		 // id calendario */
+			AddCalendarFielder(res[0],res[1],i);
+		}
 		else if(b.attr('class')=='datos delCalendarAct guardando')
 			DeleteCalAct(t,i);
 		else
@@ -2095,6 +2107,7 @@ $(document).on("click",".edUS h5 a",function(event){event.preventDefault();
 	$(this).parent().hide();
 });
 $(document).on("click",".edUS .fuera a",function(event){event.preventDefault();
+	$('#loading').show();
 	$('.fue :selected').each(function(i,v){
 		var id=$(v).attr('value'),
 			tx=$(v).text(),
@@ -2105,12 +2118,13 @@ $(document).on("click",".edUS .fuera a",function(event){event.preventDefault();
 				$('.den').append('<option value="'+id+'" cfr="'+x.id+'">'+tx+'</option>');
 				$(v).remove();
 			}
-			else
-			creanotificacion('Error',x.Error,'','','error');
+			else creanotificacion('Error',x.Error,'','','error');
+			$('#loading').hide();
 		});
 	});
 });
 $(document).on("click",".edUS .dentro a",function(event){event.preventDefault();
+	$('#loading').show();
 	$('.den :selected').each(function(i,v){
 		var id=$(v).attr('value'),
 			tx=$(v).text(),
@@ -2121,6 +2135,7 @@ $(document).on("click",".edUS .dentro a",function(event){event.preventDefault();
 				$(v).remove();
 			}
 			else creanotificacion('Error',x,'','','error');
+			$('#loading').hide();
 		});
 	});
 });

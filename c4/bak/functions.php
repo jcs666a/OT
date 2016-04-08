@@ -435,7 +435,6 @@ else if($pky=='-*6+¿dyF'){ //Traigo todos los usuarios
 		$abj=$abj->apiResponse[0];
 		$i=0;
 		foreach($abj as $k=>$v){
-			$no_tengo='No';
 			if($v->role > 3 && $v->cuenta==1){
 				if($p=='Administrador' || in_array('Todas las regiones',$rb) || in_array('Todas las campañas',$rb)){
 					$obj[$i]['idUsuario']=$v->idUsuario;
@@ -460,28 +459,18 @@ else if($pky=='-*6+¿dyF'){ //Traigo todos los usuarios
 					$ibj=file_get_contents($ipServ.'telmex/get/region/'.$v->idUsuario);
 					$ibj=json_decode($ibj);
 					$ibj=$ibj->apiResponse[0];
-					$o=0;
+					$o=0;$no_tengo='No';
 					foreach($ibj as $kx=>$vx){
 						if($p=='Director'){
 							foreach($ra as $kix=>$vix){
 								if(strpos($vx->regionTrabajo,$vix)!==false)
 									$no_tengo='Si';
-								else{
-									$vix='1-';
-									if(strpos($vx->regionTrabajo,$vix)!==false)
-										$no_tengo='Si';
-								}
 							}
 						}
 						else{
 							foreach($rb as $kix=>$vix){
 								if(strpos($vx->regionTrabajo,$vix)!==false)
 									$no_tengo='Si';
-								else{
-									$vix='1-';
-									if(strpos($vx->regionTrabajo,$vix)!==false)
-										$no_tengo='Si';
-								}
 							}
 						}
 					}
@@ -1106,6 +1095,40 @@ else if($pky=='lj.m,-/5tD'){ // Mostrando regiones asignadas a campaña, DIRECTO
 	}
 	echo json_encode($obj,JSON_UNESCAPED_UNICODE);
 }
+else if($pky=='lj.m,[0]tD'){ // Mostrando regiones asignadas a campaña, Lider en calendarios
+	$p=$_POST['P'];
+	$res=file_get_contents($ipServ.'telmex/get/campAllRegs');
+	$obj['Error']='';
+	$obj['Sin']='';
+	if($res!=''){
+		$res=json_decode($res);$i=0;
+		foreach ($res->apiResponse[0] as $k=>$v){
+			if($v->estado==true)
+				if($v->idCampaña==$p || in_array($v->region,$p)){
+					$obj['Regiones'][$i]['id_CR']=$v->id;
+					$obj['Regiones'][$i]['id_C']=$v->idCampaña;
+					$obj['Regiones'][$i]['Region']=$v->region;
+					$ras=file_get_contents($ipServ.'telmex/get/campInformacion/'.$v->id);
+					if($ras!=''){
+						$ras=json_decode($ras);
+						$obj['Regiones'][$i]['titulo']=$ras->apiResponse[0][0]->titulo;
+						$obj['Regiones'][$i]['offercode']=$ras->apiResponse[0][0]->offer_code;
+						$obj['Regiones'][$i]['campaigncode']=$ras->apiResponse[0][0]->campaign_code;
+						$obj['Regiones'][$i]['tcode']=$ras->apiResponse[0][0]->tcode;
+						$obj['Regiones'][$i]['region']=$ras->apiResponse[0][0]->region;
+						$obj['Regiones'][$i]['createAt']=$v->createAt;
+					}
+					$i++;
+				}
+		}
+		if($i==0)
+			$obj['Sin']='No hay regiones asignadas a la campaña.';
+	}
+	else{
+		$obj['Error']='No se encontró el servicio para obtener los CR.';
+	}
+	echo json_encode($obj,JSON_UNESCAPED_UNICODE);
+}
 else if($pky=='{-po9kD3$'){ // para eliminar reguin CR
 	$p=trim($_POST['P']);
 	$data[]=array('id'=>$p);
@@ -1149,6 +1172,70 @@ else if($pky=='}-.Ygf#44'){ //Guardo nueva relacion CR
 		die(curl_error($ch));
 	$response=json_decode($response);
 	$obj=$response->apiResponse[0];
+	echo json_encode($obj,JSON_UNESCAPED_UNICODE);
+}
+else if($pky=='/*ÑÑ%4dG'){ // Obtengo los fielders que ya estan en un calendario, validando su region tambien y campaña
+	$p=trim($_POST['P']);	// Id cr
+	$y=trim($_POST['Y']); // GetAllCFR=N - GetACalFi=Y
+	$z=$_POST['Z'];	// Mis regiones
+	$r=$_POST['R'];	// Region a comparar o bien NA
+	foreach($z as $k=>$v){
+		$w=substr($v,0,1);
+		if(is_numeric($w))
+			$zz[]=substr($v,0,4);
+		else
+			$zz[]=$v;
+	}
+	$abj=file_get_contents($ipServ.'telmex/get/calf/byIdCal/'.$p);
+	$obj['errorMessageA']='';
+	$obj['errorMessageB']='';
+	$obj['Dentro']=array();
+	$obj['Fuera']=array();
+	if($abj=='')
+		$obj['errorMessageA']='No hay respuesta del servidor para obtener usuarios registrados al CFR. NO RESPONSE';
+	else{
+		$abj=json_decode($abj);
+		$abj=$abj->apiResponse[0];
+		$i=0;
+		foreach($abj as $k=>$v){
+			$com[]=$v->idFielder;$paso=0;
+			$subj=file_get_contents($ipServ.'telmex/get/userandregiones/'.$v->idFielder);
+			$subj=json_decode($subj);
+			$subj=$subj->apiResponse[0];
+			foreach($subj as $j=>$w){
+				if(in_array(substr($w->regionTrabajo,0,4),$zz) && $w->role==7)
+					$paso=1;
+			}
+			if($paso==1){
+					$obj['Dentro'][$i]['id']=$v->id;
+					$obj['Dentro'][$i]['idCalendar']=$v->idCalendar;
+					$obj['Dentro'][$i]['idFielder']=$v->idFielder;
+					$obj['Dentro'][$i]['createAt']=$v->createAt;
+					$obj['Dentro'][$i]['nombre']=$v->nombre;
+				$i++;
+			}
+		}
+	}
+	$r=explode('-',$r);
+	$r=$r[0].'-'.$r[1];
+	$abj=file_get_contents($ipServ.'telmex/get/userAllByRegiones/'.$r);
+	if($abj=='')
+		$obj['errorMessageB']='No hay respuesta del servidor para obtener usuarios. NO RESPONSE';
+	else{
+		$abj=json_decode($abj);
+		$abj=$abj->apiResponse[0];
+		foreach($abj as $k=>$v){
+			$bat=explode('-',$v->region);
+			$bet=$bat[1].'-'.$bat[2];
+			if(!in_array($bat[0],$com)){
+				if($bet==$r){
+					$obj['Fuera'][$bat[0]]['idUsuario']=$bat[0];
+					$obj['Fuera'][$bat[0]]['nombre']=$v->usrNombre;
+					$obj['Fuera'][$bat[0]]['role']=7;
+				}
+			}
+		}
+	}
 	echo json_encode($obj,JSON_UNESCAPED_UNICODE);
 }
 else if($pky=='/*-+%4dG'){ // Obtengo los fielders mas los fielders que ya estan asignados a un CFR
@@ -1314,7 +1401,7 @@ else if($pky=='hUUrf[,.()'){ // Mostrando calendarios que me asignaron o todos s
 }
 else if($pky=='°1sLp9]+'){ //Actualizo evento de calendario....
 	$a=trim($_POST['A']);
-	$c=trim($_POST['C']);
+	$c=trim($_POST['C']);$c=explode(",",$c);$c=$c[0];
 	$s=trim($_POST['S']);$s=date('Y-m-d',strtotime($s.' +1 day'));
 	$e=trim($_POST['E']);$e=date('Y-m-d',strtotime($e.' +1 day'));
 	$m=trim($_POST['M']);
@@ -1344,12 +1431,13 @@ else if($pky=='°1sLp9]+'){ //Actualizo evento de calendario....
 	}
 	else{
 //		$response=json_decode($response);
+		$obj['Raponse']=$response;
 		$obj['Response']=json_decode($response);
-		echo json_encode($obj);
 	}
+	echo json_encode($obj);
 }
 else if($pky=='y_m,/5fGd'){ //Crea un evento de calendario....
-	$c=trim($_POST['C']);
+	$c=trim($_POST['C']);$c=explode(",",$c);$c=$c[0];
 	$s=trim($_POST['S']);$s=date('Y-m-d',strtotime($s.' +1 day'));
 	$e=trim($_POST['E']);$e=date('Y-m-d',strtotime($e.' +1 day'));
 	$m=trim($_POST['M']);
@@ -1362,6 +1450,7 @@ else if($pky=='y_m,/5fGd'){ //Crea un evento de calendario....
 		'meta'=>$m,
 		'titulo'=>$t,
 		'descripcion'=>$d);
+	$obj['Data']=$data;
 	$ch=curl_init($ipServ."telmex/add/calendar");
 	curl_setopt_array($ch,array(
 		CURLOPT_POST=>TRUE,
@@ -1383,8 +1472,8 @@ else if($pky=='y_m,/5fGd'){ //Crea un evento de calendario....
 			$obj['Error']=$response->errorMessage;
 		else
 			$obj['id']=$response->apiResponse[0]->id;
-		echo json_encode($obj);
 	}
+	echo json_encode($obj);
 }
 else if($pky=='p_.9886fF+'){ //Agrega fielder a tarea de calendario
 	$c=trim($_POST['C']);
