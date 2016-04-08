@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body onload=" loadInfo()">
+	<form action="" id="claroMusica">
+		<!--nombre-->
+		<input type="text" class="mandatory text">
+		<!--telefono-->
+		<input type="text" class="mandatory numeric">
+		<!--correo-->
+		<input type="email" class="mandatory email">
+		<!--promocion-->
+		<input type="text" class="mandatory text">
+		<input type="submit" onclick="validation()"; value="validar">
+	</form>
+	<form action="" id="claroVideo">
+		<!--nombre -->
+		<input type="text" class="mandatory text">
+		<!--apellidos -->
+		<input type="text" class="mandatory text">
+		<!--telefono -->
+		<input type="text" class="mandatory numeric">
+		<!--email -->
+		<input type="email" class="mandatory email">
+		<input type="submit" onclick="validation()"; value="validar">
+	</form>
+	<form action="" id="mcAfree">
+		<!--telefono-->
+		<input type="text"class="mandatory numeric">
+		<!--producto-->
+		<input type="text" class="mandatory text">
+		<!--canal-->
+		<input type="text" class="mandatory text">
+		<!--clioid-->
+		<input type="text">
+		<!--tipoOrden contratacion 1-->
+		<input type="hidden" value="1">
+		<!--nombre--> 
+		<input type="text" class="mandatory text">
+		<!--apPaterno-->
+		<input type="text" class="mandatory text">
+		<!--apMaterno--> 
+		<input type="text" class="mandatory text">
+		<!--correo--> 
+		<input type="text" class="mandatory email">
+		<!--edoValidacion 1 exito 0 pendiente-->
+		<input type="text">
+		<!--datos-->
+		<input type="text" class="mandatory">
+		<!--valordato-->
+		<input type="text" class="mandatory">
+		<input type="submit" onclick="validation()"; value="validar">
+	</form>
+	<div id="expressTelmex">
+		<div class="inner">
+			<div class="logo"></div>
+			<p>Contrato de servicios</p>
+			<form id="express-node" action="http://201.147.20.243:8082/sendtopisadummy/sendtopisa/exito">
+				<input type="hidden" value="A0" name="servicioTipo" />
+				<input type="hidden" value="350" name="servicioId" />
+				<input type="hidden" id="idCamp">
+				<input type="hidden" id="vivo" value="">
+				<input type="hidden" value="" id="region">
+				<div class="group">
+					<input type="text" name="nombre" id="xn" placeholder="nombre" class="mandatory"/><span class="highlight"></span><span class="bar"></span>
+				</div>
+				<div class="group">
+					<input name="paterno" id="xp" placeholder="apellido paterno" type="text"  class="mandatory"/><span class="highlight"></span><span class="bar"></span>
+				</div>
+				<div class="group">
+					<input name="materno" id="xm" placeholder="apellido materno" type="text"  class="mandatory"/><span class="highlight"></span><span class="bar"></span>
+				</div>
+				<div class="group">
+					<input name="telefono" placeholder="telefono" type="text"/><span class="highlight"></span><span class="bar"></span>
+				</div>
+				<div class="group">
+					<input name="celular" placeholder="celular" type="text"/><span class="highlight"></span><span class="bar"></span>
+				</div>
+				<div class="group">
+					<input name="email" placeholder="email" type="email"/><span class="highlight"></span><span class="bar"></span>
+				</div>
+				<div class="group">
+					<input name="rfc" placeholder="rfc" type="text"/><span class="highlight"></span><span class="bar"></span>
+				</div>
+				<select name="tipoCalle" placeholder="tipo calle" id="" class="mandatory">
+					<option value="null"> tipo calle</option>
+					<option value="ACCESO">ACCESO</option>
+					<option value="AEROPUERTO">AEROPUERTO</option>
+					<option value="AMPLIACION">AMPLIACION</option>
+					<option value="ANDADOR">ANDADOR</option>
+					<option value="AVENIDA">AVENIDA</option>
+					<option value="BLOQUE">BLOQUE</option>
+					<option value="BOULEVARD">BOULEVARD</option>
+					<option value="CALLE">CALLE</option>
+					<option value="CALLEJON">CALLEJON</option>
+					<option value="CALZADA">CALZADA</option>
+					<option value="CAMINO">CAMINO</option>
+					<option value="CARRETERA">CARRETERA</option>
+					<option value="CARRIL">CARRIL</option>
+					<option value="CENTRO COMERCIAL">CENTRO COMERCIAL</option>
+					<option value="CERRADA">CERRADA</option>
+					<option value="CERRO">CERRO</option>
+					<option value="CIRCUITO">CIRCUITO</option>
+					<option value="CIRCUNVALACION">CIRCUNVALACION</option>
+					<option value="CLASE">CLASE</option>
+					<option value="COMPLEJO">COMPLEJO</option>
+					<option value="CONTINUACION">CONTINUACION</option>
+					<option value="CRUCERO">CRUCERO</option>
+					<option value="CUCHILLA">CUCHILLA</option>
+					<option value="DIAGONAL">DIAGONAL</option>
+					<option value="EDIFICIO">EDIFICIO</option>
+					<option value="EJE">EJE</option>
+					<option value="EJIDO">EJIDO</option>
+					<option value="ENTRONQUE">ENTRONQUE</option>
+					<option value="ESQUINA">ESQUINA</option>
+					<option value="KILOMETRO">KILOMETRO</option>
+					<option value="LATERAL">LATERAL</option>
+					<option value="LIBRAMIENTO">LIBRAMIENTO</option>
+					<option value="MALECON">MALECON</option>
+					<option value="MERCADO">MERCADO</option>
+					<option value="PARQUE INDUSTRIAL">PARQUE INDUSTRIAL</option>
+					<option value="PASAJE">PASAJE</option>
+					<option value="PEATONAL">PEATONAL</option>
+					<option value="PERIFERICO">PERIFERICO</option>
+					<option value="PERIMETRAL">PERIMETRAL</option>
+					<option value="PLAZA">PLAZA</option>
+					<option value="PLAZUELA">PLAZUELA</option>
+					<option value="PORTAL">PORTAL</option>
+					<option value="PRIVADA">PRIVADA</option>
+					<option value="PROLONGACION">PROLONGACION</option>
+					<option value="PUENTE">PUENTE</option>
+					<option value="RAMPA">RAMPA</option>
+					<option value="RETORNO">RETORNO</option>
+					<option value="RIVERA">RIVERA</option>
+					<option value="VIA">VIA</option>
+					<option value="VIADUCTO">VIADUCTO</option>
+				</select>
+				<div class="group">
+					<input name="calle" placeholder="calle" type="text"  class="mandatory"/><span class="highlight"></span><span class="bar"></span>
+				</div>
+				<div class="group">
+					<input name="numExt" placeholder="número exterior" type="text" class="mandatory"/><span class="highlight"></span><span class="bar"></span>
+				</div>
+				<div class="group">
+					<input name="numInt" placeholder="número interior" type="text"/><span class="highlight"></span><span class="bar"></span>
+				</div>
+				<div class="group">
+					<input name="entreCalle1" placeholder="entre calle 1" type="text"/><span class="highlight"></span><span class="bar"></span>
+				</div>
+				<div class="group">
+					<input name="entreCalle2" placeholder="entre calle 2" type="text"/><span class="highlight"></span><span class="bar"></span>
+				</div>
+				<div class="group">
+					<input name="colonia" placeholder="colonia" type="text" class="mandatory"/><span class="highlight"></span><span class="bar"></span>
+				</div>
+				<div class="group">
+					<input name="cp" placeholder="cp"  class="mandatory"/><span class="highlight"></span><span class="bar"></span>
+				</div>
+				<select name="estado" id="noShit" class="mandatory" onchange="loadThat(this.value);">
+					<option value="sinValor">ESTADO</option>
+				</select>
+				<div id="municipio"></div>
+		   		<input type="hidden" name="latlong" id="geoId"/>
+		   		<label for="inePic">Identificación</label>
+		   		<input type="file" name="ine" accept="image/*" id="inePic" capture="camera"/>
+       			<input type="hidden" id="ine" class="mandatory" />
+		   		<label for="compPic">Comprobante de domicilio</label>
+		   		<input type="file" accept="image/*" id="compPic" capture="camera"/>
+       			<input type="hidden" id="comp" class="mandatory" />
+				<span class="con" onclick="validation();">Contratar</span>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
