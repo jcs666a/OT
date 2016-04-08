@@ -352,7 +352,7 @@ function NewContent(url, Obj, r, name){
     //esta linea se va y se genera un cuadro de dialogo
     //$("#brodcast").fadeOut('fast');
     if(window.location.hash == "#"+url){
-      //location.reload();
+      location.reload();
     }
     if(window.location.hash == "#home" && url == "mensajeria"){
       location.reload();
