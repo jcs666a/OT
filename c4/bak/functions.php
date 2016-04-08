@@ -790,7 +790,7 @@ else if($pky=='l/55G4rp´'){ //Guardo tarea a un fielder
 	else{
 		$abj=json_decode($abj);
 		$obj['RespA']=$abj->apiResponse[0];
-//		if($abj->apiResponse[0]==false){
+		if($abj->apiResponse[0]==false){
 			$obj['respB']='No la tengo';
 			$dataBB[]=array(
 				'idCr'=>$q,
@@ -817,7 +817,7 @@ else if($pky=='l/55G4rp´'){ //Guardo tarea a un fielder
 				$obj['Error']='';
 				$obj['dataB']=$dataBB;
 			}
-//		}
+		}
 	}
 
 	$data[]=array(
