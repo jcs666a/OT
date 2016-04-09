@@ -178,6 +178,8 @@ function creaDivsAreas(t,z,y){
 function creaAreas(t,z,y){
 	var p=$(y+' .areas').find("option").filter(":selected").text(),
 		u=$(y+' .areas').val();
+	console.log(p);
+	console.log(u);
 	$.when(
 		promesas.areas(p,u)
 	).done(function(x){
@@ -191,6 +193,16 @@ function creaAreas(t,z,y){
 	}).fail(function(jqXHR,textStatus,error){
 		creanotificacion('Error:','No se recibió respuesta del servicio de para obtener poligonos de las areas.',error,textStatus,'error');
 	});
+}
+function liderLogin(){
+	if(idRol==6){
+		$.each(misRegiones,function(i,v){
+			console.log(regisdivareas(v));
+		});
+//		limpiaPoligonos();
+//		map.data.addGeoJson(gj);
+//		setColores();
+	}
 }
 function limpiaTablaG(){
 	$('#tablaFielders tbody').html('');
@@ -611,21 +623,23 @@ function muestraCalendario(){
 	$("#loading").hide();
 	$('#ctable,#reportes').removeClass('s');
 	$('#calendar').addClass('s');
+	var selecta=false;
+	if(Rol=='Lider Promotor')selecta=true;
 	var calendario=$('#calendar').fullCalendar({
 		header:{left:'prev,next today',center:'title',right:'month,basicWeek,basicDay'},
 		businessHours:true,
 		lang:'es',
-		selectable:true,
-		selectHelper:true,
+		selectable:selecta,
+		selectHelper:selecta,
 		select:function(start,end,allDay){if(Rol=='Lider Promotor')formCalendarA('',start);calendario.fullCalendar('unselect');},
 		eventLimit:false,
-		editable:true,
-		eventDrop:function(event,delta,revertFunc){updateEvent(event.start.format(),event.end.format(),event,'Drop');},
-		eventResize:function(event,delta,revertFunc){updateEvent(event.start.format(),event.end.format(),event,'Resize');},
+		editable:selecta,
+		eventDrop:function(event,delta,revertFunc){if(Rol=='Lider Promotor')updateEvent(event.start.format(),event.end.format(),event,'Drop');},
+		eventResize:function(event,delta,revertFunc){if(Rol=='Lider Promotor')updateEvent(event.start.format(),event.end.format(),event,'Resize');},
 		eventClick:function(calEvent,jsEvent,view){formCalendarA(calEvent,'');}
 	});
 	calendario.fullCalendar('removeEvents');
-	$.when(promesas.GetCalAct(misRegiones)).done(function(x){
+	$.when(promesas.GetCalAct(misRegiones,idRol)).done(function(x){
 		x=jQuery.parseJSON(x);
 		if(x.Error=='')
 			$.each(x.Eventos,function(k,v){
@@ -716,7 +730,7 @@ function formCalendarA(a,b){
 	}
 	function getmiscampas(){
 		$.when(promesas.GetCRdCal(misRegiones)).done(function(x){ //Region del lider...
-			x=jQuery.parseJSON(x);
+			x=jQuery.parseJSON(x);console.log(x); // porque estoy mandando 1-0-0-0 por ejemplo...
 			if(x.Error!='') creanotificacion('Error 404:',x.Error,'','','error');
 			else if(x.Sin!='') creanotificacion('Sin regiones',x.Sin,'','','advertencia');
 			else $.each(x.Regiones,function(i,v){
@@ -730,7 +744,8 @@ function formCalendarA(a,b){
 	}
 	var size=600,read='',disa='',save='<button class="datos" type="submit">Guardar</button>';
 	if(w<740) size=300;
-	if(Rol!='Lider Promotor'){save='';bat='';but='';disa=' disabled="disabled"';read=' readonly="readonly"';}
+	if(Rol!='Lider Promotor'){save='';bat='';disa=' disabled="disabled"';read=' readonly="readonly"';}
+	if(Rol=='Administrador' || Rol=='Lider Promotor' || Rol=='Director'){}else but='';
 	$.when(
 		dialogos('<form class="edUS" title="Crear meta de campaña" data="AddCalendarEvent">'+
 			'<fieldset><input type="hidden" class="editando" value="'+edi+'" />'+
@@ -1580,12 +1595,13 @@ function inicia(){
 		$('#midatos .data .r').text(Rol+', '+Usuario);
 		muestraGraficoReal('H');
 		selectDivisiones('.principal');
+		liderLogin();
 //		connect();
 	}
 	else{
 		if(typeof online==='undefined')
 			setTimeout(function(){
-				$('#loading').show().removeClass('opaco');;
+				$('#loading').show().removeClass('opaco');
 				online=setInterval(function(){location.reload()},5000);
 			},1200);
 	}
