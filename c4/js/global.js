@@ -186,7 +186,7 @@ var path=window.location.pathname,myCookie=getCookie("Cinf"),Nombre='',Usuario='
 		GetCRdCal:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'lj.m,[0]tD',P:p}});},
 		GetAllCFR:function(p,z,r){return $.ajax({method:"POST",url:Ñ,data:{pky:'/*-+%4dG',P:p,Y:'N',Z:z,R:r}});},
 		GetACalFi:function(p,z,r){return $.ajax({method:"POST",url:Ñ,data:{pky:'/*ÑÑ%4dG',P:p,Y:'Y',Z:z,R:r}});},
-		GetCalAct:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'hUUrf[,.()',P:p}});},
+		GetCalAct:function(p,q){return $.ajax({method:"POST",url:Ñ,data:{pky:'hUUrf[,.()',P:p,Q:q}});},
 		CierraSec:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'0Ṕ[RGdf',P:p}});},
 		UpdCalAct:function(a,c,s,e,m,t,d){return $.ajax({method:"POST",url:Ñ,data:{pky:'°1sLp9]+',A:a,C:c,S:s,E:e,M:m,T:t,D:d}});},
 		DelCalAct:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'""#fGm0""',P:p}});},

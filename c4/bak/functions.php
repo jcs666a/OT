@@ -10,6 +10,7 @@ else
 	header("Location: ../");
 //Vars:
 $ipServ='http://10.105.116.52:9090/';
+//$ipServ='http://localhost:9090/';
 //$ipServ='http://187.217.179.35:9090/';
 //$ipServ='http://10.105.116.187:9090/';
 //Clases:
@@ -1348,14 +1349,28 @@ else if($pky=='/*-+%4dG'){ // Obtengo los fielders mas los fielders que ya estan
 }
 else if($pky=='hUUrf[,.()'){ // Mostrando calendarios que me asignaron o todos si soy director!
 	$p=$_POST['P'];
+	$q=$_POST['Q'];
 	$res=file_get_contents($ipServ.'telmex/get/campAllRegs');
 	$obj['Error']='';
+	if($q==5){
+		foreach($p as $k=>$v){
+			$r=substr($v,0,2);
+			$pp[]=$r;
+		}
+	}
 	if($p[0]!='Todas las regiones'){
 		if($res!=''){
 			$res=json_decode($res);
 			foreach($res->apiResponse[0] as $k=>$v){
-				if(in_array($v->region,$p))
-					$ibs[]=$v->id;
+				if($q==6){
+					if(in_array($v->region,$p))
+						$ibs[]=$v->id;
+				}
+				else if($q==5){
+					$r=substr($v->region,0,2);
+					if(in_array($r,$pp))
+						$ibs[]=$v->id;
+				}
 			}
 		}
 		else $obj['Error']='No se logro obtener respuesta del servicio que devuelve las regiones que tienes asignadas como líder.';
