@@ -19,6 +19,7 @@ var loadPage = $(".map-go"),
     imagesPlaces  = 'http://187.217.179.35/c4/imgCamps/',//'http://10.105.116.52',//
     hostVar = 'http://187.217.179.35',//'http://10.105.116.207',//
     expressPhone = 0,
+    domicilio = "",
     urlVars=function(){
       var query_string={};
       var query=window.location.search.substring(1);
@@ -38,7 +39,7 @@ var loadPage = $(".map-go"),
     }();
 function global(){
     appMenu.click(function(event){
-        document.getElementById('iframeDisplay').classList.remove('open');
+        iframeMethod("closeIframe");
         appMenu.addClass('active');
         menuDisplay.addClass('active');
         wrapper.addClass('active');
@@ -56,7 +57,7 @@ function global(){
         return true;
       }
     });
-  connect();
+  //connect();
   geoRefer();
   core();
 }
@@ -826,8 +827,13 @@ function calendar(t){
                 }
                 else{
                   body += '<div class="row" data-action="'+(day-firstDay)+'-'+m+'-'+y+'" onclick="calendar(this);">';
+                  if(!fielderCalendar[y]){
+                    fielderCalendar[y]= {};
+                  }
+                  if(!fielderCalendar[y][m]){
+                    fielderCalendar[y][m] = {};
+                  }
                   if(!fielderCalendar[y][m][(day-firstDay)]){
-
                   }
                   else{
                     if(fielderCalendar[y][m][(day-firstDay)].campInfo){
@@ -1449,7 +1455,16 @@ function saveInCalendar(obj){
     var hoy = new Date(),
         d = hoy.getDate(),
         m = hoy.getMonth(),
-        y = hoy.getFullYear(), 
+        y = hoy.getFullYear();
+        if(!fielderCalendar[y]){
+        fielderCalendar[y] = {};
+        }
+        if(!fielderCalendar[y][m]){
+          fielderCalendar[y][m] = {};
+        }
+        if(!fielderCalendar[y][m][d]){
+          fielderCalendar[y][m][d] = {};
+        }
         size = fielderCalendar[y][m][d];
         if(!fielderCalendar[y][m][d].campInfo){
           //checar esto no me cuadra mucho
@@ -1602,6 +1617,7 @@ $(document).on("click","#campaniasAsignadas .row",function(){
 $(document).on("click","#closeImageDisplay",function(){$(this).parent().remove();});
 areIn = [];
 function getCampDist(v){
+  console.log('L:1620');
 	document.getElementById('mercaBox').innerHTML = "";
   $('#masterLogin').removeClass('ani').fadeOut();
 	if(!v){
@@ -1695,8 +1711,6 @@ function getCampDist(v){
     }
     return false;
   }
-  console.log(areIn);
-  areIn = [];
 }
 function mercaCrossModul(t){
 	if(cc[t].vivo == true){
@@ -1718,16 +1732,16 @@ function campCrossModul(t){
    loadPageCore("#merca");
    if(!document.getElementById('clientPosition')){
       setTimeout(function(){
-       data = document.getElementById('clientPosition');
-       data.classList.add('open');
+     data = document.getElementById('clientPosition');
+     data.classList.add('open');
       idAdq = t.dataset.camp,
       geo = document.getElementById('geoSend'),
-      name= document.getElementById('nameSend'),
-      telefono= document.getElementById('telefonoSend'),
-      address= document.getElementById('direccion'),
+      name = document.getElementById('nameSend'),
+      telefono = document.getElementById('telefonoSend'),
+      address = document.getElementById('direccion'),
       document.getElementsByClassName('getData')[0].addEventListener('click',getInfoEnd),
       document.getElementsByClassName('getData2')[0].addEventListener('click',getInfo);
-      },500);
+      },700);
    }
    else{
      data = document.getElementById('clientPosition');
@@ -1737,12 +1751,16 @@ function campCrossModul(t){
       name = document.getElementById('nameSend'),
       telefono = document.getElementById('telefonoSend'),
       address = document.getElementById('direccion'),
-      document.getElementsByClassName('getData2')[0].addEventListener('click',getInfo),
-      document.getElementsByClassName('getData')[0].addEventListener('click',getInfoEnd);
+      document.getElementsByClassName('getData')[0].addEventListener('click',getInfoEnd),
+      document.getElementsByClassName('getData2')[0].addEventListener('click',getInfo);
    }
       function getInfoEnd(){
         var datos = [idAdq,document.getElementById('nameSend').value,telefono.value,address.value,geo.value];
         reportObj["usuario"] = datos;
+        reportObj["campañas"] = [],
+        reportObj.campañas[0] = idAdq;
+        reportObj["llave"] = "";
+        finishRepo();
       }
       function getInfo(){
             masterLogin();
@@ -1792,7 +1810,7 @@ function reportBox(t){
 					setTimeout(function(){
               document.getElementById('content').classList.add('not');
 						getCampDist(reportObj.usuario[0]);
-					}, 500);
+					}, 1000);
 				 }
 				 else{
  					searchNumber();
@@ -2079,7 +2097,7 @@ function repo(){
 				masterAlert("Gracias la información fue procesada");
 				})
 				.fail(function() {
-				masterAlert("Error por favor vuelva a intentar");
+				//masterAlert("Error por favor vuelva a intentar");
 				})
 				.always(function() {
 					console.log("complete");
@@ -2087,6 +2105,10 @@ function repo(){
           setTimeout(function(){
               saveInCalendar(reportObj);
           },1000);
+          function encode_utf8(s) {
+  return unescape(encodeURIComponent(s));
+}
+
 		}
 var savePoint = "";
 function savePointFallback(){
@@ -2251,3 +2273,27 @@ function printInfoUser(r){
 }
 
 
+function iframeMethod(type){
+  if(type == "closeIframe"){
+    document.getElementById('iframeDisplay').classList.remove('open');
+    document.getElementById('iframeDisplay2').classList.remove('open');
+  }
+  else{
+     window.location.hash = '#'+type;
+    insert = document.getElementById(type); 
+    if(!insert.classList.contains('open')){
+      insert.classList.add('open');
+    }
+    else{
+      insert.classList.remove('open');
+      if(type == "iframeDisplay"){
+        document.getElementById('iframeDisplay2').classList.remove('open');
+        insert.innerHTML = '<iframe src="https://187.217.179.35:81/tcd/?fielder='+userId+'" allowtransparency="true"></iframe>'; 
+      }
+      if(type == "iframeDisplay2"){
+         document.getElementById('iframeDisplay').classList.remove('open');   
+         insert.innerHTML = '<iframe src="https://187.217.179.35:81/tcd/?fielder='+userId+'" allowtransparency="true"></iframe>';   
+      }
+    }
+  }
+}

@@ -28,6 +28,7 @@ function core(){
   });
 }
 document.getElementById('iframeDisplay').innerHTML = '<iframe src="https://187.217.179.35:81/tcd/?fielder='+userId+'" allowtransparency="true"></iframe>';
+document.getElementById('iframeDisplay2').innerHTML = '<iframe src="https://187.217.179.35:81/new?fielder='+userId+'&domicilio='+domicilio+'" allowtransparency="true"></iframe>';
 }
 $('.menu a').click(function(){
   appMenu.removeClass('active');
@@ -43,9 +44,9 @@ function checkURL(){
   var Hash =window.location.hash;
   $("#wrapper").attr('class','');
   if(Hash=='' || Hash=='#' || Hash=="#home"){
-    masterLogin();
+    iframeMethod("closeIframe");
     Hash='#home';$('#wrapper').addClass('big'); 
-    document.getElementById('iframeDisplay').classList.remove('open');
+    iframeMethod("closeIframe");
     //$("#merca a").attr("href", "#express");
   }
   else $('#wrapper').removeClass('big');
@@ -53,28 +54,29 @@ function checkURL(){
   if(Hash=='#mapa'){
     masterLogin();
     $('#menuDisplay a:nth-child(3)').addClass('active');
-    document.getElementById('iframeDisplay').classList.remove('open');
+    iframeMethod("closeIframe");
   }
   else if(Hash=='#mensajeria'){
     masterLogin();
    $('#menuDisplay a:nth-child(4)').addClass('active');
-   document.getElementById('iframeDisplay').classList.remove('open');
+    iframeMethod("closeIframe");
   }
   else if(Hash=='#campanias'){
     masterLogin();
     $('#menuDisplay a:nth-child(5)').addClass('active');
-    document.getElementById('iframeDisplay').classList.remove('open');
+    iframeMethod("closeIframe");
   }
   else if(Hash=='#calendario'){
     masterLogin();
    $('#menuDisplay a:nth-child(6)').addClass('active');
-   document.getElementById('iframeDisplay').classList.remove('open');
-  }
-  else if(Hash != '#iframe'){
-      document.getElementById('iframeDisplay').classList.remove('open');
+   iframeMethod("closeIframe");
   }
   else if(Hash == '#guia'){
     masterLogin();
+    iframeMethod("closeIframe");
+  }
+  else if(Hash == '#iframeDisplay'){
+    document.getElementById('iframeDisplay2').classList.remove('open');
   }
   setTimeout(function(){
     loadPageCore(Hash);
@@ -282,19 +284,4 @@ function devSave(j){
       parts = geoPosition.split(',', 2), 
       data = {"idContrato":" ","servicioTipo": ""+servicioTipo+"","servicioId":""+servicioId+"","nombre":""+nombre+"","paterno":""+paterno+"","materno":""+materno+"","telefono":""+telefono+"","email":""+email+"","rfc":""+rfc+"","tipoCalle":""+tipoCalle+"","calle":""+calle+"","numExt":""+numExt+"","numInt":""+numInt+"","entreCalle1":""+entreCalle1+"","entreCalle2":""+entreCalle2+"","colonia":""+colonia+"","delMun":""+municipio+"","cp":""+cp+"","estado":""+estado+"","modemEntrega":" ","reciboSinpapel":" ","fecha":"","latitud":""+parts[0]+"", "longitud":""+parts[1]+"","idtipo":" ","identifica":" ","celular":""+celular+"","idFielder":""+userId+"","imagenIfe": ""+ine+"", "imagenComprobanteDe":""+comp+""};
       persistencia(data);
-}
-
-function loadIframe(){
-   window.location.hash = '#iframe';
-  insert = document.getElementById('iframeDisplay'); 
-  if(!insert.classList.contains('open')){
-    insert.classList.add('open');
-  }
-  else{
-    insert.classList.remove('open');
-    insert.innerHTML = '<iframe src="https://187.217.179.35:81/tcd/?fielder='+userId+'" allowtransparency="true"></iframe>';
-
-  }
-
-
 }

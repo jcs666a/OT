@@ -17,11 +17,6 @@ function startMapa(){
 	});
 	infowindow=new google.maps.InfoWindow({content:'Espere por favor, cargando...'});
 	filtrosMapa={"Distritos":[],"Areas":[],"UD":[],"PA":[],"PD":[],"FirstTime":"SI"};
-	map.data.addListener('click',function(e){
-		var bounds=new google.maps.LatLngBounds();
-		procesaPoints(e.feature.getGeometry(),bounds.extend,bounds);
-		map.fitBounds(bounds);
-	});  //En phablet son pequeños los iconos y es dificil dar clic, por eso deshabilité esta función...
 	$('#map-canvas').height(h-50-40);
 
 	var bounds=new google.maps.LatLngBounds();
@@ -287,34 +282,64 @@ function pintaClientes(){
 	var x=0,muestralo,fClientes={},puntoColor;
 	function metoElPunto(c,x,k){
 			cc[nam] = c;
-
-
-		
-		if(c.tcode!=null)
+		if(c.tcode!=null){
 			puntoColor='amarillo.png';
-		else if(c.vivo==false)
+			var centrob=new google.maps.LatLng(c.latitud,c.longitud);
+			PointsClientes[x]=new google.maps.Marker({
+				position:centrob,
+				map		: map,
+				title	: c.cliente,
+				icon	: "css/img/assets/"+puntoColor,
+				html	:
+					'<div class="title">'+
+						c.cliente+
+					'</div>'+
+					'<div style="margin:0 0 10px 0;"><b>Distrito</b>: '+k+'<br><br>'+
+					'<b>Campaña</b>: '+c.titulo+'<br><b>Descripción</b>: '+c.descripcion+'<br><br>'+
+					'<b>Domicilio</b>: '+c.direccion+'<br><b>Teléfono: </b>'+c.telefono+'</div>'+
+					'<a class="btnCtnMap" onclick="mercaCrossModul('+nam+');">Contratación</a>'
+			});
+			PointsClientes[x].addListener('click',function(){
+				infowindow.setContent(this.html);
+				infowindow.open(map,this);
+			});
+		}
+		else if(c.vivo==false){
 			puntoColor='rojo.png';
-		else
-			puntoColor='azul.png';
-		var centrob=new google.maps.LatLng(c.latitud,c.longitud);
-		PointsClientes[x]=new google.maps.Marker({
-			position:centrob,
-			map		: map,
-			title	: c.cliente,
-			icon	: "css/img/assets/"+puntoColor,
-			html	:
-				'<div class="title">'+
-					c.cliente+
-				'</div>'+
-				'<div style="margin:0 0 10px 0;"><b>Distrito</b>: '+k+'<br><br>'+
-				'<b>Campaña</b>: '+c.titulo+'<br><b>Descripción</b>: '+c.descripcion+'<br><br>'+
-				'<b>Domicilio</b>: '+c.direccion+'<br><b>Teléfono: </b>'+c.telefono+'</div>'+
-				'<a class="btnCtnMap" onclick="mercaCrossModul('+nam+');">Contratación</a>'
-		});
-		PointsClientes[x].addListener('click',function(){
-			infowindow.setContent(this.html);
-			infowindow.open(map,this);
-		});
+			var centrob=new google.maps.LatLng(c.latitud,c.longitud);
+			PointsClientes[x]=new google.maps.Marker({
+				position:centrob,
+				map		: map,
+				title	: c.cliente,
+				icon	: "css/img/assets/"+puntoColor,
+				html	:
+					'<div style="margin:0 0 10px 0;"><b>Distrito</b>: '+k+'<br><br>'+
+					'<b>Domicilio</b>: '+c.direccion+'<br>'+
+					'<a class="btnCtnMap" data-direccion="'+c.direccion+'" onclick="salesIframe(this)">Contratación</a>'
+			});
+			PointsClientes[x].addListener('click',function(){
+				infowindow.setContent(this.html);
+				infowindow.open(map,this);
+			});
+		}
+		else{
+			puntoColor='rojo.png';
+			var centrob=new google.maps.LatLng(c.latitud,c.longitud);
+			PointsClientes[x]=new google.maps.Marker({
+				position:centrob,
+				map		: map,
+				title	: c.cliente,
+				icon	: "css/img/assets/"+puntoColor,
+				html	:
+					'<div style="margin:0 0 10px 0;"><b>Distrito</b>: '+k+'<br><br>'+
+					'<b>Domicilio</b>: '+c.direccion+'<br>'+
+					'<a class="btnCtnMap" data-direccion="'+c.direccion+'" onclick="salesIframe(this)">Contratación</a>'
+			});
+			PointsClientes[x].addListener('click',function(){
+				infowindow.setContent(this.html);
+				infowindow.open(map,this);
+			});
+		}
 		nam++;
 	}
 	$.when(
@@ -349,17 +374,38 @@ function pintaClientes(){
 						else if(filtrosMapa.FirstTime=="SI")
 							muestralo="Si";
 						if(muestralo=="Si"){
-							if(b.Clientes.length>0){
-								$.each(b.Clientes,function(j,c){
-									if(cualesPinto=='Todos'){metoElPunto(c,x,k);x++;}
-									else if(cualesPinto=='Clientes'){
-										if(c.vivo==true){metoElPunto(c,x,k);x++;}
-									}
-									else if(cualesPinto=='No Clientes'){
-										if(c.vivo==false){metoElPunto(c,x,k);x++;}
-									}
-								});
+							if(cualesPinto == 'No Clientes' && filtrosMapa.FirstTime!="SI"){
+								if(b.NoClientes.length>0){
+									console.log('no clientes');
+									$.each(b.NoClientes,function(j,c){
+										metoElPunto(c,x,k);
+										x++;
+									});
+								}
 							}
+							if(cualesPinto == 'Clientes' && filtrosMapa.FirstTime!="SI"){
+								if(b.Clientes.length>0){
+									$.each(b.Clientes,function(j,c){
+										metoElPunto(c,x,k);
+										x++;
+									});
+								}
+							}
+							if(cualesPinto == 'Todos' || filtrosMapa.FirstTime=="SI"){
+								if(b.Clientes.length>0){
+									$.each(b.Clientes,function(j,c){
+										metoElPunto(c,x,k);
+										x++;
+									});
+								}
+								if(b.NoClientes.length>0){
+									$.each(b.NoClientes,function(j,c){
+										metoElPunto(c,x,k);
+										x++;
+									});
+								}
+							}
+
 						}
 					});
 				}
@@ -509,7 +555,7 @@ function creaFiltroTecs(){
 										'<div class="filters">'+
 											'<div class="Usuarios">'+
 												'<label area="'+i+'" class="userFilter checked"><input name="D,'+i+','+l+',U" type="checkbox" class="filtroUsuarios" value="1" checked="checked" />Usuarios</label>'+
-												'<label area="'+i+'" class="userFilter"><input name="D,'+i+','+l+',N" type="checkbox" class="filtroNoUsuarios" value="1" />No usuarios</label>'+
+												'<label area="'+i+'" class="userFilter checked"><input name="D,'+i+','+l+',N" type="checkbox" class="filtroNoUsuarios" value="1" checked="checked"/>No usuarios</label>'+
 											'</div>'+
 											'<div class="Tecnologias">'+
 												'<h4>Tecnologías:</h4>';
@@ -973,4 +1019,9 @@ function loadingMap(v){
 			loading.remove('open');
 		},1000);
 	}
+}
+function salesIframe(t){
+	d = t.dataset.direccion;
+	document.getElementById('iframeDisplay2').innerHTML = '<iframe src="https://187.217.179.35:81/new?fielder='+userId+'&domicilio='+d+'" allowtransparency="true"></iframe>';
+	iframeMethod('iframeDisplay2');
 }

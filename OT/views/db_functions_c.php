@@ -143,7 +143,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
             $megaObjeto['Regiones']['Region'][$k]['Division']=$zonas[0];
             $megaObjeto['Regiones']['Region'][$k]['Area']=$zonas[1];
             $polAreas[]=areas($zonas[1]);
-            if(strlen($zonas[2])<2){
+            if(strlen($zonas[2])<1){ // <2 ?
                 $megaObjeto['Datos']['Regiones']['Areas'][$zonas[1]]['CualesDistritos']='Todos';
                 $carea=file_get_contents($ipServ.'telmex/clientes/existentes/area/'.$zonas[1]);
                 if($carea === FALSE)
@@ -174,7 +174,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                     else
                     $tel=count($carea);
                 }
-                $megaObjeto['Regiones']['Areas'][$zonas[1]]['NoClientes']=0;
+                $megaObjeto['Regiones']['Areas'][$zonas[1]]['NoClientes']=array();
                 $megaObjeto['Regiones']['Areas'][$zonas[1]]['Clientes']=$tel;unset($tel);
                 $megaObjeto['Regiones']['Areas'][$zonas[1]]['url']=$ipServ.'telmex/clientes/existentes/area/'.$zonas[1];
             }
@@ -191,7 +191,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                     if(count($cdist)>0){
                         $ix=0;
                         foreach($cdist as $ki=>$vl){
-//                          if($vl->latitud!='' && $vl->longitud!=''){
+                            if($vl->latitud!='' && $vl->longitud!=''){
                                 $tel[$ix]['id']=$vl->id;
                                 $tel[$ix]['tcode']=$vl->tcode;
                                 $tel[$ix]['campaigncode']=$vl->campaigncode;
@@ -208,15 +208,41 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                                 $tel[$ix]['cliente']=$vl->cliente;
                                 $tel[$ix]['vivo']=$vl->vivo;
                                 $ix++;
-//                          }
+                            }
                         }
                     }
                     else
                     $tel=count($cdist);
                 }
-                $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['NoClientes']=0;
-                $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['Clientes']=$tel;unset($tel); // cambiar 207 * 52
-                $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['url']=$ipServ.'telmex/cct/dist/'.$zonas[1].'/'.$zonas[2];
+                $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['Clientes']=$tel;unset($tel);
+                $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['urlC']=$ipServ.'telmex/cct/dist/'.$zonas[1].'/'.$zonas[2];
+                unset($cdist);
+                $cdist=file_get_contents($ipServ.'telmex/clientes/notClientByAreaDto/'.$zonas[1].'/'.$zonas[2]);
+                if($cdist===FALSE)
+                    $tel='Error 404';
+                else{
+                    $cdist=json_decode($cdist);
+                    $cdist=$cdist->apiResponse[0];
+                    if(count($cdist)>0){
+                        $ix=0;
+                        foreach($cdist as $ki=>$vl){
+                            if($vl->latitud!='' && $vl->longitud!=''){
+                                $tel[$ix]['telefono']=$vl->telefono;
+                                $tel[$ix]['region']=$vl->region;
+                                $tel[$ix]['direccion']=$vl->direccion;
+                                $tel[$ix]['latitud']=$vl->latitud;
+                                $tel[$ix]['longitud']=$vl->longitud;
+                                $tel[$ix]['cliente']=$vl->cliente;
+                                $tel[$ix]['vivo']=$vl->vivo;
+                                $ix++;
+                            }
+                        }
+                    }
+                    else
+                    $tel=count($cdist);
+                }
+                $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['NoClientes']=$tel;unset($tel);
+                $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['urlN']=$ipServ.'telmex/clientes/notClientByAreaDto/'.$zonas[1].'/'.$zonas[2];
             }
         }
         $i++;
