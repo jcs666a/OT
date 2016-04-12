@@ -4,7 +4,12 @@ $feB=trim($_GET['feB']);
 $cam=$_GET['cam'];
 $cam = explode(",",$cam);
 
-$res=file_get_contents('http://10.105.116.52:9090/telmex/get/contratos/intervalo/'.$feA.'/'.$feB);
+//$ipServ='http://10.105.116.52:9090/';
+//$ipServ='http://localhost:9090/';
+$ipServ='http://187.217.179.35:9090/';
+//$ipServ='http://10.105.116.187:9090/';
+
+$res=file_get_contents($ipServ.'telmex/get/contratos/intervalo/'.$feA.'/'.$feB);
 if($res!=''){
 	$res=json_decode($res);
 

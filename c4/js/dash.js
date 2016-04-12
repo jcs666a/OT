@@ -18,6 +18,7 @@ var l=window.location.hash.substr(1),
 	online,
 	GA,
 	barras,
+	fieldersG,
 	pie,
 	dataVentaGA=[],
 	dataNventGA=[],
@@ -65,7 +66,7 @@ function connect(){
 	stompClient.debug=null
 	stompClient.connect({},function(frame){
 		clearInterval(reintento);
-		stompClient.subscribe('/topic/reporte/campaña', function(greeting){muestraGraficoReal('');});
+		stompClient.subscribe('/topic/reporte/campaña', function(greeting){muestraGraficoReal('H');});
 		stompClient.subscribe('/topic/reporte/contratacion', function(greeting){
 			var x=jQuery.parseJSON(greeting.body);creaMapaCaliente();
 			creanotificacion('Nuevo contrato','Para la región '+x.region,'','','');
@@ -281,7 +282,9 @@ function muestraUsuarios(){
 			});
 		}
 	}
-	$.when(promesas.GetFielrs(misRegiones,Rol)).done(function(x){metelosTodos(x);});
+	$.when(promesas.GetFielrs(misRegiones,Rol)).done(function(x){
+		metelosTodos(x);
+	});
 }
 function creaMapaCaliente(){
 	var mapB,heatmap,a=[];
@@ -406,7 +409,7 @@ function grafMetas(){
 		mi=getRandomInt(0,ma);
 		$.when(
 			$('#metas').append('<div id="graf'+i+'" class="mets"></div>')
-		).done(function(x){
+		).done(function(){
 			$('#graf'+i).highcharts({
 				credits:{enabled:false},
 				chart:{
@@ -467,7 +470,7 @@ function grafMetas(){
 	}
 }
 function creaOtrosGraficos(x){
-	var dataPie=[];
+	var dataPie=[],dataFielderSerie=[],dataFielderVentas=[];
 	if(x.hasOwnProperty("regiones"))
 		$.when(
 			barras=new Highcharts.Chart({
@@ -492,8 +495,12 @@ function creaOtrosGraficos(x){
 				var name=regisdivareas(v.name);
 				var vv={'name':name['region'],'y':v.y};
 				dataPie.push(vv);
+			}),
+			$.each(x.fielders,function(k,v){
+				dataFielderSerie.push(k);
+				dataFielderVentas.push(v);
 			})
-		).done(function(){
+		).done(function(){console.log(x.fielders);
 			addSeries(x);
 //			grafMetas(); Hacer metas...
 			var dataPi={name:'Contratos',data:dataPie};
@@ -517,6 +524,38 @@ function creaOtrosGraficos(x){
 					}
 				},
 				series:[dataPi]
+			});
+			fieldersG=new Highcharts.Chart({
+				credits:{enabled:false},
+				chart:{renderTo:'fielders',type:'bar',height:320},
+				title:{text:'Ventas por Fielder'},
+				subtitle:{text:''},
+				xAxis:{
+					categories:dataFielderSerie,
+					title:{text:null}
+				},
+				yAxis:{
+					min:0,
+					title:{text:''},
+					labels:{overflow:'justify'}
+				},
+				plotOptions:{bar:{dataLabels:{enabled:true}}},
+				legend:{
+					layout:'vertical',
+					align:'right',
+					verticalAlign:'top',
+					x:-40,
+					y:80,
+					floating:true,
+					borderWidth:1,
+					backgroundColor:'#FFFFFF',
+					shadow:true
+				},
+				credits:{enabled:false},
+				series:[{
+					name:'Ventas',
+					data:dataFielderVentas
+				}]
 			});
 		});
 	else{
@@ -1596,7 +1635,7 @@ function inicia(){
 		muestraGraficoReal('H');
 		selectDivisiones('.principal');
 		liderLogin();
-//		connect();
+		connect();
 	}
 	else{
 		if(typeof online==='undefined')
@@ -1645,6 +1684,8 @@ $(document).on("change",".divisiones",function(){
 				else if(todosdiv=='edUS smpr ui-dialog-content ui-widget-content')
 					$(this).parent().parent().find('.busca').addClass('c');
 			}
+			else if(todosdiv=='edUS arc ui-dialog-content ui-widget-content')
+				$(this).parent().parent().find('.busca').addClass('c');
 		}
 		ap.parent().parent().find('.areas').html('').prop("disabled",false);
 		ap.parent().parent().find('.distritos').val('0').prop("disabled",true);
