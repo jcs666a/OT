@@ -16,8 +16,8 @@ var loadPage = $(".map-go"),
     longitude = 0,
     tope=0,
     reportObj = {}, 
-    imagesPlaces  = 'http://187.217.179.35/c4/imgCamps/',//'http://10.105.116.52',//
-    hostVar = 'http://187.217.179.35',//'http://10.105.116.207',//
+    imagesPlaces  = 'http://187.217.179.35/c4/imgCamps/',
+    hostVar = 'http://187.217.179.35',
     expressPhone = 0,
     domicilio = "",
     urlVars=function(){
@@ -57,7 +57,7 @@ function global(){
         return true;
       }
     });
-  //connect();
+  connect();
   geoRefer();
   core();
 }
@@ -1617,7 +1617,6 @@ $(document).on("click","#campaniasAsignadas .row",function(){
 $(document).on("click","#closeImageDisplay",function(){$(this).parent().remove();});
 areIn = [];
 function getCampDist(v){
-  console.log('L:1620');
 	document.getElementById('mercaBox').innerHTML = "";
   $('#masterLogin').removeClass('ani').fadeOut();
 	if(!v){
@@ -1702,6 +1701,10 @@ function getCampDist(v){
         }
       }
     }
+    $('#mercaBox').append('<h1></h1><div class="cont">'+
+            '<div class="t">Agendador</div>'+
+            '<iframe src="https://187.217.179.35:81/agenda?tel='+reportObj.usuario[2]+'" frameborder="0"></iframe>'+
+          '</div>');
 	}
   function includes(k) {
     for(var i=0; i < this.length; i++){
