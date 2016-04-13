@@ -1,0 +1,66 @@
+                <div class="homeInner">
+                  <div class="inner">
+                    <p>Bienvenido <strong class="triggers" onclick="pritThis(this, userName);"></strong></p>
+                  </div>
+                </div>
+                  <div class="activity menu">
+                    <div class="boxSlide riple">
+                      <a href="#mapa" class="riples"><span class="ripplesCircle"></span>
+                        <div class="inner">
+                          <i class="fa fa-map-marker"></i>
+                          <p>Mapa</p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="boxSlide">
+                      <a href="#mensajeria" class="riples"><span class="ripplesCircle"></span>
+                        <div class="inner">
+                          <i class="fa fa-envelope-o">
+                            <span id="msjCount">0</span>
+                          </i>
+                          <p>Mensajería</p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="boxSlide">
+                      <a href="#campanias" class="riples"><span class="ripplesCircle"></span>
+                        <div class="inner">
+                          <i class="fa fa-users"></i>
+                          <p>Campañas</p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="boxSlide">
+                      <a href="#calendario" class="riples"><span class="ripplesCircle"></span>
+                        <div class="inner">
+                          <i class="fa fa-calendar"></i>
+                          <p>Calendario</p>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="boxSlide riple">
+                      <a href="#guia" class="riples none"><span class="ripplesCircle"></span></a>
+                      <div class="inner">
+                        <i class="fa fa-file-o"></i>
+                        <p>Guía</p>
+                      </div>
+                    </div>
+                    <div class="boxSlide">
+                      <a onclick="logout();" class="riples"><span class="ripplesCircle"></span>
+                          <div class="inner">
+                            <i class="fa fa-lock"></i>
+                            <p>Cerrar Sesión</p>
+                          </div>
+                      </a>
+                    </div>
+                  </div>
+<script>
+    document.querySelector(".triggers").onclick();
+    if(fielderMsgs.Nuevos != 0){
+      $("#msjCount").fadeIn('fast');
+      document.getElementById('msjCount').innerHTML = fielderMsgs.Nuevos;
+    }
+    else{
+      $("#msjCount").hide('fast');
+    }
+</script>
