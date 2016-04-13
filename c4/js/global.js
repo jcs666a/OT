@@ -148,7 +148,7 @@ function regisdivareas(region){
 		regiones['region']=regiones['division'] + '-' + regiones['area'] + '-' + res[2];
 		regiones['regionT']='Distrito: <span>' + regiones['division'] + '-' + regiones['area'] + '-' + res[2]+'</span>';
 	}
-	else if(res[1]==0 && res[2]==0){
+	else if(res[1]==0){
 		regiones['region']=regiones['division'];
 		regiones['regionT']='División: <span>'+regiones['division']+'</span>';
 	}

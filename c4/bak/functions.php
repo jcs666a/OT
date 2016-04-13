@@ -1597,13 +1597,29 @@ else if($pky=='k;624/6'){ // Graficos, obtener RC / INT de rango de fechas
 			$mes=substr($v->createAt,3,2);$mes--;$mes=str_pad($mes,2,"0",STR_PAD_LEFT);
 			$ano=substr($v->createAt,6,4);
 			if(in_array($v->idCampaign,$ca) || $ca[0]=='todas'){
+				$obj['regiones'][$v->region]['name']=$v->region;
+				if($obj['regiones'][$v->region]['y']=='' || $obj['regiones'][$v->region]['y']==null)
+					$obj['regiones'][$v->region]['y']=0;
+				if($obj['nuevos'][$v->idCampaign][0]=='' || $obj['nuevos'][$v->idCampaign][0]==null)
+					$obj['nuevos'][$v->idCampaign][0]=0;
+				if($obj['nuevos'][$v->idCampaign][1]=='' || $obj['nuevos'][$v->idCampaign][1]==null)
+					$obj['nuevos'][$v->idCampaign][1]=0;
+				if($yui[$v->idFielder]=='' || $yui[$v->idFielder]==null)
+					$yui[$v->idFielder]=0;
 				if($v->pesco==true){
 					$obj['nuevos'][$v->idCampaign][0]=$obj['nuevos'][$v->idCampaign][0]+1;
-					$obj['regiones'][$v->region]['name']=$v->region;
 					$obj['regiones'][$v->region]['y']=$obj['regiones'][$v->region]['y']+1;
+					$yui[$v->idFielder]=$yui[$v->idFielder]+1;
 				}
 				else
 					$obj['nuevos'][$v->idCampaign][1]=$obj['nuevos'][$v->idCampaign][1]+1;
+			}
+		}
+		foreach($yui as $k=>$v){
+			$res=file_get_contents($ipServ.'telmex/get/userById/'.$k);
+			if($res!=''){
+				$res=json_decode($res);
+				$obj['fielders'][$res->apiResponse[0]->nombre]=$yui[$k];
 			}
 		}
 	}
@@ -1654,13 +1670,18 @@ else if($pky=='oP{ñ_,m$"'){ // Graficos, obtener RC / INT en tiempo real, por d
 			$mes=substr($v->createAt,3,2);$mes--;$mes=str_pad($mes,2,"0",STR_PAD_LEFT);
 			$ano=substr($v->createAt,6,4);
 			$obj['campsIDS'][]=$v->idCampaign;
-			if((in_array($v->idCampaign,$p) || $p[0]=='todas') &&
-			(in_array($v->region,$r) || $r[0]=='Todas las regiones') || $r[0]=='Todas las campañas'){
+//			if((in_array($v->idCampaign,$p) || $p[0]=='todas') &&
+//			(in_array($v->region,$r) || $r[0]=='Todas las regiones') || $r[0]=='Todas las campañas'){
+				if($fv[$ano.'.'.$mes.'.'.$dia]=='' || $fv[$ano.'.'.$mes.'.'.$dia]==null)
+					$fv[$ano.'.'.$mes.'.'.$dia]=0;
+				if($nv[$ano.'.'.$mes.'.'.$dia]=='' || $nv[$ano.'.'.$mes.'.'.$dia]==null)
+					$nv[$ano.'.'.$mes.'.'.$dia]=0;
+
 				if($v->pesco==true)
 					$fv[$ano.'.'.$mes.'.'.$dia]=$fv[$ano.'.'.$mes.'.'.$dia]+1;
 				else
 					$nv[$ano.'.'.$mes.'.'.$dia]=$nv[$ano.'.'.$mes.'.'.$dia]+1;
-			}
+//			}
 		}
 		foreach($aryRange as $v){
 			$dia=substr($v,0,2);       $dia=str_pad($dia,2,"0",STR_PAD_LEFT);
