@@ -9,9 +9,9 @@ if($_POST['pky']!='')
 else
 	header("Location: ../");
 //Vars:
-$ipServ='http://10.105.116.52:9090/';
+//$ipServ='http://10.105.116.52:9090/';
 //$ipServ='http://localhost:9090/';
-//$ipServ='http://187.217.179.35:9090/';
+$ipServ='http://187.217.179.35:9090/';
 //$ipServ='http://10.105.116.187:9090/';
 //Clases:
 class GCM{
@@ -438,20 +438,20 @@ else if($pky=='-*6+¿dyF'){ //Traigo todos los usuarios
 		foreach($abj as $k=>$v){
 			if($v->role > 3 && $v->cuenta==1){
 				if($p=='Administrador' || in_array('Todas las regiones',$rb) || in_array('Todas las campañas',$rb)){
-					$obj[$i]['idUsuario']=$v->idUsuario;
-					$obj[$i]['role']=$v->role;
-					$obj[$i]['idRole']=$v->role;
-					$obj[$i]['nombre']=$v->nombre;
-					$obj[$i]['usuario']=$v->usuario;
-					$obj[$i]['expediente']=$v->expediente;
-					$obj[$i]['conectado']=$v->conectado;
-					$obj[$i]['gcm']=$v->gcm;
+					$obj['u'][$i]['idUsuario']=$v->idUsuario;
+					$obj['u'][$i]['role']=$v->role;
+					$obj['u'][$i]['idRole']=$v->role;
+					$obj['u'][$i]['nombre']=$v->nombre;
+					$obj['u'][$i]['usuario']=$v->usuario;
+					$obj['u'][$i]['expediente']=$v->expediente;
+					$obj['u'][$i]['conectado']=$v->conectado;
+					$obj['u'][$i]['gcm']=$v->gcm;
 					$ibj=file_get_contents($ipServ.'telmex/get/region/'.$v->idUsuario);
 					$ibj=json_decode($ibj);
 					$ibj=$ibj->apiResponse[0];
 					$o=0;
 					foreach($ibj as $ky=>$vy){
-						$obj[$i]['regiones'][$o]=$vy->regionTrabajo;
+						$obj['u'][$i]['regiones'][$o]=$vy->regionTrabajo;
 						$o++;
 					}
 					$i++;
@@ -478,38 +478,77 @@ else if($pky=='-*6+¿dyF'){ //Traigo todos los usuarios
 					if($no_tengo=='Si'){
 						if($p=='Director' && $v->role=='6'){
 							foreach($ibj as $ky=>$vy){
-								$obj[$i]['regiones'][$o]=$vy->regionTrabajo;
+								$obj['u'][$i]['regiones'][$o]=$vy->regionTrabajo;
 								$o++;
 							}
-							$obj[$i]['idUsuario']=$v->idUsuario;
-							$obj[$i]['role']=$v->role;
-							$obj[$i]['idRole']=$v->role;
-							$obj[$i]['nombre']=$v->nombre;
-							$obj[$i]['usuario']=$v->usuario;
-							$obj[$i]['expediente']=$v->expediente;
-							$obj[$i]['conectado']=$v->conectado;
-							$obj[$i]['gcm']=$v->gcm;
+							$obj['u'][$i]['idUsuario']=$v->idUsuario;
+							$obj['u'][$i]['role']=$v->role;
+							$obj['u'][$i]['idRole']=$v->role;
+							$obj['u'][$i]['nombre']=$v->nombre;
+							$obj['u'][$i]['usuario']=$v->usuario;
+							$obj['u'][$i]['expediente']=$v->expediente;
+							$obj['u'][$i]['conectado']=$v->conectado;
+							$obj['u'][$i]['gcm']=$v->gcm;
 							$i++;
 						}
 						else if($p=='Lider Promotor' && $v->role=='7'){
 							foreach($ibj as $ky=>$vy){
-								$obj[$i]['regiones'][$o]=$vy->regionTrabajo;
+								$obj['u'][$i]['regiones'][$o]=$vy->regionTrabajo;
 								$o++;
 							}
-							$obj[$i]['idUsuario']=$v->idUsuario;
-							$obj[$i]['role']=$v->role;
-							$obj[$i]['idRole']=$v->role;
-							$obj[$i]['nombre']=$v->nombre;
-							$obj[$i]['usuario']=$v->usuario;
-							$obj[$i]['expediente']=$v->expediente;
-							$obj[$i]['conectado']=$v->conectado;
-							$obj[$i]['gcm']=$v->gcm;
+							$obj['u'][$i]['idUsuario']=$v->idUsuario;
+							$obj['u'][$i]['role']=$v->role;
+							$obj['u'][$i]['idRole']=$v->role;
+							$obj['u'][$i]['nombre']=$v->nombre;
+							$obj['u'][$i]['usuario']=$v->usuario;
+							$obj['u'][$i]['expediente']=$v->expediente;
+							$obj['u'][$i]['conectado']=$v->conectado;
+							$obj['u'][$i]['gcm']=$v->gcm;
 							$i++;
 						}
 					}
 				}
 			}
 			$no_tengo='No';
+		}
+	}
+	echo json_encode($obj);
+}
+else if($pky=='ñ%3fN.-'){ //Traigo los usuarios lideres o los fielders de un lider o director
+	$p=$_POST['P'];
+	$q=$_POST['Q'];
+	if($q=='1'){
+		$abj=file_get_contents($ipServ.'telmex/get/usuariosLiderByDiv/'.$p);
+		$obj['url']=$ipServ.'telmex/get/usuariosLiderByDiv/'.$p;
+	}
+	else{
+		$abj=file_get_contents($ipServ.'telmex/get/usuariosPromotorByDivArea/'.$p);
+		$obj['url']=$ipServ.'telmex/get/usuariosPromotorByDivArea/'.$p;
+	}
+	if($abj=='' || $abj==null){
+		$obj['errorMessage']='No hay respuesta del servidor para obtener usuarios. (NO RESPONSE)';
+	}
+	else{
+		$abj=json_decode($abj);
+		$abj=$abj->apiResponse[0];$i=0;
+		foreach($abj as $k=>$v){
+			$obj['u'][$i]['idUsuario']=$v->idUsuario;
+			$obj['u'][$i]['role']=$v->role->idRole;
+			$obj['u'][$i]['idRole']=$v->role->idRole;
+			$obj['u'][$i]['nombre']=$v->nombre;
+			$obj['u'][$i]['usuario']=$v->usuario;
+			$obj['u'][$i]['expediente']=$v->expediente;
+			$obj['u'][$i]['conectado']=$v->conectado;
+			$obj['u'][$i]['gcm']='';
+			$ibj=file_get_contents($ipServ.'telmex/get/region/'.$v->idUsuario);
+			$ibj=json_decode($ibj);
+			$ibj=$ibj->apiResponse[0];
+			$o=0;
+			foreach($ibj as $ky=>$vy){
+				$obj['u'][$i]['regiones'][$o]=$vy->regionTrabajo;
+				$o++;
+			}
+			$i++;
 		}
 	}
 	echo json_encode($obj);

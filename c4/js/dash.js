@@ -28,6 +28,7 @@ var l=window.location.hash.substr(1),
 	repChecks=0,
 	DesDate='',
 	HasDate='',
+	mstraUsrTi={k:'',i:'',r:'',n:''},
 	veoTit=w-$("#gn-menu li.gn-trigger").width()-$("#gn-menu li.sal").width()-1,
 	dG=$('.principal .ui-autocomplete-input'),
 	aG=$('.principal .busca'),
@@ -223,13 +224,28 @@ function muestraUsuarios(){
 	function metelosTodos(x){
 		if(x!=null && x!='null'){
 			x=jQuery.parseJSON(x);
-			if(x.hasOwnProperty("errorMessage"))
+			if(x.hasOwnProperty("errorMessage")){
+				console.log(x.url);
 				creanotificacion('Error','<b>'+x.errorMessage,'','','error');
+				$.when(
+					mstraUsrTi={k:'',i:'',r:'',n:''},
+					$('#tablaFielders tbody').append('<tr><td></td><td></td><td></td><td></td><td></td></tr>')
+				).done(function(){
+					tablaFielders=$('#tablaFielders').DataTable({
+						language:{url:"../js/esp.json"},columnDefs:[{orderable:false,targets:[4]}],"pageLength":50
+					});
+					$('#ctable').addClass('s');
+					$('#calendar,#reportes').removeClass('s');
+					$('#top,#generico').addClass("open");
+					$('#generico').addClass("openB");
+					$("#loading").hide();
+				});
+			}
 			else{ var muetralo=1;
 				$.when(
-					$.each(x,function(i,a){
+					$.each(x.u,function(i,a){
 						muetralo=1;
-						if(idRol!='6')
+						if(idRol!='6' && mstraUsrTi.k=='')
 							if(a.role=='7')
 								muetralo=0;
 						if(muetralo==1){
@@ -238,15 +254,18 @@ function muestraUsuarios(){
 								$.each(a.regiones,function(il,al){
 									var il=regisdivareas(al);
 									 reg=reg+il.region+'<br />';
-									 areg.push('"'+al+'"');
+									 if(a.role==5)
+									 	al=al.substring(0,1);
+									 if(a.role==6)
+									 	al=al.substring(0,4);
+									 areg.push(al);
 								});
 							}
 							var cdc='<a data=\'{"x":"Eliminar","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'"}\' title="Eliminar a '+a.nombre+'"><i class="fa fa-trash"></i></a>',
 								adc='<a data=\'{"x":"Sacar","idUser":"'+a.idUsuario+'"}\' title="Cerrar sesión de '+a.nombre+'"><i class="fa fa-unlock-alt"></i></a>',
 								msj='<a data=\'{"x":"Mensaje","regid":"'+a.gcm+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'"}\' title="Enviar mensaje a '+a.nombre+'"><i class="fa fa-comment"></i></a>',
-								use='<a data=\'{"x":"MuestraUsers","regid":"'+areg+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'"}\' title="Mostrar usuarios de '+a.nombre+'"><i class="fa fa-users"></i></a>';
+								use='<a data=\'{"x":"MuestraUsers","rol":"'+a.role+'","regs":"'+areg+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'","creg":"'+reg+'"}\' title="Mostrar usuarios de '+a.nombre+'"><i class="fa fa-users"></i></a>';
 							if(a.idUsuario==8) cdc='';
-							console.log(areg);
 							if(a.role<5) adc='';
 							if(a.role!=7) msj='';
 							if(idRol==6 || a.role==4 || a.role==8 || a.role==7) use='';
@@ -286,9 +305,20 @@ function muestraUsuarios(){
 			});
 		}
 	}
-	$.when(promesas.GetFielrs(misRegiones,Rol)).done(function(x){
-		metelosTodos(x);
-	});
+	if(mstraUsrTi.k==''){
+		$('#ctable h2').html('').hide();
+		$.when(promesas.GetFielrs(misRegiones,Rol)).done(function(x){metelosTodos(x);});
+	}
+	else if(mstraUsrTi.k==6){
+		$('#ctable h2').html('<a href="#" class="bakUsers">Regresar</a>Usuarios del Lider '+mstraUsrTi.n+
+			'<span class="sub">'+mstraUsrTi.c+'</span>').show();
+		$.when(promesas.GetLiders(mstraUsrTi.r,2)).done(function(x){metelosTodos(x);});
+	}
+	else if(mstraUsrTi.k==5){
+		$('#ctable h2').html('<a href="#" class="bakUsers">Regresar</a>Usuarios del Director '+mstraUsrTi.n+
+			'<span class="sub">'+mstraUsrTi.c+'</span>').show();
+		$.when(promesas.GetLiders(mstraUsrTi.r,1)).done(function(x){metelosTodos(x);});
+	}
 }
 function creaMapaCaliente(){
 	var mapB,heatmap,a=[];
@@ -1837,6 +1867,14 @@ $(document).on("click","#tablaFielders tbody tr td a",function(event){event.prev
 			'<h4>¿Estas seguro de querer eliminar a este usuario?</h4><span><a class="Y" data-h="eliminoUsuario" data-id="'+data.idUser+
 			'">Si</a><a class="N">No</a></span></div>',340)
 		).done(function(x){$("#loading").hide();});
+	else if(data.x=='MuestraUsers')
+		$.when(
+			mstraUsrTi.k=data.rol,
+			mstraUsrTi.i=data.idUser,
+			mstraUsrTi.r=data.regs,
+			mstraUsrTi.n=data.nombre,
+			mstraUsrTi.c=data.creg
+		).done(function(x){muestraUsuarios();});
 	else if(data.x=='Sacar')
 		$.when(
 			dialogos('<div id="quest" title="Cerrar sesión de usuario">'+
@@ -2262,6 +2300,15 @@ $(document).on("click",".edUS .asignadas a",function(event){event.preventDefault
 	}
 	else $('fieldset .asignadas').addClass('disabled');
 });
+$(document).on("click","#ctable h2 a.bakUsers",function(event){event.preventDefault();
+	event.preventDefault();
+	$.when(mstraUsrTi={k:'',i:'',r:'',n:''}).done(function(){
+	//	$("#mapa").dialogExtend("minimize");
+//		$('#top,#generico').removeClass("open");
+		$("#loading").show();
+		muestraUsuarios();
+	});
+});
 
 $(".titulos .xls").click(function(event){
 	event.preventDefault();
@@ -2271,11 +2318,13 @@ $(".titulos .xls").click(function(event){
 });
 $("#losUsers").click(function(event){
 	event.preventDefault();
-	cierraMenu();
-//	$("#mapa").dialogExtend("minimize");
-	$('#top,#generico').removeClass("open");
-	$("#loading").show();
-	muestraUsuarios();
+	$.when(mstraUsrTi={k:'',i:'',r:'',n:''}).done(function(){
+		cierraMenu();
+	//	$("#mapa").dialogExtend("minimize");
+		$('#top,#generico').removeClass("open");
+		$("#loading").show();
+		muestraUsuarios();
+	});
 });
 $(".gn-icon.gn-icon-home,.gn-menu-main li.titulo img").click(function(event){
 	event.preventDefault();
