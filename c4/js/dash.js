@@ -243,10 +243,13 @@ function muestraUsuarios(){
 							}
 							var cdc='<a data=\'{"x":"Eliminar","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'"}\' title="Eliminar a '+a.nombre+'"><i class="fa fa-trash"></i></a>',
 								adc='<a data=\'{"x":"Sacar","idUser":"'+a.idUsuario+'"}\' title="Cerrar sesión de '+a.nombre+'"><i class="fa fa-unlock-alt"></i></a>',
-								msj='<a data=\'{"x":"Mensaje","regid":"'+a.gcm+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'"}\' title="Enviar mensaje a '+a.nombre+'"><i class="fa fa-comment"></i></a>';
+								msj='<a data=\'{"x":"Mensaje","regid":"'+a.gcm+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'"}\' title="Enviar mensaje a '+a.nombre+'"><i class="fa fa-comment"></i></a>',
+								use='<a data=\'{"x":"MuestraUsers","regid":"'+areg+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'"}\' title="Mostrar usuarios de '+a.nombre+'"><i class="fa fa-users"></i></a>';
 							if(a.idUsuario==8) cdc='';
+							console.log(areg);
 							if(a.role<5) adc='';
 							if(a.role!=7) msj='';
+							if(idRol==6 || a.role==4 || a.role==8 || a.role==7) use='';
 							$('#tablaFielders tbody').append('<tr><td>'+
 								a.nombre+'</td><td>'+
 								perfiles(a.role)+'</td><td>'+
@@ -256,6 +259,7 @@ function muestraUsuarios(){
 								msj+
 								adc+
 								cdc+
+								use+
 								'</td></tr>');
 						}
 					})
