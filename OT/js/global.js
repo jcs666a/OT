@@ -1701,8 +1701,8 @@ function getCampDist(v){
         }
       }
     }
-    $('#mercaBox').append('<h1></h1><div class="cont">'+
-            '<div class="t">Agendador</div>'+
+    $('#mercaBox').append('<div class="cont">'+
+            '<div class="t" style="padding:10px">Agendador</div>'+
             '<iframe src="https://187.217.179.35:81/agenda?tel='+reportObj.usuario[2]+'" frameborder="0"></iframe>'+
           '</div>');
 	}
