@@ -180,6 +180,7 @@ var path=window.location.pathname,myCookie=getCookie("Cinf"),Nombre='',Usuario='
 		SendMesje:function(p,r,i,t){return $.ajax({method:"POST",url:Ñ,data:{pky:'1|s"1!',P:p,R:r,I:i,T:t}});},
 		SendMsjAl:function(p,r,t){return $.ajax({method:"POST",url:Ñ,data:{pky:'t6U.ño/',P:p,R:r,T:t}});},
 		GetFielrs:function(r,p){return $.ajax({method:"POST",url:Ñ,data:{pky:'-*6+¿dyF',R:r,P:p}});},
+		GetLiders:function(p,q){return $.ajax({method:"POST",url:Ñ,data:{pky:'ñ%3fN.-',P:p,Q:q}});},
 		GetCampas:function(){return $.ajax({method:"POST",url:Ñ,data:{pky:'ñ*}{Lokj'}});},
 		campById:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'.tr/(ydF',P:p}});},
 		GetCRdCam:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'lj.m,-/5tD',P:p}});},
