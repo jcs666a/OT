@@ -1,5 +1,6 @@
 <?php ob_start();
-$ipServ='http://187.217.179.35:9090/'; //'http://localhost:9090/';
+//$ipServ='http://187.217.179.35:9090/'; //'http://localhost:9090/';
+$ipServ='http://10.105.116.52:9090/'; //'http://localhost:9090/';
 if($_POST['pDf']=='ñrRp3}.'){ //Crea GCM o no
     $data=array(
         'idUsuario'=>array(
@@ -351,16 +352,14 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
     $jsan=json_decode($jsan);
     $megaObjeto['Campanas']=$jsan->apiResponse[0];
 //Para las imagenes en un objeto aparte...
-    $i=0;
-    foreach($jsan->apiResponse[0] as $y=>$v){
+/*    foreach($jsan->apiResponse[0] as $y=>$v){
         $path = '../../c4v2/imgCamps/'.$v->campana->imagen;
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
         $megaObjeto['Imagenes'][$v->campana->imagen]=$base64;
-        $i++;
     }
-    unset($jsan);
+    unset($jsan); */
 //Tiendas por área
     foreach($polAreas as $y=>$v){ // 74 * 52
         $jsan=file_get_contents($ipServ.'telmex/tiendaLoc/getTiendaByArea/'.$v);
@@ -387,6 +386,53 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
         unset($jsan);unset($dse);
     }
 
+    $jsan=file_get_contents($ipServ.'telmex/get/rc/rcActivoByidFielder/'.$_POST["idu"]);
+    $jsan=json_decode($jsan);
+    foreach($jsan->apiResponse[0] as $k=>$v){
+        $createAt=strtotime($v->createAt);
+        $ano=date('Y',$createAt);$mes=date('m',$createAt);$dia=date('d',$createAt);
+        $mes--;
+
+        if($v->idCampania!='' && $v->idCampania!=null && $v->idCampania!='null' && $v->idCampania!="''"
+            && $v->region!='' && $v->region!=null && $v->region!='null' && $v->region!="''"){
+            if($megaObjeto['Calendario'][$v->idCampania]['TotalVisitas']=='' || $megaObjeto['Calendario'][$v->idCampania]['TotalVisitas']==null)
+                $megaObjeto['Calendario'][$v->idCampania]['TotalVisitas']=0;
+            if($megaObjeto['Calendario'][$v->idCampania]['TotalVentas']=='' || $megaObjeto['Calendario'][$v->idCampania]['TotalVentas']==null)
+                $megaObjeto['Calendario'][$v->idCampania]['TotalVentas']=0;
+            $megaObjeto['Calendario'][$v->idCampania]['TotalVisitas']=$megaObjeto['Calendario'][$v->idCampania]['TotalVisitas']+1;
+            $megaObjeto['Calendario'][$v->idCampania]['TotalVentas']=$megaObjeto['Calendario'][$v->idCampania]['TotalVentas']+1;
+            $megaObjeto['Calendario'][$v->idCampania]['Visitas'][$ano][$mes][$dia][]=array(
+                'nombre'=>$v->nombre,
+                'telefono'=>$v->telefono,
+                'geo'=>$v->latitud.','.$v->longitud,
+                'CP'=>'',
+                'direccion'=>$v->direccion,
+                'status'=>$v->pesco,
+                'tipo'=>$v->vivo,
+                'razon'=>$v->razon,
+                'campaña'=>$v->idCampania,
+                'titulo'=>$v->titulo
+            );
+        }
+        else{
+            if($megaObjeto['Calendario']['Libres']['TotalVentas']=='' || $megaObjeto['Calendario']['Libres']['TotalVentas']==null)
+                $megaObjeto['Calendario']['Libres']['TotalVentas']=0;
+            $megaObjeto['Calendario']['Libres']['TotalVentas']=$megaObjeto['Calendario']['Libres']['TotalVentas']+1;
+            $megaObjeto['Calendario']['Libres']['Visitas'][$ano][$mes][$dia][]=array(
+                'nombre'=>$v->nombre,
+                'telefono'=>$v->telefono,
+                'geo'=>$v->latitud.','.$v->longitud,
+                'CP'=>'',
+                'direccion'=>$v->direccion,
+                'status'=>true,
+                'tipo'=>false,
+                'razon'=>$v->razon,
+                'campaña'=>$v->idCampania,
+                'titulo'=>$v->titulo
+            );
+        }
+    }
+/*
     $jsan=file_get_contents($ipServ.'telmex/get/rc/rcActivoByidFielder/'.$_POST["idu"]);
     $jsan=json_decode($jsan);
     function dateDifference($date_1,$date_2,$differenceFormat='%a'){
@@ -467,6 +513,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
             }
         }
     }
+*/
     unset($jsan);
 
     echo json_encode($megaObjeto);

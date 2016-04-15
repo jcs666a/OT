@@ -62,8 +62,9 @@ function creandoObjeto(){
 			});
 		},
 		Stor:function(x){
-			console.log(x);
 			x=jQuery.parseJSON(x);
+			console.log(x.Campanas);
+			console.log(x.Calendario);
 			localStorage.setItem('fielderInfo','{"Persona":"'+x.Datos.Nombre+
 				'","Datos":{"Rol":{"id":'+x.Datos.Rol.id+
 								',"rol":"'+x.Datos.Rol.rol+
@@ -76,15 +77,7 @@ function creandoObjeto(){
 			localStorage.setItem('fielderGrap','{}');			vy=JSON.stringify(x.Graficos);		if(x.hasOwnProperty("Graficos"))localStorage.setItem('fielderGrap',vy);
 			localStorage.setItem('fielderCamp','{}');			vy=JSON.stringify(x.Campanas);		if(x.hasOwnProperty("Campanas"))localStorage.setItem('fielderCamp',vy);
 			localStorage.setItem('fielderTien','{}');			vy=JSON.stringify(x.Tiendas);		if(x.hasOwnProperty("Tiendas"))localStorage.setItem('fielderTien',vy);
-			//localStorage.setItem('fielderImag','{}');			vy=JSON.stringify(x.Imagenes);		if(x.hasOwnProperty("Imagenes"))localStorage.setItem('fielderImag',vy);
-			localStorage.setItem('fielderCalendar','{}');
-			if(x.hasOwnProperty("Calendario")){
-				vy=JSON.stringify(x.Calendario.Cal);
-				if(x.Calendario.Cal.hasOwnProperty([1970]))
-					localStorage.setItem('fielderCalendar','{}');
-				else
-					localStorage.setItem('fielderCalendar',vy);
-			}
+			localStorage.setItem('fielderCalendar','{}');		vy=JSON.stringify(x.Calendario);	if(x.hasOwnProperty("Calendario")){localStorage.setItem('fielderCalendar',vy);}
 			return 'Listo';
 		}
 	};
@@ -99,7 +92,7 @@ function creandoObjeto(){
 		$.when(
 			Voy.Stor(x)
 		).done(function(x){
-			window.location.href="../#home";
+//			window.location.href="../#home";
 		});
 	}
 	$.when(
