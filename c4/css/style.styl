@@ -218,7 +218,7 @@ html
 					label
 						padding 6px 6px 6px 0
 						display block
-						min-width 480px
+						min-width 320px
 						width 100%
 						overflow hidden
 						text-align right
@@ -386,8 +386,8 @@ html
 			top 0
 			right 0
 			z-index 9999
-			width 35%
-			min-width 370px
+			width 38%
+			min-width 320px
 			margin 0
 			padding 10px
 			overflow hidden
@@ -521,9 +521,9 @@ html
 						opacity 0
 						transform rotate(-90deg) translateY(-20px)
 		.container
-			min-width 350px
+			min-width 320px
 			#gn-menu
-				min-width 350px
+				min-width 320px
 				z-index 12
 				background #00AEE8
 				box-shadow 0 0 10px #555
@@ -653,7 +653,7 @@ html
 												&:after
 													content ''
 			#wraper
-				min-width 350px
+				min-width 320px
 				height 100%
 				width auto
 				overflow hidden
@@ -682,7 +682,7 @@ html
 						overflow auto
 						#ctable,#calendar,#reportes
 							display none
-							min-width 348px
+							min-width 310px
 							h2
 								color #bbb
 								font-size 2em
@@ -720,6 +720,18 @@ html
 									margin-right 10px
 									font-weight normal
 									color #fff
+							.dataTables_wrapper
+								table
+									border-spacing 1px
+									table-layout fixed
+									thead,tbody
+										tr
+											th,td
+												overflow hidden
+												white-space nowrap
+												text-overflow ellipsis
+											td:last-child
+												white-space normal
 						#ctable.s,#calendar.s,#reportes.s
 							display block
 						#reportes
@@ -1104,31 +1116,44 @@ html
 					display none
 			.gn-menu-main > li.veo h1
 				font-size 18px
-			.container #wraper #generico .contenedor
-				#reportes .camps label
-					display block
-					font-size 19px
-					height 21px
-					span
-						font-size 19px
-						&:before
-							font-size 20px
-							height 21px
-				#ctable h2,#calendar h2,#reportes h2
-					font-size 18px
-				.dataTables_wrapper
-					table
-						border-spacing 1px
-						thead,tbody
-							tr
-								th,td
-									padding 4px
-						tbody
-							tr
-								td,th
-									font-size 11px
-								td:last-child
+			.container
+				#wraper
+					overflow auto
+					#generico .contenedor
+						#reportes .camps
+							span
+								margin-bottom 10px
+							label
+								display block
+								height 20px
+								span
 									font-size 16px
+									margin 0
+									padding-left 26px
+									&:before
+										font-size 20px
+										height 21px
+						#ctable h2,#calendar h2,#reportes h2
+							font-size 18px
+						.dataTables_wrapper
+							.dataTables_length
+								label
+									display inline-block
+									text-indent -4000px
+									select
+										float right
+							table
+								border-spacing 1px
+								thead,tbody
+									tr
+										th,td
+											padding 4px
+								tbody
+									tr
+										td,th
+											font-size 11px
+										td:last-child
+											font-size 16px
 			.ui-dialog
 				form fieldset
 					padding 8px
@@ -1144,3 +1169,25 @@ html
 							margin 0
 					label.dentro select,label.fuera select
 						height 260px
+@media screen and (max-width:600px)
+	html
+		body
+			.container
+				#wraper
+					#generico .contenedor
+						.dataTables_wrapper
+							table
+								thead,tbody
+									tr
+										th:last-child,td:last-child
+											max-width 22px
+											width 22px
+											text-align center
+											a
+												display none
+												margin 3px 0
+								tbody
+									tr:hover,tr:focus
+										th:last-child,td:last-child
+											a
+												display inline-block

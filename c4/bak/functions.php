@@ -9,9 +9,9 @@ if($_POST['pky']!='')
 else
 	header("Location: ../");
 //Vars:
-//$ipServ='http://10.105.116.52:9090/';
+$ipServ='http://10.105.116.52:9090/';
 //$ipServ='http://localhost:9090/';
-$ipServ='http://187.217.179.35:9090/';
+//$ipServ='http://187.217.179.35:9090/';
 //$ipServ='http://10.105.116.187:9090/';
 //Clases:
 class GCM{
@@ -569,6 +569,7 @@ else if($pky=='ñ*}{Lokj'){ //Traigo todas las campañas
 				$obj[$i]['campaigncode']=$v->campaigncode;
 				$obj[$i]['offercode']=$v->offercode;
 				$obj[$i]['createAt']=$v->createAt;
+				$obj[$i]['meta']=$v->meta;
 				$obj[$i]['fecha_inicio']=$v->fechaInicio;
 				$obj[$i]['fecha_fin']=$v->fechaFin;
 				$obj[$i]['descripcion']=htmlspecialchars($v->descripcion,ENT_QUOTES);
@@ -1084,6 +1085,7 @@ else if($pky=='-:Ñ_6%fC'){ // Mostrando regiones asignadas a campaña en select
 					$obj['Regiones'][$i]['offercode']=$ras->apiResponse[0][0]->offer_code;
 					$obj['Regiones'][$i]['campaigncode']=$ras->apiResponse[0][0]->campaign_code;
 					$obj['Regiones'][$i]['tcode']=$ras->apiResponse[0][0]->tcode;
+					$obj['Regiones'][$i]['meta']=$ras->apiResponse[0][0]->meta;
 					$obj['Regiones'][$i]['region']=$ras->apiResponse[0][0]->region;
 					$obj['Regiones'][$i]['createAt']=$v->createAt;
 				}
@@ -1121,6 +1123,7 @@ else if($pky=='lj.m,-/5tD'){ // Mostrando regiones asignadas a campaña, DIRECTO
 						$obj['Regiones'][$i]['offercode']=$ras->apiResponse[0][0]->offer_code;
 						$obj['Regiones'][$i]['campaigncode']=$ras->apiResponse[0][0]->campaign_code;
 						$obj['Regiones'][$i]['tcode']=$ras->apiResponse[0][0]->tcode;
+						$obj['Regiones'][$i]['meta']=$ras->apiResponse[0][0]->meta;
 						$obj['Regiones'][$i]['region']=$ras->apiResponse[0][0]->region;
 						$obj['Regiones'][$i]['createAt']=$v->createAt;
 					}
@@ -1155,6 +1158,7 @@ else if($pky=='lj.m,[0]tD'){ // Mostrando regiones asignadas a campaña, Lider e
 						$obj['Regiones'][$i]['offercode']=$ras->apiResponse[0][0]->offer_code;
 						$obj['Regiones'][$i]['campaigncode']=$ras->apiResponse[0][0]->campaign_code;
 						$obj['Regiones'][$i]['tcode']=$ras->apiResponse[0][0]->tcode;
+						$obj['Regiones'][$i]['meta']=$ras->apiResponse[0][0]->meta;
 						$obj['Regiones'][$i]['region']=$ras->apiResponse[0][0]->region;
 						$obj['Regiones'][$i]['createAt']=$v->createAt;
 					}
@@ -1676,6 +1680,7 @@ else if($pky=='.tr/(ydF'){ // Obtener informacion de campaña por ID
 		$obj['descripcion']=$res->apiResponse[0]->descripcion;
 		$obj['titulo']=$res->apiResponse[0]->titulo;
 		$obj['tcode']=$res->apiResponse[0]->tcode;
+		$obj['meta']=$res->apiResponse[0]->meta;
 		$obj['campaigncode']=$res->apiResponse[0]->campaigncode;
 		$obj['offercode']=$res->apiResponse[0]->offercode;
 		$obj['fecha_inicio']=$res->apiResponse[0]->fechaInicio;//traian dia mes año entonces: date('Y-m-d',strtotime($res->apiResponse[0]->fechaInicio))
