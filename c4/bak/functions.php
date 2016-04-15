@@ -9,9 +9,9 @@ if($_POST['pky']!='')
 else
 	header("Location: ../");
 //Vars:
-$ipServ='http://10.105.116.52:9090/';
+//$ipServ='http://10.105.116.52:9090/';
 //$ipServ='http://localhost:9090/';
-//$ipServ='http://187.217.179.35:9090/';
+$ipServ='http://187.217.179.35:9090/';
 //$ipServ='http://10.105.116.187:9090/';
 //Clases:
 class GCM{
@@ -168,6 +168,7 @@ if($pky=='}54ñj?='){ //Login
 			$object['errorMessage']=$abj->errorMessage;
 		}
 		else{
+//			$object['return']=$abj;
 			if($abj->apiResponse[0]->role->role!='Usuario Tecnico' &&
 				$abj->apiResponse[0]->role->role!='Usuario Comercial' &&
 				$abj->apiResponse[0]->role->role!='Supervisor Comercial' &&
@@ -464,7 +465,7 @@ else if($pky=='-*6+¿dyF'){ //Traigo todos los usuarios
 					foreach($ibj as $kx=>$vx){
 						if($p=='Director'){
 							foreach($ra as $kix=>$vix){
-								if(strpos($vx->regionTrabajo,$vix)!==false)
+								if(substr($vx->regionTrabajo,0,2)===$vix)
 									$no_tengo='Si';
 							}
 						}
@@ -570,6 +571,7 @@ else if($pky=='ñ*}{Lokj'){ //Traigo todas las campañas
 				$obj[$i]['offercode']=$v->offercode;
 				$obj[$i]['createAt']=$v->createAt;
 				$obj[$i]['meta']=$v->meta;
+				$obj[$i]['color']=$v->color;
 				$obj[$i]['fecha_inicio']=$v->fechaInicio;
 				$obj[$i]['fecha_fin']=$v->fechaFin;
 				$obj[$i]['descripcion']=htmlspecialchars($v->descripcion,ENT_QUOTES);
@@ -992,6 +994,7 @@ else if($pky=='g.-&3eGD'){ //Guardo edición de campaña o también campaña nue
 	$d=trim($_POST['D']);
 	$k=trim($_POST['K']);$obj['K']=$k;
 	$l=trim($_POST['L']);$obj['L']=$l;
+	$m=trim($_POST['M']);$obj['M']=$m;
 	$c=trim($_POST['C']);$c=ltrim($c,'#');
 	$y='';
 	$obj['Error']='';
@@ -1020,6 +1023,7 @@ else if($pky=='g.-&3eGD'){ //Guardo edición de campaña o también campaña nue
 			'estado'=>'true',
 			'fechaInicio'=>$k,
 			'fechaFin'=>$l,
+			'meta'=>$m,
 			'color'=>$c,
 			'imagen'=>$y);
 		$ch=curl_init($ipServ.'telmex/add/camp');
@@ -1043,6 +1047,7 @@ else if($pky=='g.-&3eGD'){ //Guardo edición de campaña o también campaña nue
 			'estado'=>'true',
 			'fechaInicio'=>$k,
 			'fechaFin'=>$l,
+			'meta'=>$m,
 			'color'=>$c,
 			'imagen'=>$y);
 		$ch=curl_init($ipServ."telmex/campUp");
@@ -1113,19 +1118,22 @@ else if($pky=='lj.m,-/5tD'){ // Mostrando regiones asignadas a campaña, DIRECTO
 					if($v->idCampaña==$p || $p[0]=='Todas las regiones' || $p[0]=='Todas las campañas'){}
 					else $i=$v->idCampaña; // Le pega cuando veo que regiones tiene la campaña, al admin o director
 					$obj['Regiones'][$i]['id_CR']=$v->id;
+					$obj['Regiones'][$i]['id']=$v->id;
 					$obj['Regiones'][$i]['id_C']=$v->idCampaña;
 					$obj['Regiones'][$i]['Region']=$v->region;
 					$obj['Regiones'][$i]['createAt']=$v->createAt;
-					$ras=file_get_contents($ipServ.'telmex/get/campInformacion/'.$v->id);
+					$ras=file_get_contents($ipServ.'telmex/get/campById/'.$v->idCampaña);
 					if($ras!=''){
 						$ras=json_decode($ras);
-						$obj['Regiones'][$i]['titulo']=$ras->apiResponse[0][0]->titulo;
-						$obj['Regiones'][$i]['offercode']=$ras->apiResponse[0][0]->offer_code;
-						$obj['Regiones'][$i]['campaigncode']=$ras->apiResponse[0][0]->campaign_code;
-						$obj['Regiones'][$i]['tcode']=$ras->apiResponse[0][0]->tcode;
-						$obj['Regiones'][$i]['meta']=$ras->apiResponse[0][0]->meta;
-						$obj['Regiones'][$i]['region']=$ras->apiResponse[0][0]->region;
-						$obj['Regiones'][$i]['createAt']=$v->createAt;
+						$obj['Regiones'][$i]['titulo']=$ras->apiResponse[0]->titulo;
+						$obj['Regiones'][$i]['offercode']=$ras->apiResponse[0]->offercode;
+						$obj['Regiones'][$i]['campaigncode']=$ras->apiResponse[0]->campaigncode;
+						$obj['Regiones'][$i]['tcode']=$ras->apiResponse[0]->tcode;
+						$obj['Regiones'][$i]['meta']=$ras->apiResponse[0]->meta;
+						$obj['Regiones'][$i]['color']=$ras->apiResponse[0]->color;
+						$obj['Regiones'][$i]['fecha_inicio']=$ras->apiResponse[0]->fechaInicio;
+						$obj['Regiones'][$i]['fecha_fin']=$ras->apiResponse[0]->fechaFin;
+						$obj['Regiones'][$i]['region']=$v->region;
 					}
 					$i++;
 				}

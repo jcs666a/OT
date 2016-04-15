@@ -391,7 +391,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
     foreach($jsan->apiResponse[0] as $k=>$v){
         $createAt=strtotime($v->createAt);
         $ano=date('Y',$createAt);$mes=date('m',$createAt);$dia=date('d',$createAt);
-        $mes--;
+        $mes--;$region=explode("-",$v->region);
 
         if($v->idCampania!='' && $v->idCampania!=null && $v->idCampania!='null' && $v->idCampania!="''"
             && $v->region!='' && $v->region!=null && $v->region!='null' && $v->region!="''"){
@@ -405,6 +405,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                 'nombre'=>$v->nombre,
                 'telefono'=>$v->telefono,
                 'geo'=>$v->latitud.','.$v->longitud,
+                'distrito'=>$region[2],
                 'CP'=>'',
                 'direccion'=>$v->direccion,
                 'status'=>$v->pesco,
@@ -422,6 +423,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                 'nombre'=>$v->nombre,
                 'telefono'=>$v->telefono,
                 'geo'=>$v->latitud.','.$v->longitud,
+                'distrito'=>'',
                 'CP'=>'',
                 'direccion'=>$v->direccion,
                 'status'=>true,
