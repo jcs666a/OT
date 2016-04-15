@@ -16,8 +16,8 @@ var loadPage = $(".map-go"),
     longitude = 0,
     tope=0,
     reportObj = {}, 
-    imagesPlaces  = 'http://187.217.179.35/c4/imgCamps/',
-    hostVar = 'http://187.217.179.35',
+    imagesPlaces  = 'http://10.105.116.52/c4/imgCamps/',
+    hostVar = 'http://10.105.116.52',
     expressPhone = 0,
     domicilio = "",
     urlVars=function(){
@@ -1701,8 +1701,8 @@ function getCampDist(v){
         }
       }
     }
-    $('#mercaBox').append('<h1></h1><div class="cont">'+
-            '<div class="t">Agendador</div>'+
+    $('#mercaBox').append('<div class="cont">'+
+            '<div class="t" style="padding:10px">Agendador</div>'+
             '<iframe src="https://187.217.179.35:81/agenda?tel='+reportObj.usuario[2]+'" frameborder="0"></iframe>'+
           '</div>');
 	}

@@ -42,36 +42,41 @@ $('.menu a').click(function(){
 $(window).on('hashchange',function(){checkURL()});
 function checkURL(){
   var Hash =window.location.hash;
-  $("#wrapper").attr('class','');
   if(Hash=='' || Hash=='#' || Hash=="#home"){
+    $("#wrapper").attr('class','');
     iframeMethod("closeIframe");
-    Hash='#home';$('#wrapper').addClass('big'); 
+    Hash='#home';
+    $('#wrapper').addClass('big'); 
     iframeMethod("closeIframe");
-    //$("#merca a").attr("href", "#express");
   }
   else $('#wrapper').removeClass('big');
   $('#menuDisplay a').removeClass('active');
   if(Hash=='#mapa'){
+    $("#wrapper").attr('class','');
     masterLogin();
     $('#menuDisplay a:nth-child(3)').addClass('active');
     iframeMethod("closeIframe");
   }
   else if(Hash=='#mensajeria'){
+    $("#wrapper").attr('class','');
     masterLogin();
    $('#menuDisplay a:nth-child(4)').addClass('active');
     iframeMethod("closeIframe");
   }
   else if(Hash=='#campanias'){
+    $("#wrapper").attr('class','');
     masterLogin();
     $('#menuDisplay a:nth-child(5)').addClass('active');
     iframeMethod("closeIframe");
   }
   else if(Hash=='#calendario'){
+    $("#wrapper").attr('class','');
     masterLogin();
    $('#menuDisplay a:nth-child(6)').addClass('active');
    iframeMethod("closeIframe");
   }
   else if(Hash == '#guia'){
+    $("#wrapper").attr('class','');
     masterLogin();
     iframeMethod("closeIframe");
   }
@@ -84,7 +89,11 @@ function checkURL(){
 }
 function loadPageCore(url){
   url=url.replace('#','');
-  $('#wrapper').addClass(url);
+  if(url == 'iframeDisplay' || url == 'iframeDisplay2'){
+  }
+  else{ 
+      $('#wrapper').addClass(url);
+  }
   $('#content').load(url+".html", function(){
     if(url=="home")
       $('.fa.fa-envelope-o span').html(fielderMsgs.Nuevos);
