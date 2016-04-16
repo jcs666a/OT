@@ -16,8 +16,8 @@ var loadPage = $(".map-go"),
     longitude = 0,
     tope=0,
     reportObj = {}, 
-    imagesPlaces  = 'http://10.105.116.52/c4/imgCamps/',
-    hostVar = 'http://10.105.116.52',
+    imagesPlaces  = 'http://187.217.179.35/c4/imgCamps/',
+    hostVar = 'http://187.217.179.35',
     expressPhone = 0,
     domicilio = "",
     urlVars=function(){
@@ -875,7 +875,7 @@ function calendar(t){
       for(var i = 0; i<= ObjectSize(fielderCalendar[data[2]][data[1]][data[0]].asignacion)-1; i++){
         var desc = fielderCalendar[data[2]][data[1]][data[0]].asignacion[i].descripcion;
         agend += '<div class="holder">';
-        agend += '<h3  data-place ="'+i+'" data-origin="'+[data[0]]+'-'+[data[1]]+'-'+[data[2]]+'" data-asig="'+desc+'" onclick="getInfoThis(this);">asignado a '+desc+'</h3>';
+        agend += '<h3  data-place ="'+i+'" data-origin="'+[data[0]]+'-'+[data[1]]+'-'+[data[2]]+'" data-asig="'+desc+'" onclick="getInfoThis(this);">Distrito '+desc+'</h3>';
         agend += '<div id="'+desc+'" class="loadDay"></div>';
         agend += '</div>';
       }
@@ -909,9 +909,9 @@ function getInfoThis(t){
       else{
         t.classList.add("open");
         var loadThis = '<div data-origin="'+origin+'" data-asig="'+asig+'" data-todo="'+place+'" onclick="loadCont(this);" class="son">Todo</div>'+
-            '<div data-origin="'+origin+'" data-asig="'+asig+'" data-cam="'+place+'" onclick="loadCont(this);" class="son">campañas</div>'+
-            '<div data-origin="'+origin+'" data-asig="'+asig+'" data-adq="'+place+'" data-type="venta" onclick="loadCont(this);" class="son">adquisiciones</div>'+
-            '<div data-origin="'+origin+'" data-asig="'+asig+'" data-adq="'+place+'" data-type="sin venta" onclick="loadCont(this);" class="son">sin adquisicion</div>'+
+            '<div data-origin="'+origin+'" data-asig="'+asig+'" data-cam="'+place+'" onclick="loadCont(this);" class="son">Campañas</div>'+
+            '<div data-origin="'+origin+'" data-asig="'+asig+'" data-adq="'+place+'" data-type="venta" onclick="loadCont(this);" class="son">Adquisiciones</div>'+
+            '<div data-origin="'+origin+'" data-asig="'+asig+'" data-adq="'+place+'" data-type="sin venta" onclick="loadCont(this);" class="son">Sin adquisicion</div>'+
             '<div id="load-'+asig+'"></div>';
         document.getElementById(''+asig+'').innerHTML = loadThis;
       }
@@ -1498,11 +1498,27 @@ function saveInCalendar(obj){
               size[i].clientes[ObjectSize(size[i].clientes)-1]["nombre"] = obj.usuario[1],
               size[i].clientes[ObjectSize(size[i].clientes)-1]["telefono"] = obj.usuario[2],
               size[i].clientes[ObjectSize(size[i].clientes)-1]["geo"] = obj.usuario[4],
-              size[i].clientes[ObjectSize(size[i].clientes)-1]["direccion"] = obj.usuario[3],
-              size[i].clientes[ObjectSize(size[i].clientes)-1]["status"] = obj.status,
-              size[i].clientes[ObjectSize(size[i].clientes)-1]["tipo"] = obj.tipo, 
-              size[i].clientes[ObjectSize(size[i].clientes)-1]["razon"] = obj.razon,
-              size[i].clientes[ObjectSize(size[i].clientes)-1]["campaña"] = obj.usuario[0];
+              size[i].clientes[ObjectSize(size[i].clientes)-1]["direccion"] = obj.usuario[3];
+              if(obj.status == true){
+                obj.status = 'Venta';
+              }
+              else{
+                obj.status = 'Sin Venta';
+              }
+              size[i].clientes[ObjectSize(size[i].clientes)-1]["status"] = obj.status;
+              if(obj.tipo == true){
+                  obj.tipo = 'Cliente Telmex';
+              }
+              else{
+                obj.tipo = 'No Cliente';
+              }
+              size[i].clientes[ObjectSize(size[i].clientes)-1]["tipo"] = obj.tipo;
+              size[i].clientes[ObjectSize(size[i].clientes)-1]["razon"] = obj.razon;
+              for(var n = 0; n <= fielderCamp.length-1; n++){
+                if(fielderCamp[n].campana.id = obj.usuario[0]){
+                  size[i].clientes[ObjectSize(size[i].clientes)-1]["campaña"] = fielderCamp[n].campana.titulo ;
+                }
+              }
               for(var f = 0; f <= meta.length-1; f++){
                 if(obj.usuario[0] == meta[f].idCamp){
                   if(obj.status == "venta"){
@@ -1523,11 +1539,28 @@ function saveInCalendar(obj){
                   size[i].clientes[ObjectSize(size[i].clientes)-1]["nombre"] = obj.usuario[1],
                   size[i].clientes[ObjectSize(size[i].clientes)-1]["telefono"] = obj.usuario[2],
                   size[i].clientes[ObjectSize(size[i].clientes)-1]["geo"] = obj.usuario[4],
-                  size[i].clientes[ObjectSize(size[i].clientes)-1]["direccion"] = obj.usuario[3],
-                  size[i].clientes[ObjectSize(size[i].clientes)-1]["status"] = obj.status,
-                  size[i].clientes[ObjectSize(size[i].clientes)-1]["tipo"] = obj.tipo, 
-                  size[i].clientes[ObjectSize(size[i].clientes)-1]["razon"] = obj.razon,
-                  size[i].clientes[ObjectSize(size[i].clientes)-1]["campaña"] = obj.usuario[0];
+                  size[i].clientes[ObjectSize(size[i].clientes)-1]["direccion"] = obj.usuario[3];
+                  if(obj.status == true){
+                    obj.status = 'Venta';
+                  }
+                  else{
+                    obj.status = 'Sin Venta';
+                  }
+                  size[i].clientes[ObjectSize(size[i].clientes)-1]["status"] = obj.status;
+                  if(obj.tipo == true){
+                      obj.tipo = 'Cliente Telmex';
+                  }
+                  else{
+                    obj.tipo = 'No Cliente';
+                  }
+                  size[i].clientes[ObjectSize(size[i].clientes)-1]["tipo"] = obj.tipo; 
+                  size[i].clientes[ObjectSize(size[i].clientes)-1]["razon"] = obj.razon;
+                    for(var n = 0; n <= fielderCamp.length-1; n++){
+                      if(fielderCamp[n].campana.id = obj.usuario[0]){
+                        size[i].clientes[ObjectSize(size[i].clientes)-1]["campaña"] = fielderCamp[n].campana.titulo ;
+                      }
+                    }
+                  //size[i].clientes[ObjectSize(size[i].clientes)-1]["campaña"] = obj.usuario[0];
                   for(var f = 0; f <= meta.length-1; f++){
                     if(obj.usuario[0] == meta[f].idCamp){
                       if(obj.status == "venta"){
@@ -2065,7 +2098,7 @@ function repo(){
 					'<option value="Cliente no estaba en domicilio">Cliente no estaba en domicilio</option>'+
 					'<option value="Domicilio no localizado">Domicilio no localizado</option> '+
 				'</select>'+
-				'<p id="endRepo">finalizar <i class="fa fa-check"></i></p>'+
+				'<p id="endRepo">Finalizar <i class="fa fa-check"></i></p>'+
 			'</div></div>'+
 		'</div>';
 		reportObj["status"] = {};
