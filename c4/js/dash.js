@@ -67,8 +67,12 @@ function connect(){
 	stompClient.debug=null
 	stompClient.connect({},function(frame){
 		clearInterval(reintento);
-		stompClient.subscribe('/topic/reporte/campaña', function(greeting){muestraGraficoReal('H');});
+		stompClient.subscribe('/topic/reporte/campaña', function(greeting){
+			console.log(greeting);
+			muestraGraficoReal('H');
+		});
 		stompClient.subscribe('/topic/reporte/contratacion', function(greeting){
+			console.log(greeting);
 			var x=jQuery.parseJSON(greeting.body);creaMapaCaliente();
 			creanotificacion('Nuevo contrato','Para la región '+x.region,'','','');
 		});
@@ -102,8 +106,7 @@ function creaMapa(s,t){
 			zoomControl:true,
 			zoom:6,
 			center:{lat:19.3907336,lng:-99.1436126},
-			styles:estilo,
-			mapTypeId:google.maps.MapTypeId.TERRAIN
+			styles:estilo
 		});
 		map.data.addListener('click',function(e){
 			var bounds=new google.maps.LatLngBounds();
@@ -217,11 +220,10 @@ function muestraUsuarios(){
 	$('#tablaFielders thead').append('<tr>'+
 		'<th>Nombre</th>'+
 		'<th>Rol</th>'+
-		'<th>Expediente</th>'+
 		'<th>Región</th>'+
 		'<th></th>'+
 	'</tr>');
-	function metelosTodos(x){
+	function metelosTodos(x){console.log(x);
 		if(x!=null && x!='null'){
 			x=jQuery.parseJSON(x);
 			if(x.hasOwnProperty("errorMessage")){
@@ -229,10 +231,10 @@ function muestraUsuarios(){
 				creanotificacion('Error','<b>'+x.errorMessage,'','','error');
 				$.when(
 					mstraUsrTi={k:'',i:'',r:'',n:''},
-					$('#tablaFielders tbody').append('<tr><td></td><td></td><td></td><td></td><td></td></tr>')
+					$('#tablaFielders tbody').append('<tr><td></td><td></td><td></td><td></td></tr>')
 				).done(function(){
 					tablaFielders=$('#tablaFielders').DataTable({
-						language:{url:"../js/esp.json"},columnDefs:[{orderable:false,targets:[4]}],"pageLength":50
+						language:{url:"../js/esp.json"},columnDefs:[{orderable:false,targets:[3]}],"pageLength":50
 					});
 					$('#ctable').addClass('s');
 					$('#calendar,#reportes').removeClass('s');
@@ -272,7 +274,6 @@ function muestraUsuarios(){
 							$('#tablaFielders tbody').append('<tr><td>'+
 								a.nombre+'</td><td>'+
 								perfiles(a.role)+'</td><td>'+
-								a.expediente+'</td><td>'+
 								reg+'</td><td>'+
 								'<a data=\'{"x":"Editar","y":1,"role":"'+a.role+'","idUser":"'+a.idUsuario+'","GCM":"'+a.gcm+'"}\' title="Editar a '+a.nombre+'"><i class="fa fa-pencil-square"></i></a>'+
 								msj+
@@ -284,7 +285,7 @@ function muestraUsuarios(){
 					})
 				).done(function(){
 					tablaFielders=$('#tablaFielders').DataTable({
-						language:{url:"../js/esp.json"},columnDefs:[{orderable:false,targets:[4]}],"pageLength":50
+						language:{url:"../js/esp.json"},columnDefs:[{orderable:false,targets:[3]}],"pageLength":50
 					});
 					$('#ctable').addClass('s');
 					$('#calendar,#reportes').removeClass('s');
@@ -426,10 +427,10 @@ function muestraGraficoReal(H){
 }
 function addSeries(x){
 	$.each(x.nuevos,function(k,v){
-		barras.addSeries({
-			name:CampsInRepo[k],
-			data:[v[0],v[1]]
-		});
+		if(k=='' || k==null || k=='null')
+			barras.addSeries({name:'Libres',data:[v[0],v[1]]});
+		else
+			barras.addSeries({name:CampsInRepo[k],data:[v[0],v[1]]});
 	});
 }
 function grafMetas(){
@@ -504,7 +505,7 @@ function grafMetas(){
 	}
 }
 function creaOtrosGraficos(x){
-	var dataPie=[],dataFielderSerie=[],dataFielderVentas=[];
+	var dataPie=[],dataFielderSerie=[],dataFielderVentas=[];console.log(x);
 	if(x.hasOwnProperty("regiones"))
 		$.when(
 			barras=new Highcharts.Chart({
@@ -526,11 +527,14 @@ function creaOtrosGraficos(x){
 				series:[]
 			}),
 			$.each(x.regiones,function(k,v){
-				var name=regisdivareas(v.name);
-				var vv={'name':name['region'],'y':v.y};
+				var name='Libre';
+				if(v.name!='' && v.name!=null && v.name!='null'){
+					name=regisdivareas(v.name);name=name['region'];}
+				var vv={'name':name,'y':v.y};
 				dataPie.push(vv);
 			}),
-			$.each(x.fielders,function(k,v){
+			$.each(x.fielders,function(k,v){console.log(k);
+				if(k=='' || k==null || k=='null'){k='Libre';v.name='Libre';}
 				dataFielderSerie.push(k);
 				dataFielderVentas.push(v);
 			})
@@ -540,21 +544,18 @@ function creaOtrosGraficos(x){
 			var dataPi={name:'Contratos',data:dataPie};
 			pie=new Highcharts.Chart({
 				credits:{enabled:false},
-				chart:{renderTo:'pie',type:'pie',height:700,
-					options3d:{enabled:true,alpha:45}
+				chart:{renderTo:'pie',type:'pie',height:470,margin:[0,0,0,0],
+					spacingTop:0,spacingBottom:0,spacingLeft:0,spacingRight:0,
+					options3d:{enabled:true,alpha:45,beta:0}
 				},
 				title:{text:'Contratos nuevos por región'},
 				subtitle:{text:''},
 				plotOptions:{
 					pie:{
-						innerSize:180,
-						depth:70,
 						allowPointSelect:true,
-						cursor:'pointer',
-						dataLabels:{
-							enabled:true,
-							format:'<b>{point.name}</b>: {point.percentage:.1f} %'
-						}
+						depth:35,
+						dataLabels:{enabled:false},
+						showInLegend:true
 					}
 				},
 				series:[dataPi]
@@ -704,39 +705,91 @@ function muestraCalendario(){
 		lang:'es',
 		selectable:selecta,
 		selectHelper:selecta,
-		select:function(start,end,allDay){if(Rol=='Lider Promotor')formCalendarA('',start);calendario.fullCalendar('unselect');},
+		select:function(event){
+			console.log(event);
+/*			if(Rol=='Lider Promotor')formCalendarA('',start);calendario.fullCalendar('unselect');
+			$.when(promesas.campById(data.id)).done(function(x){
+				x=jQuery.parseJSON(x);
+				$.extend(data,x);
+				editarCampana(data);
+			}); */
+		},
 		eventLimit:false,
 		editable:selecta,
-		eventDrop:function(event,delta,revertFunc){if(Rol=='Lider Promotor')updateEvent(event.start.format(),event.end.format(),event,'Drop');},
-		eventResize:function(event,delta,revertFunc){if(Rol=='Lider Promotor')updateEvent(event.start.format(),event.end.format(),event,'Resize');},
-		eventClick:function(calEvent,jsEvent,view){formCalendarA(calEvent,'');}
+		eventDrop:function(event,delta,revertFunc){
+//			if(Rol=='Lider Promotor')updateEvent(event.start.format(),event.end.format(),event,'Drop');
+		},
+		eventResize:function(event,delta,revertFunc){
+//			if(Rol=='Lider Promotor')updateEvent(event.start.format(),event.end.format(),event,'Resize');
+		},
+		eventClick:function(calEvent,jsEvent,view){
+			if(Rol=='Lider Promotor'){
+				var data;
+				$.when(
+					data={x:"AddFieldersC",id:calEvent.idActividad,"region":calEvent.region,"titulo":calEvent.titulo}
+				).done(function(){
+					AddFieldersC(data);
+				});
+			}
+			else{
+				var data={x:"EditarCamp",id:calEvent.idActividad};
+				$.when(promesas.campById(calEvent.idActividad)).done(function(x){
+					x=jQuery.parseJSON(x);
+					$.extend(data,x);
+					editarCampana(data);
+				});
+			}
+		}
 	});
 	calendario.fullCalendar('removeEvents');
-	$.when(promesas.GetCalAct(misRegiones,idRol)).done(function(x){
-		x=jQuery.parseJSON(x);
-		if(x.Error=='')
-			$.each(x.Eventos,function(k,v){
+	function GetCampasMias(){
+		$.when(promesas.GetCRdCam(misRegiones)).done(function(x){ //Region del lider..., falta createAt, linea 575 functions.php lj.m,-/5tD
+			x=jQuery.parseJSON(x);
+			if(x.Error!='') creanotificacion('Error 404:',x.Error,'','','error');
+			else if(x.Sin!='') creanotificacion('Sin regiones',x.Sin,'','','advertencia');
+			else $.each(x.Regiones,function(i,v){
 				calendario.fullCalendar('renderEvent',{
-						title:v.titulo+ ', ' +v.descripcion+' ('+v.inicio+' | '+v.fin+')',
+						title:v.titulo+ ' ('+v.fecha_inicio+' | '+v.fecha_fin+')',
 						titulo:v.titulo,
-						start:v.inicio,
-						from:v.inicio,
-						to:v.fin,
-						end:v.fin,
+						start:v.fecha_inicio,
+						end:v.fecha_fin,
+						region:v.region,
 						allDay:true,
-						backgroundColor:v.color,
-						borderColor:'#fff',
-						idActividad:v.idActividad,
-						idCR:v.idCR,
-						descripcion:v.descripcion,
-						meta:v.meta
+						backgroundColor:'#'+v.color,
+						borderColor:'#f3f3f3',
+						idActividad:v.id_C
 					},
 					true
 				);
 			});
-		else
-			creanotificacion('Error','<b>'+x.Error,'','','error');
-	});
+		});
+	}
+	if(Rol=='Lider Promotor')
+		GetCampasMias();
+	else
+		$.when(promesas.GetCampas()).done(function(x){
+			x=jQuery.parseJSON(x);
+			if(x.hasOwnProperty("errorMessage"))
+				creanotificacion('Error','<b>'+x.errorMessage,'','','error');
+			else{
+				$.each(x,function(i,v){
+					calendario.fullCalendar('renderEvent',{
+							title:v.titulo+ ' ('+v.fecha_inicio+' | '+v.fecha_fin+')',
+							titulo:v.titulo,
+							start:v.fecha_inicio,
+							end:v.fecha_fin,
+							allDay:true,
+							backgroundColor:'#'+v.color,
+							borderColor:'#f3f3f3',
+							idActividad:v.id
+						},
+						true
+					);
+				});
+			}
+
+		});
+
 }
 function updateEvent(s,d,e,f){
 	var ndate,
@@ -901,17 +954,15 @@ function muestraCampanas(){
 	if(Rol=='Lider Promotor')
 		$('#tablaFielders thead').append('<tr>'+
 			'<th>Título</th>'+
-			'<th>tCode</th>'+
-			'<th>CampaignCode</th>'+
-			'<th>OfferCode</th>'+
+			'<th>Códigos</th>'+
+			'<th>Meta</th>'+
 			'<th></th>'+
 		'</tr>');
 	else
 		$('#tablaFielders thead').append('<tr>'+
 			'<th>Título</th>'+
-			'<th>tCode</th>'+
-			'<th>CampaignCode</th>'+
-			'<th>OfferCode</th>'+
+			'<th>Códigos</th>'+
+			'<th>Meta</th>'+
 			'<th>Inicio</th>'+
 			'<th>Fin</th>'+
 			'<th></th>'+
@@ -934,13 +985,14 @@ function muestraCampanas(){
 			else $.each(x.Regiones,function(i,a){
 				$('#tablaFielders tbody').append('<tr><td>'+
 					a.titulo+'</td><td>'+
-					a.tcode+'</td><td>'+
-					a.campaigncode+'</td><td>'+
+					a.tcode+'<br />'+
+					a.campaigncode+'<br />'+
 					a.offercode+'</td><td>'+
+					a.meta+'</td><td>'+
 					'<a data=\'{"x":"AddFieldersC","id":'+a.id_C+',"region":"'+a.region+'","titulo":"'+a.titulo+'"}\' title="Añadir Fielders a campaña '+a.titulo+'"><i class="fa fa-users"></i></a>'+
 					'</td></tr>');
 			});
-			creaTablaYa(4,0);
+			creaTablaYa(3,0);
 		});
 	}
 	if(Rol=='Lider Promotor')
@@ -954,9 +1006,10 @@ function muestraCampanas(){
 				$.each(x,function(i,a){
 					$('#tablaFielders tbody').append('<tr><td>'+
 						a.titulo+'</td><td>'+
-						a.tcode+'</td><td>'+
-						a.campaigncode+'</td><td>'+
+						a.tcode+'<br />'+
+						a.campaigncode+'<br />'+
 						a.offercode+'</td><td>'+
+						a.meta+'</td><td>'+
 						a.fecha_inicio+'</td><td>'+
 						a.fecha_fin+'</td><td>'+
 						'<a data=\'{"x":"EditarCamp'+
@@ -966,7 +1019,7 @@ function muestraCampanas(){
 						'</td></tr>');
 				});
 			}
-			creaTablaYa(6,4);
+			creaTablaYa(5,3);
 		});
 }
 function buscaFielders(){
@@ -1306,7 +1359,20 @@ function nuevoUsuario(){
 	if(idRol=="6"){
 		dire='';admi='';dise='';lide='';nvByLider='Si';
 		formaB='<fieldset><h4>Añadir región:</h4>'+
-			'<label>Divsión<select class="divisiones"></select></label>'+
+			'<label>División<select class="divisiones"></select></label>'+
+			'<label>Área<select class="areas" disabled="disabled"></select></label>'+
+			'<label>Distrito/Colonia<select class="distritos" disabled="disabled">'+
+			'<option value="0"> --- </option>'+
+			'<option value="1">Distritos</option>'+
+			'<option value="3">Colonias</option>'+
+			'</select></label>'+
+			'<label class="busca">Agregar<input type="text" class="ui-autocomplete-input" value="" /></label>'+
+			'</fieldset>';
+	}
+	else if(idRol=="5"){
+		dire='';admi='';dise='';nvByLider='Si';
+		formaB='<fieldset><h4>Añadir región:</h4>'+
+			'<label>División<select class="divisiones"></select></label>'+
 			'<label>Área<select class="areas" disabled="disabled"></select></label>'+
 			'<label>Distrito/Colonia<select class="distritos" disabled="disabled">'+
 			'<option value="0"> --- </option>'+
@@ -1380,6 +1446,7 @@ function nuevaCampana(){
 		'<label>Título<input type="text" class="titulo" value="" /></label>'+
 		'<label>Comienzo<input type="text" class="fecha_inicio" readonly="readonly" value="" /></label>'+
 		'<label>Fin<input type="text" class="fecha_fin" readonly="readonly" value="" /></label>'+
+		'<label>Meta<input type="text" class="meta" id="meta" value="" /></label>'+
 		'<label>tCode<input type="text" class="tcode" value="" /></label>'+
 		'<label>CampaignCode<input type="text" class="campaigncode" value="" /></label>'+
 		'<label>OfferCode<input type="text" class="offercode" value="" /></label>'+
@@ -1390,6 +1457,7 @@ function nuevaCampana(){
 		'</fieldset>'+
 		'</form>',size)
 	).done(function(x){
+		var meta=new LiveValidation('meta');meta.add(Validate.Presence).add(Validate.Numericality,{onlyInteger:true});
 		$(".edUS .fecha_inicio").datepicker({monthNames:meses,dayNamesMin:diaM,dateFormat:'yy-mm-dd',onSelect:function(selected){
 			var ini=new Date(selected);ini.setDate(ini.getDate()+2);$(".edUS .fecha_fin").datepicker("option","minDate",ini)}});
 		$(".edUS .fecha_fin").datepicker({monthNames:meses,dayNamesMin:diaM,dateFormat:'yy-mm-dd',onSelect:function(selected){
@@ -1409,6 +1477,7 @@ function creaEditaCampForm(d){
 			'<label>Título<input type="text" class="titulo" value="'+d.titulo+'" /></label>'+
 			'<label>Comienzo<input type="text" class="fecha_inicio" readonly="readonly" value="'+d.fecha_inicio+'" /></label>'+
 			'<label>Fin<input type="text" class="fecha_fin" readonly="readonly" value="'+d.fecha_fin+'" /></label>'+
+			'<label>Meta<input type="text" class="meta" id="meta" value="'+d.meta+'" /></label>'+
 			'<label>tCode<input type="text" class="tcode" value="'+d.tcode+'" /></label>'+
 			'<label>CampaignCode<input type="text" class="campaigncode" value="'+d.campaigncode+'" /></label>'+
 			'<label>OfferCode<input type="text" class="offercode" value="'+d.offercode+'" /></label>'+
@@ -1423,6 +1492,7 @@ function creaEditaCampForm(d){
 }
 function editarCampana(d){
 	$.when(creaEditaCampForm(d)).done(function(x){
+		var meta=new LiveValidation('meta');meta.add(Validate.Presence).add(Validate.Numericality,{onlyInteger:true});
 		$(".edUS .fecha_inicio").datepicker({monthNames:meses,dayNamesMin:diaM,dateFormat:'yy-mm-dd',onSelect:function(selected){
 			var ini=new Date(selected);ini.setDate(ini.getDate()+2);$(".edUS .fecha_fin").datepicker("option","minDate",ini)}});
 		$(".edUS .fecha_fin").datepicker({monthNames:meses,dayNamesMin:diaM,dateFormat:'yy-mm-dd',onSelect:function(selected){
@@ -1437,7 +1507,7 @@ function AddRegionesC(d){
 	'<fieldset style="display:none;">'+
 	'<input type="hidden" class="id_editado" value="'+d.id+'" />'+
 	'</fieldset><fieldset><h4>Añadir región:</h4>'+
-	'<label>Divsión<select class="divisiones"></select></label>'+
+	'<label>División<select class="divisiones"></select></label>'+
 	'<label>Área<select class="areas" disabled="disabled"></select></label>'+
 	'<button class="busca">Añadir región</button>'+
 	'<h4>Regiones asignadas:</h4>'+
@@ -1579,7 +1649,7 @@ function editarUsuario(e){ //id,reggcm,nombre
 			'<label'+cdc+'>Perfil<select class="rol">'+dire+admi+dise+lide+prom+'</select></label>'+
 			'<button class="datos">Guardar datos</button></fieldset>',
 		formaB='<fieldset><h4>Añadir región:</h4>'+
-			'<label>Divsión<select class="divisiones"></select></label>'+
+			'<label>División<select class="divisiones"></select></label>'+
 			'<label>Área<select class="areas" disabled="disabled"></select></label>'+
 			'<label>Distrito/Colonia<select class="distritos" disabled="disabled">'+
 			'<option value="0"> --- </option>'+
@@ -2090,6 +2160,7 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 			p=$(this).parent().find('.campaigncode').val(),
 			r=$(this).parent().find('.offercode').val(),
 			d=$(this).parent().find('.descripcion').val(),
+			m=$(this).parent().find('.meta').val(),
 			c=$(this).parent().find('.color').val(),
 			j=$(this).parent().find('.imagen'),
 			k=$(this).parent().find('.fecha_inicio').val(),
@@ -2097,7 +2168,7 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 			D=new FormData(),
 			size=0;
 		$('#loading').show();
-		if(e!='' && u!='' && p!='' && r!=''){
+		if(e!='' && u!='' && p!='' && r!='' && m!=''){
 			if(typeof j[0].files[0]!=='undefined'){
 				D.append('file',j[0].files[0]);
 				size=j[0].files[0].size/1000000;
@@ -2118,6 +2189,7 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 				D.append('C',c);
 				D.append('K',k);
 				D.append('L',l);
+				D.append('M',m);
 				D.append('pky','g.-&3eGD');
 				$.when($.ajax({url:Ñ,type:'POST',data:D,processData:false,contentType:false,})).done(function(x){
 					repChecks=0;x=jQuery.parseJSON(x);
@@ -2137,6 +2209,12 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 					},500);
 				});
 			}
+		}
+		else{ creanotificacion('No se pudo realizar tu petición',
+			'Dejaste algún campo requerido en blanco, o bien, con algún dato íncorrecto.',
+			'','','advertencia');
+			$('#loading').hide();
+			b.removeClass('guardando');
 		}
 	}
 });
