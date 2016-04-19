@@ -34,13 +34,18 @@ $("#formulario").on("submit",function(event){
 			var respuesta=data;
 			if(respuesta.errorMessage!= null)
 				$("#formulario #error").addClass('si').html('<small>'+respuesta.errorMessage+'</small>');
-			else
-				if(respuesta.apiResponse[0].cuenta==true)
-					window.location="views/login.html?"+
-					"&iduser="+respuesta.apiResponse[0].idUsuario+
-					"&gcm_regid="+gcm_regid;
-			else
-				$("#formulario #error").addClass('si').html('<small>Cuenta desactivada</small>');
+			else{
+				if(respuesta.apiResponse[0].cuenta==true){
+					if(respuesta.apiResponse[0].role.idRole==7 || respuesta.apiResponse[0].role.idRole=='7')
+						window.location="views/login.html?"+
+						"&iduser="+respuesta.apiResponse[0].idUsuario+
+						"&gcm_regid="+gcm_regid;
+					else
+						$("#formulario #error").addClass('si').html('<small>No tienes acceso a esta aplicación</small>');
+				}
+				else
+					$("#formulario #error").addClass('si').html('<small>Cuenta desactivada</small>');
+			}
 		}).fail(function(jqXHR,textStatus,error){
 			$("#formulario #error").addClass('si').html('<small>'+respuesta.error+'</small><br />'+textStatus);
 		});

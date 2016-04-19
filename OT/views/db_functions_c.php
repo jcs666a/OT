@@ -206,6 +206,8 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                                 $tel[$ix]['longitud']=$vl->longitud;
                                 $tel[$ix]['cliente']=$vl->cliente;
                                 $tel[$ix]['vivo']=$vl->vivo;
+                                $tel[$ix]['producto']=$vl->producto;
+                                $tel[$ix]['ofertaAdicional']=$vl->ofertaAdicional;
                                 $ix++;
                             }
                         }

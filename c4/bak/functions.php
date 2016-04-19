@@ -9,9 +9,9 @@ if($_POST['pky']!='')
 else
 	header("Location: ../");
 //Vars:
-//$ipServ='http://10.105.116.52:9090/';
+$ipServ='http://10.105.116.52:9090/';
 //$ipServ='http://localhost:9090/';
-$ipServ='http://187.217.179.35:9090/';
+//$ipServ='http://187.217.179.35:9090/';
 //$ipServ='http://10.105.116.187:9090/';
 //Clases:
 class GCM{
@@ -268,12 +268,12 @@ else if($pky=='ñhj/4"1z'){ //Pinta poligonos de divisiones
 	if($_POST['X'][0]=='Todas las regiones' || $_POST['X'][0]=='Todas las campañas'){}
 	else{
 		foreach($_POST['X'] as $k=>$v){
-			$r=substr($v,0,1);
-			$q=substr($v,2,1);
+			$por=explode("-",$v);
+			$q=$por[1];
 			if($q==0)
 				$derecho[]='Todas';
-			if($r==$_POST['U'])
-				$derecho[]=substr($v,2,1);
+			else
+				$derecho[]=$q;
 		}
 	}
 	if($abj=='')
@@ -661,6 +661,8 @@ else if($pky=='bH-.!sdT'){ //Guardo nuevo usuario
 	$obj['Error']='';
 	$ch = curl_init($ipServ.'telmex/add/user');
 	curl_setopt_array($ch, array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 30,
 		CURLOPT_POST => TRUE,
 		CURLOPT_RETURNTRANSFER => TRUE,
 		CURLOPT_HTTPHEADER => array(
@@ -670,7 +672,7 @@ else if($pky=='bH-.!sdT'){ //Guardo nuevo usuario
 	));
 	$response=curl_exec($ch);
 	if($response===FALSE)
-		print_r(curl_error($ch));
+		$obj['Error']=curl_error($ch);
 	else{
 		$response=json_decode($response);
 		if($response->errorCode<0)
@@ -685,6 +687,8 @@ else if($pky=='bH-.!sdT'){ //Guardo nuevo usuario
 				);
 				$ch=curl_init($ipServ.'telmex/add/regiones');
 				curl_setopt_array($ch, array(
+					CURLOPT_CONNECTTIMEOUT => 15,
+					CURLOPT_TIMEOUT => 30,
 					CURLOPT_POST => TRUE,
 					CURLOPT_RETURNTRANSFER => TRUE,
 					CURLOPT_HTTPHEADER => array(
@@ -694,7 +698,7 @@ else if($pky=='bH-.!sdT'){ //Guardo nuevo usuario
 				));
 				$response = curl_exec($ch);
 				if($response === FALSE)
-					die(curl_error($ch));
+					$obj['Error']=curl_error($ch);
 				else{
 					$response=json_decode($response);
 					if($response->errorCode<0)
@@ -720,8 +724,8 @@ else if($pky=='Nb%423d'){ //Guardo y envío información de nueva región asigna
 	);
 	$ch = curl_init($ipServ.'telmex/add/regiones');
 	curl_setopt_array($ch, array(
-		CURLOPT_CONNECTTIMEOUT => 20,
-		CURLOPT_TIMEOUT => 40,
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 30,
 		CURLOPT_POST => TRUE,
 		CURLOPT_RETURNTRANSFER => TRUE,
 		CURLOPT_HTTPHEADER => array(
@@ -730,11 +734,11 @@ else if($pky=='Nb%423d'){ //Guardo y envío información de nueva región asigna
 		CURLOPT_POSTFIELDS=>json_encode($postData)
 	));
 	$response = curl_exec($ch);
-	$obj['sdsdsdfsd']=$response;
-	if($response === FALSE)
-		die(curl_error($ch));
+	if($response === FALSE){
+		$obj['error_curl']=curl_error($ch);
+	}
 	else{
-		$responseData = json_decode($response);
+		$responseData=json_decode($response);
 		if($responseData->errorCode>=0){
 			if($z==7)
 				$obj['men']=mensajes($g,'Has sido asignado a la region '.$b,$j,$i);

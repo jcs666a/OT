@@ -223,7 +223,7 @@ function muestraUsuarios(){
 		'<th>Región</th>'+
 		'<th></th>'+
 	'</tr>');
-	function metelosTodos(x){console.log(x);
+	function metelosTodos(x){
 		if(x!=null && x!='null'){
 			x=jQuery.parseJSON(x);
 			if(x.hasOwnProperty("errorMessage")){
@@ -1322,7 +1322,6 @@ function agregaRegFielder(dist,asig,empl,rgcm,y,rol){
 				region=regisdivareas(region);
 				$.when(promesas.addRegion(empl,idBoss,region.original,rgcm,region.region,rol)).done(function(x){
 					x=jQuery.parseJSON(x);
-					console.log(x);
 					if(x.hasOwnProperty("errorSinMensaje")){
 						creanotificacion('Error',x.errorSinMensaje,'','','error');
 						btn.removeClass('guardando').addClass('bad');
@@ -1330,6 +1329,8 @@ function agregaRegFielder(dist,asig,empl,rgcm,y,rol){
 					else{
 						if(x.hasOwnProperty("errorMessage"))
 							creanotificacion('No se envió mensaje',x.errorMessage+':<br /><b>'+x.error+'</b><br /><br /><b>id:</b> '+x.multicast_id,'','','advertencia');
+						if(x.hasOwnProperty("error_curl"))
+							creanotificacion('Error',x.error_curl,'','','error');
 						btn.removeClass('guardando').addClass('ok');
 						RegionesUser.push(region.original);
 						asig.append("<a data='"+region.original+"'>"+region.regionT+"</a>");
@@ -2071,6 +2072,7 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 		$('#loading').show();
 		if(n!='' && u!='' && r!='' && s!='' && i!='ZZ' && p==q){
 			$.when(promesas.UpdateUse(n,i,e,u,p,r,s)).done(function(x){
+				console.log(x);
 				if(y==1)muestraUsuarios();
 				if(x==0)b.removeClass('guardando').addClass('ok');
 				else b.removeClass('guardando').addClass('bad');
@@ -2106,7 +2108,6 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 			if(paso==1){
 				$.when(promesas.AddingUse(n,e,u,p,r,s,reg)).done(function(x){
 					x=jQuery.parseJSON(x);
-					if(y==1)muestraUsuarios();
 					if(x.Error!=''){
 						creanotificacion('Error en Akame',x.Error,'','','error');
 						b.removeClass('guardando').addClass('bad');
@@ -2119,6 +2120,7 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 						$(".ui-dialog-content").dialog("close");
 						$('#loading').hide();
 					},500);
+					if(y==1)muestraUsuarios();
 				});
 			}
 		}
