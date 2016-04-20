@@ -286,9 +286,9 @@ function pintaClientes(){
 			puntoColor='amarillo.png';
 			var centrob=new google.maps.LatLng(c.latitud,c.longitud),oAdic='',pAdic='';
 			if(c.ofertaAdicional!=null && c.ofertaAdicional!='null' && c.ofertaAdicional!='')
-				oAdic='<p>Oferta: '+c.ofertaAdicional+'</p>';
+				oAdic='<p><b>Oferta</b>: '+c.ofertaAdicional+'</p>';
 			if(c.producto!=null && c.producto!='null' && c.producto!='')
-				pAdic='<p>Producto: '+c.producto+'</p>';
+				pAdic='<p><b>Producto</b>: '+c.producto+'</p>';
 			PointsClientes[x]=new google.maps.Marker({
 				position:centrob,
 				map		: map,
@@ -300,7 +300,7 @@ function pintaClientes(){
 					'</div>'+
 					'<div style="margin:0 0 10px 0;"><b>Distrito</b>: '+k+'<br><br>'+
 					'<b>Campaña</b>: '+c.titulo+'<br><b>Descripción</b>: '+c.descripcion+'<br><br>'+
-					'<b>Domicilio</b>: '+c.direccion+'<br><b>Teléfono: </b>'+c.telefono+'</div>'+
+					'<b>Domicilio</b>: '+c.direccion+'<br><b>Teléfono</b>: '+c.telefono+'</div>'+
 					oAdic+pAdic+
 					'<a class="btnCtnMap" onclick="mercaCrossModul('+nam+');">Contratación</a>'
 			});

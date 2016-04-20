@@ -20,6 +20,7 @@ var loadPage = $(".map-go"),
     hostVar = 'http://187.217.179.35',
     expressPhone = 0,
     domicilio = "",
+    Calendar = {},
     urlVars=function(){
       var query_string={};
       var query=window.location.search.substring(1);
@@ -57,8 +58,8 @@ function global(){
         return true;
       }
     });
-  connect();
-  geoRefer();
+  //connect();
+  //geoRefer();
   core();
 }
 function logout(){
@@ -746,34 +747,33 @@ function calendar(t){
     if(t.dataset.action){
       var data = t.dataset.action;
       getInfoDay(data);
-        $(".row").removeClass("activeDay2");
-        t.classList.add("activeDay2");
-
+      $(".row").removeClass("activeDay2");
+      t.classList.add("activeDay2");
     }
     if(t.dataset.prev){
       data = t.dataset.prev;
-		var go = new Date(),
-			d = go.getDate(),
-			m = parseInt(data)-1,
-			y = go.getFullYear();
+    var go = new Date(),
+      d = go.getDate(),
+      m = parseInt(data)-1,
+      y = go.getFullYear();
           calCostruct(d, m, y);
          var currentDate = new Date(),
-         	mm = currentDate.getDate();
+          mm = currentDate.getDate();
           if(m != mm ){
-          	$('.row').removeClass('activeDay');
+            $('.row').removeClass('activeDay');
           }
     }
     if(t.dataset.next){
-		data = t.dataset.next;
-		var go = new Date(),
-			d = go.getDate(),
-			m = parseInt(data)+1,
-			y = go.getFullYear();
+    data = t.dataset.next;
+    var go = new Date(),
+      d = go.getDate(),
+      m = parseInt(data)+1,
+      y = go.getFullYear();
           calCostruct(d, m, y);
          var currentDate = new Date(),
-         	mm = currentDate.getDate();
+          mm = currentDate.getDate();
           if(m != mm ){
-          	$('.row').removeClass('activeDay');
+            $('.row').removeClass('activeDay');
           }
     }
   }
@@ -786,9 +786,9 @@ function calendar(t){
         body = '', 
         header = '';
       header += '<div class="nav">';
-      header += '<p data-prev="'+m+'" onclick="calendar(this);" style="left:0px;"><i class="fa fa-arrow-left"></i></p>';
+      header += '<p data-prev="'+m+'" onclick="calendar(this);" style="left:0px;"><i class="fa fa-arrow-left">&#8592;</p>';
       header +=  "<h3>"+mes[m] + "&nbsp;" +y+"</h3>";
-      header += '<p data-next="'+m+'" onclick="calendar(this);" style="right:0px;"><i class="fa fa-arrow-right"></i></p>';
+      header += '<p data-next="'+m+'" onclick="calendar(this);" style="right:0px;"><i class="fa fa-arrow-right">&#8594;</p>';
       header += '</div>'; 
       header += '<div class="header">';
       for(var i = 0; i <= 6; i++ ){
@@ -806,16 +806,18 @@ function calendar(t){
             if((day <= (monthLength+firstDay)) && (i > 0 || j >= firstDay)){
                 if((day-firstDay) == d){
                   body += '<div class="row activeDay" data-action="'+(day-firstDay)+'-'+m+'-'+y+'" onclick="calendar(this);">'; 
-                  if(!fielderCalendar[y]){
-                     fielderCalendar[y] = {},
-                     fielderCalendar[y][m] ={};
+                  if(!Calendar[y]){
+                     Calendar[y] = {};
                   }
-                  if(!fielderCalendar[y][m][(day-firstDay)]){
-
+                  if(!Calendar[y][m]){
+                    Calendar[y][m] = {}
+                  }
+                  if(!Calendar[y][m][(day-firstDay)]){
+                    Calendar[y][m][(day-firstDay)] = {}
                   }
                   else{
-                    if(fielderCalendar[y][m][(day-firstDay)].campInfo){
-                      camps = fielderCalendar[y][m][(day-firstDay)].campInfo;
+                    if(Calendar[y][m][(day-firstDay)].campInfo){
+                      camps = Calendar[y][m][(day-firstDay)].campInfo;
                       for(var f = 0; f <= camps.length-1; f++){
                         body += '<div class="eventCamp" style="background:#'+camps[f].color+';"></div>';
                       }
@@ -827,17 +829,18 @@ function calendar(t){
                 }
                 else{
                   body += '<div class="row" data-action="'+(day-firstDay)+'-'+m+'-'+y+'" onclick="calendar(this);">';
-                  if(!fielderCalendar[y]){
-                    fielderCalendar[y]= {};
+                  if(!Calendar[y]){
+                    Calendar[y]= {};
                   }
-                  if(!fielderCalendar[y][m]){
-                    fielderCalendar[y][m] = {};
+                  if(!Calendar[y][m]){
+                    Calendar[y][m] = {};
                   }
-                  if(!fielderCalendar[y][m][(day-firstDay)]){
+                  if(!Calendar[y][m][(day-firstDay)]){
+                    console.log('NaN');
                   }
                   else{
-                    if(fielderCalendar[y][m][(day-firstDay)].campInfo){
-                      camps = fielderCalendar[y][m][(day-firstDay)].campInfo;
+                    if(Calendar[y][m][(day-firstDay)].campInfo){
+                      camps = Calendar[y][m][(day-firstDay)].campInfo;
                       for(var f = 0; f <= camps.length-1; f++){
                         body += '<div class="eventCamp" style="background:#'+camps[f].color+';"></div>';
                       }
@@ -859,42 +862,38 @@ function calendar(t){
   function getInfoDay(data){
     var data = data.split('-',3), 
     agend = '';
-    if(!fielderCalendar[data[2]][data[1]]){
+    if(!Calendar[data[2]][data[1]]){
       document.getElementById('day-content').innerHTML = "<p><div class='errorCal'><p>Lo sentimos no existe contenido para el mes buscado.</p></div>";
       $("#calc small").html('0');
       $("#ventasRealizadas small").html('0');
       $("#visitas small").html('0');
     }
-    if(!fielderCalendar[data[2]][data[1]][data[0]] || !fielderCalendar[data[2]][data[1]][data[0]].asignacion){
-      document.getElementById('day-content').innerHTML = "<p><div class='errorCal'><p>Lo sentimos no existe el contenido para este día.</p></div>";
+    if(!Calendar[data[2]][data[1]][data[0]] || !Calendar[data[2]][data[1]][data[0]].asignacion){
+      document.getElementById('day-content').innerHTML = "<p><div class='errorCal'><p>Lo sentimos no existe el contenido para este dÃ­a.</p></div>";
       $("#calc small").html('0');
       $("#ventasRealizadas small").html('0');
       $("#visitas small").html('0');
     }
     else{
-      for(var i = 0; i<= ObjectSize(fielderCalendar[data[2]][data[1]][data[0]].asignacion)-1; i++){
-        var desc = fielderCalendar[data[2]][data[1]][data[0]].asignacion[i].descripcion;
-        agend += '<div class="holder">';
-        agend += '<h3  data-place ="'+i+'" data-origin="'+[data[0]]+'-'+[data[1]]+'-'+[data[2]]+'" data-asig="'+desc+'" onclick="getInfoThis(this);">Distrito '+desc+'</h3>';
-        agend += '<div id="'+desc+'" class="loadDay"></div>';
-        agend += '</div>';
-      }
+      var i = 0;
+      $.each(Calendar[data[2]][data[1]][data[0]].asignacion, function(index, val) {
+        $.each(val.clientes, function(index2, val2) {
+          var desc = val2.distrito;
+          agend += '<div class="holder">';
+          agend += '<h3  data-place ="'+i+'" data-origin="'+[data[0]]+'-'+[data[1]]+'-'+[data[2]]+'" data-asig="'+desc+'" onclick="getInfoThis(this);">Distrito '+desc+'</h3>';
+          agend += '<div id="'+desc+'" class="loadDay"></div>';
+          agend += '</div>';
+          i++;
+        });
+        if(index == 'Libres'){
+          desc = 'Libres';
+            agend += '<div class="holder">';
+            agend += '<h3  data-place ="'+(parseInt(i)+1)+'" data-origin="'+[data[0]]+'-'+[data[1]]+'-'+[data[2]]+'" data-asig="'+desc+'" onclick="getInfoThis(this);">Ventas Libres</h3>';
+            agend += '<div id="'+desc+'" class="loadDay"></div>';
+            agend += '</div>';
+        }
+      });
       document.getElementById('day-content').innerHTML = agend;
-            var comprasRealizadas = 0;
-      for(var i = 0;  i <= ObjectSize(fielderCalendar[data[2]][data[1]][data[0]].asignacion)-1; i++){
-        for (var c = 0; c <= ObjectSize(fielderCalendar[data[2]][data[1]][data[0]].asignacion[i].clientes)-1; c++){  
-          if(fielderCalendar[data[2]][data[1]][data[0]].asignacion[i].clientes[c].status == true){
-            comprasRealizadas++;
-          }
-        }
-      }
-     // $("#ventasRealizadas small").html(comprasRealizadas);
-      comprasRealizadas = 0;
-      for(var i = 0; i <= ObjectSize(fielderCalendar[data[2]][data[1]][data[0]].asignacion)-1; i++){
-        for(var c = 0; c <= ObjectSize(fielderCalendar[data[2]][data[1]][data[0]].asignacion[i].clientes)-1; c++){
-          $("#visitas small").html(c+1);
-        }
-      }
     }
   }
 }
@@ -908,19 +907,29 @@ function getInfoThis(t){
       }
       else{
         t.classList.add("open");
+        if(asig != 'Libres'){
         var loadThis = '<div data-origin="'+origin+'" data-asig="'+asig+'" data-todo="'+place+'" onclick="loadCont(this);" class="son">Todo</div>'+
-            '<div data-origin="'+origin+'" data-asig="'+asig+'" data-cam="'+place+'" onclick="loadCont(this);" class="son">Campañas</div>'+
-            '<div data-origin="'+origin+'" data-asig="'+asig+'" data-adq="'+place+'" data-type="venta" onclick="loadCont(this);" class="son">Adquisiciones</div>'+
-            '<div data-origin="'+origin+'" data-asig="'+asig+'" data-adq="'+place+'" data-type="sin venta" onclick="loadCont(this);" class="son">Sin adquisicion</div>'+
+            '<div data-origin="'+origin+'" data-asig="'+asig+'" data-cam="'+place+'" onclick="loadCont(this);" class="son">campaÃ±as</div>'+
+            '<div data-origin="'+origin+'" data-asig="'+asig+'" data-adq="'+place+'" data-type="venta" onclick="loadCont(this);" class="son">adquisiciones</div>'+
+            '<div data-origin="'+origin+'" data-asig="'+asig+'" data-adq="'+place+'" data-type="sin venta" onclick="loadCont(this);" class="son">sin adquisicion</div>'+
             '<div id="load-'+asig+'"></div>';
-        document.getElementById(''+asig+'').innerHTML = loadThis;
+            document.getElementById(''+asig+'').innerHTML = loadThis;
+        }
+        else{
+          date = origin.split('-'),
+          place =  Calendar[date[2]][date[1]][date[0]].asignacion.Libres;
+          console.log(asig);
+         loadThis = '<div id="load-'+asig+'"></div>';
+          document.getElementById(''+asig+'').innerHTML = loadThis;
+            Print(place,'todo',asig,origin);
+        }
       }
 }
 function loadCont(t){
   var data = t.dataset.origin, 
       data = data.split('-',3),
       asig = t.dataset.asig;
-      place = fielderCalendar[data[2]][data[1]][data[0]].asignacion;
+      place = Calendar[data[2]][data[1]][data[0]].asignacion;
       document.getElementById('load-'+asig).innerHTML = " ";
   if(t.dataset.cam){
     if(t.classList.contains('open')){
@@ -933,31 +942,16 @@ function loadCont(t){
         dataLoad = t.dataset.cam, 
         obj = {}, 
         type = "campania";
-        for(var i = 0; i<= ObjectSize(place[dataLoad].clientes)-1; i++){
-          var campName = place[dataLoad].clientes[i].campaña, 
-          campPlace;
-          if(!fielderCalendar[data[2]][data[1]][data[0]].campania){
-            for(var y = 0; y <= fielderCamp.length-1; y++){
-              if(campName == fielderCamp[y].campana.id){
-                campPlace = fielderCamp[y].campana;
-              }
-            }
+        $.each(place, function(index, val) {
+          if(!obj[val.descripcion]){
+            obj[val.descripcion] = {};
+            obj[val.descripcion]= val.clientes;
           }
           else{
-            campPlace = fielderCalendar[data[2]][data[1]][data[0]].campania;
-          }
-          if(campName == campPlace.id ){
-            var name = campPlace.titulo;
-          if(!obj[name]){
-            obj[name] ={},
-            obj[name][0]= place[dataLoad].clientes[i];
-          }
-          else{
-            obj[name][ObjectSize(obj[name])] = place[dataLoad].clientes[i];
+            obj[val.descripcion] = val.clientes;
           }
           Print(obj,type,asig,t.dataset.origin);
-        }
-      }
+        });
     }
   }
   if(t.dataset.adq){
@@ -967,26 +961,33 @@ function loadCont(t){
     else{
       dataLoad = t.dataset.adq,
       obj = {}, 
-      type = t.dataset.type;
+      type = t.dataset.type, 
+      i = 0;
       if(type == "venta"){
           $(".son").removeClass('open');
           t.classList.add('open');
-        for(var i = 0; i<= ObjectSize(place[dataLoad].clientes)-1; i++){
-          name = place[dataLoad].clientes[i].status;
-          if(name == "venta" || name == true){
-            obj[ObjectSize(obj)] = place[dataLoad].clientes[i];
-          }
-        }
+        $.each(place, function(index, val) {
+          $.each(val.clientes, function(index2, val2) {
+            if(val2.status == "venta" || val2.status == true || val2.status == "Venta"){
+              val2.status = "Venta";
+              obj[i] = val2;
+              i++;
+            }
+          });
+        });
       }
       if(type == "sin venta"){
           $(".son").removeClass('open');
           t.classList.add('open');
-        for(var i = 0; i<= ObjectSize(place[dataLoad].clientes)-1; i++){
-          name = place[dataLoad].clientes[i].status;
-          if(name == "sin venta" || name == false){
-            obj[ObjectSize(obj)] = place[dataLoad].clientes[i];
-          }
-        }
+        $.each(place, function(index, val) {
+          $.each(val.clientes, function(index2, val2) {
+            if(val2.status == "sin venta" || val2.status == false || val2.status == "Sin Venta"){
+              val2.status = "Sin Venta";
+              obj[i] = val2;
+              i++;
+            }
+          });
+        });
       }
       Print(obj,type,asig);
     }
@@ -1000,28 +1001,37 @@ function loadCont(t){
       t.classList.add('open');
       dataLoad = t.dataset.todo,
       obj = {},
-      type = "todo";
-      for(var i = 0; i<= ObjectSize(place[dataLoad].clientes)-1; i++){
-        obj[ObjectSize(obj)] = place[dataLoad].clientes[i];
-      }
+      type = "todo",
+      i = 0;
+        $.each(place, function(index, val) {
+          $.each(val.clientes, function(index2, val2) {
+             obj[i] = val2;
+             i++;
+          });
+        });
+        console.log(obj);
       Print(obj,type,asig);
     }
   }
+}
   function Print(obj,type,data,origin){
     var insert = document.getElementById('load-'+data);
     insert.innerHTML = ''; 
     insert.classList.add('loadResult'); 
     if(type == "campania"){
-     $.each(obj, function(i,v){
-            insert.innerHTML = insert.innerHTML+'<div class="row"><div class="name"><h3  onclick="toggleThis(this);" data-toggle="'+i+'" data-idCamp="'+v[ObjectSize(v)-1].campaña+'" data-origin="'+origin+'">'+i+'</h3></div><div id="'+i+'" class="campLoad"></div></div>';
-            var insert2 = document.getElementById(i);
-        $.each(v, function(ix,vx){
+      $.each(obj, function(i,v){
+        if(!v[0].campaña){}
+        else{
+          insert.innerHTML = insert.innerHTML+'<div class="row"><div class="name"><h3  onclick="toggleThis(this);" data-toggle="'+i+'" data-idCamp="'+v[0].campaña+'" data-origin="'+origin+'">'+i+'</h3></div><div id="'+i+'" class="campLoad"></div></div>';
+          var insert2 = document.getElementById(i);
+          $.each(v, function(ix,vx){
             insert2.innerHTML = insert2.innerHTML+'<div class="row2"><div><h3  onclick="toggleThis(this);" data-toggle="node-'+ix+'">cliente '+vx.nombre+'</h3></div><div id="node-'+ix+'" class="campLoad"></div></div>';
             var insert3 = document.getElementById('node-'+ix);
-          $.each(vx, function(ixx,vxx){
-            insert3.innerHTML = insert3.innerHTML +'<div class="innerRow"><div>'+ixx+':</div><div>'+vxx+'</div></div>';
+            $.each(vx, function(ixx,vxx){
+              insert3.innerHTML = insert3.innerHTML +'<div class="innerRow"><div>'+ixx+':</div><div>'+vxx+'</div></div>';
+            });
           });
-        });
+        }
       });
     }
     if(type == "todo" || type == "venta" || type == "sin venta"){
@@ -1034,7 +1044,6 @@ function loadCont(t){
       });
     }
   }
-}
 function toggleThis(t){
   console.log(t);
   var value = t.dataset.toggle, 
@@ -1048,15 +1057,15 @@ function toggleThis(t){
     printScore(idCamp,origin,'clear');
   }
   else{
-  	node.style.display = "block";
-  	t.classList.add("open");
+    node.style.display = "block";
+    t.classList.add("open");
     printScore(idCamp,origin,'print');
   }
 }
 function printScore(id,origin,action){
   console.log(origin);
   var date = origin.split('-'), 
-      obj = fielderCalendar[date[2]][date[1]][date[0]].campInfo;
+      obj = Calendar[date[2]][date[1]][date[0]].campInfo;
   if(action == 'clear'){  
     $("#ventasRealizadas small").html('0');
     $("#visitas small").html('0');
@@ -1077,7 +1086,7 @@ function printCamps(){
   var agend = "";
     if(fielderCamp){
     agend+= '<div id="colorCode">';
-      agend+='<h3>Campañas asignadas</h3>';
+      agend+='<h3>CampaÃ±as asignadas</h3>';
     for(var i = 0; i <= fielderCamp.length-1; i++){
       if(!printCampDone.includes(fielderCamp[i].campana.id)){
           printCampDone.push(fielderCamp[i].campana.id);
@@ -1104,6 +1113,134 @@ function printCamps(){
     return false;
   }
   printCampDone = [];
+}
+function createCal(){
+  for(var i = 0; i <= fielderCamp.length-1; i++){
+    console.log(fielderCamp[i].campana.fechaInicio);
+    c = fielderCamp[i].campana.fechaInicio;
+    b = fielderCamp[i].campana.fechaFin;
+    splitInicio = c.split('-'),
+    splitFinal = b.split('-'),
+    oneDay = 24*60*60*1000,
+    firstDate = new Date(splitInicio[0],splitInicio[1],splitInicio[2]),
+    secondDate = new Date(splitFinal[0],splitFinal[1],splitFinal[2]),
+    diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay))),
+    mm = splitInicio[1]-1, 
+    yy = splitInicio[0], 
+    changeMonth = 0;
+    mmdif = parseInt( splitFinal[1]) -  parseInt(splitInicio[1]);
+    for(var f = 0; f <= diffDays;){
+      monthLength = new Date(yy, mm+1, 0).getDate();
+    for (a = 1; a <= monthLength; a++){
+    if(changeMonth == 0){
+      if(mm == splitInicio[1]-1){
+        a = splitInicio[0];
+        diffDays - parseInt(a);
+        changeMonth++;
+      }
+    }
+    if(a == parseInt(splitFinal[0])+1){
+      patt = /^0[0-9].*$/, 
+      monthNum = parseInt(splitFinal[1])-1;
+      if(patt.test(monthNum)){
+        var mmParse = monthNum.toString().split('');
+        if(mm == mmParse[1]){
+          break;
+        }
+      }
+      else{
+        if(mm == monthNum){
+          break;
+        }     
+      }
+    }
+    console.log('here');
+    if(!Calendar[yy]){
+      Calendar[yy] ={};
+    }
+    if(!Calendar[yy][mm]){
+      Calendar[yy][mm] = {};
+    }
+      if(!Calendar[yy][mm][a]){
+        Calendar[yy][mm][a] = {};
+      }
+    if(Calendar[yy][mm][a]){
+      newObj = Calendar[yy][mm][a];
+        if(a >= splitInicio[2] || mm >= splitInicio[1]){
+          printDates();
+        }
+      }
+      if(a == monthLength){
+        mm++;
+      }
+      if(mm == 12){
+        yy++;
+        mm = 0;
+      }
+      function printDates(){
+        if(f <= diffDays + parseInt(splitInicio[2]) + mmdif){
+          if(!newObj.campInfo){
+            newObj.campInfo = [];
+          }
+          if(newObj.campInfo){
+            newObj.campInfo[newObj.campInfo.length] = {},
+            newObj.campInfo[newObj.campInfo.length-1]['id'] = fielderCamp[i].campana.id,
+            newObj.campInfo[newObj.campInfo.length-1]['color'] = fielderCamp[i].campana.color;
+          }
+        }
+          hasSomeThing(newObj,yy,mm,a);
+      }
+      f++;
+    }
+  } 
+}
+}
+function ObjectSize(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+}
+function hasSomeThing(o,y,m,a){
+  if(!o.campInfo){
+  }
+  else{
+    for(var i = 0; i <= o.campInfo.length-1; i++){
+      if(!o.asignacion){
+        o.asignacion = {};
+      }
+      if(!fielderCalendar.Libres){}
+      else{
+        if(fielderCalendar.Libres.Visitas[y]){
+          if(fielderCalendar.Libres.Visitas[y][m]){
+            if(fielderCalendar.Libres.Visitas[y][m][a]){
+              o.asignacion["Libres"] = fielderCalendar.Libres.Visitas[y][m][a];
+            }
+          }
+        }
+      }
+      if(!fielderCalendar[o.campInfo[i].id].Visitas[y]){
+        fielderCalendar[o.campInfo[i].id].Visitas[y] = {};
+      }if(!fielderCalendar[o.campInfo[i].id].Visitas[y][m]){
+       fielderCalendar[o.campInfo[i].id].Visitas[y][m] ={};
+      }
+      if(!fielderCalendar[o.campInfo[i].id].Visitas[y][m][a]){
+        fielderCalendar[o.campInfo[i].id].Visitas[y][m][a] = {};
+      }
+      if(!o.asignacion[o.campInfo[i].id]){
+        o.asignacion[o.campInfo[i].id] = {};
+      }
+      o.asignacion[o.campInfo[i].id] = {};
+      o.asignacion[o.campInfo[i].id]["clientes"] = [],
+      o.asignacion[o.campInfo[i].id]["clientes"] = fielderCalendar[o.campInfo[i].id].Visitas[y][m][a];
+      for(var y = 0; y <= fielderCamp.length-1; y++){
+        if(fielderCamp[y].campana.id == o.campInfo[i].id){
+          o.asignacion[o.campInfo[i].id]["descripcion"] = fielderCamp[y].campana.titulo;
+        }
+      }
+    }
+  }
 }
 
 
@@ -1499,7 +1636,7 @@ function saveInCalendar(obj){
               size[i].clientes[ObjectSize(size[i].clientes)-1]["telefono"] = obj.usuario[2],
               size[i].clientes[ObjectSize(size[i].clientes)-1]["geo"] = obj.usuario[4],
               size[i].clientes[ObjectSize(size[i].clientes)-1]["direccion"] = obj.usuario[3];
-              if(obj.status == true){
+     if(obj.status == true){
                 obj.status = 'Venta';
               }
               else{

@@ -4,6 +4,7 @@ var l=window.location.hash.substr(1),
 	dis_o_col,
 	marcadores=[],
 	ubicalosFirst=1,
+	intervalLider,
 	intervaloMarcadores,
 	todosdiv="",
 	viendo='',
@@ -183,8 +184,6 @@ function creaDivsAreas(t,z,y){
 function creaAreas(t,z,y){
 	var p=$(y+' .areas').find("option").filter(":selected").text(),
 		u=$(y+' .areas').val();
-	console.log(p);
-	console.log(u);
 	$.when(
 		promesas.areas(p,u)
 	).done(function(x){
@@ -200,14 +199,90 @@ function creaAreas(t,z,y){
 	});
 }
 function liderLogin(){
-	if(idRol==6){
-		$.each(misRegiones,function(i,v){
-			console.log(regisdivareas(v));
-		});
-//		limpiaPoligonos();
-//		map.data.addGeoJson(gj);
-//		setColores();
+	var ubicandoFiLid=[];
+	limpiaPoligonos();
+	function datosFielders(r){ var Pi;
+		Pi=promesas.fieldersA(r);
+		return Pi;
 	}
+	function PintaPolis(gj){
+		map.data.addGeoJson(gj);
+		setColores();
+	}
+	function areas(p,u){
+		p=p.toUpperCase();
+		$.when(
+			promesas.areas(p,u)
+		).done(function(x){
+			x=jQuery.parseJSON(x);
+			if(x.hasOwnProperty("errorMessage"))
+				creanotificacion('Error:',
+					x.errorMessage,'','','error');
+			else
+				PintaPolis(x);
+		}).fail(function(jqXHR,textStatus,error){
+			creanotificacion('Error:','No se recibió respuesta del servicio de para obtener poligonos de las areas.',error,textStatus,'error');
+		});
+	}
+	function pintaFil(){
+		limpiaMarcadores();
+		$.when(promesas.UbicaFiel(ubicandoFiLid)).done(function(x){
+			x=jQuery.parseJSON(x);
+			var infowindow=new google.maps.InfoWindow({content:'Espere por favor, cargando...'}),
+				i=0,datosMarker,centro;
+			if(x.Error!='')
+				creanotificacion('Error:',x.errorMessage,'','','error');
+			else
+				$.each(x.r[0],function(i,f){
+					var Pts=f.createAt.split('-'),
+						feN;feN=Pts[2].substring(0,4)+'-'+Pts[1]+'-'+Pts[0]+' '+Pts[2].substring(5,13);
+					if(ubicalosFirst==1)
+						creanotificacion(f.nombre+', ubicado...',f.latitud+', '+f.longitud+'<br/>'+dateFormat(feN,"fullDate")+' a las '+dateFormat(feN,"shortTime"),'','','');
+					datosMarker='<div>'+
+						'<h3>'+f.nombre+'</h3>'+
+						'<p>Expediente: <b>'+f.expediente+'</b><br />Visto el '+dateFormat(feN,"fullDate")+' a las '+dateFormat(feN,"shortTime")+'</p>'+
+						'</div>';
+					centro=new google.maps.LatLng(f.latitud,f.longitud);
+					marcadores[i]=new google.maps.Marker({
+						position:centro,
+						map:map,
+						title:f.nombre,
+						icon:'../img/geo_a.png',
+						html:datosMarker
+					});
+					marcadores[i].addListener('click', function(){
+						infowindow.setContent(this.html);
+						infowindow.open(map, this);
+					});
+					i++;
+				});
+		});
+	}
+	function startFiel(region){
+		$.when(
+			datosFielders(region)
+		).done(function(x){
+			x=jQuery.parseJSON(x);
+			if($.inArray(x[0][0],ubicandoFiLid)<0)
+				ubicandoFiLid.push(x[0][0]);
+		}).fail(function(jqXHR,textStatus,error){
+			creanotificacion('Error:','No se recibió respuesta del servicio de para obtener los datos de los fielders buscados.',error,textStatus,'error');
+		});
+	}
+	$.when(
+		$.each(misRegiones,function(i,v){
+			var r=v.split('-'),
+				s=regisdivareas(v);
+			startFiel(r[0]+'-'+r[1]+'-');
+			areas(s.area,r[1]);
+		})
+	).done(function(x){
+		setTimeout(function(){
+			pintaFil();
+		},5000);
+	}).fail(function(jqXHR,textStatus,error){
+		creanotificacion('Error:','No se recibió respuesta del servicio de para obtener los datos de los fielders buscados.',error,textStatus,'error');
+	});
 }
 function limpiaTablaG(){
 	$('#tablaFielders tbody').html('');
@@ -505,7 +580,7 @@ function grafMetas(){
 	}
 }
 function creaOtrosGraficos(x){
-	var dataPie=[],dataFielderSerie=[],dataFielderVentas=[];console.log(x);
+	var dataPie=[],dataFielderSerie=[],dataFielderVentas=[];
 	if(x.hasOwnProperty("regiones"))
 		$.when(
 			barras=new Highcharts.Chart({
@@ -533,12 +608,12 @@ function creaOtrosGraficos(x){
 				var vv={'name':name,'y':v.y};
 				dataPie.push(vv);
 			}),
-			$.each(x.fielders,function(k,v){console.log(k);
+			$.each(x.fielders,function(k,v){
 				if(k=='' || k==null || k=='null'){k='Libre';v.name='Libre';}
 				dataFielderSerie.push(k);
 				dataFielderVentas.push(v);
 			})
-		).done(function(){console.log(x.fielders);
+		).done(function(){
 			addSeries(x);
 //			grafMetas(); Hacer metas...
 			var dataPi={name:'Contratos',data:dataPie};
@@ -1147,7 +1222,7 @@ function buscaFielders(){
 				'<th></th>'+
 			'</tr>');
 		}
-		if(dis_o_col!=''){
+		if(dis_o_col!=''){console.log(region);
 			$.when(
 				datosFielders(region)
 			).done(function(x){
@@ -1739,7 +1814,7 @@ function inicia(){
 		$('#midatos .data .r').text(Rol+', '+Usuario);
 		muestraGraficoReal('H');
 		selectDivisiones('.principal');
-		liderLogin();
+		if(idRol==6){liderLogin();intervalLider=setInterval(function(){liderLogin()},20000);}
 		connect();
 	}
 	else{
@@ -2399,7 +2474,7 @@ $(".titulos .xls").click(function(event){
 $("#losUsers").click(function(event){
 	event.preventDefault();
 	$.when(mstraUsrTi={k:'',i:'',r:'',n:''}).done(function(){
-		cierraMenu();
+		cierraMenu();clearInterval(intervalLider);
 	//	$("#mapa").dialogExtend("minimize");
 		$('#top,#generico').removeClass("open");
 		$("#loading").show();
@@ -2408,7 +2483,7 @@ $("#losUsers").click(function(event){
 });
 $(".gn-icon.gn-icon-home,.gn-menu-main li.titulo img").click(function(event){
 	event.preventDefault();
-	cierraMenu();
+	cierraMenu();clearInterval(intervalLider);
 	setTimeout(function(){muestraGraficoReal('H');},500);
 //	$("#mapa").dialogExtend("minimize");
 	$('#top,#generico').removeClass("open");
@@ -2416,7 +2491,7 @@ $(".gn-icon.gn-icon-home,.gn-menu-main li.titulo img").click(function(event){
 });
 $(".gn-icon.gn-icon-nuser").click(function(event){
 	event.preventDefault();
-	cierraMenu();
+	cierraMenu();clearInterval(intervalLider);
 //	$("#mapa").dialogExtend("minimize");
 	$('#top,#generico').removeClass("open");
 	$("#loading").show();
@@ -2425,7 +2500,7 @@ $(".gn-icon.gn-icon-nuser").click(function(event){
 });
 $(".gn-icon.gn-icon-campana").click(function(event){
 	event.preventDefault();
-	cierraMenu();
+	cierraMenu();clearInterval(intervalLider);
 //	$("#mapa").dialogExtend("minimize");
 	$('#top,#generico').removeClass("open");
 	$("#loading").show();
@@ -2433,7 +2508,7 @@ $(".gn-icon.gn-icon-campana").click(function(event){
 });
 $(".gn-icon.gn-icon-ncampana").click(function(event){
 	event.preventDefault();
-	cierraMenu();
+	cierraMenu();clearInterval(intervalLider);
 	$('#top,#generico').removeClass("open");
 	$("#loading").show();
 	muestraCampanas();
@@ -2441,7 +2516,7 @@ $(".gn-icon.gn-icon-ncampana").click(function(event){
 });
 $(".gn-icon.gn-icon-calendar").click(function(event){
 	event.preventDefault();
-	cierraMenu();
+	cierraMenu();clearInterval(intervalLider);
 //	$("#mapa").dialogExtend("minimize");
 	$('#top,#generico').removeClass("open");
 	$("#loading").show();
@@ -2449,14 +2524,14 @@ $(".gn-icon.gn-icon-calendar").click(function(event){
 });
 $(".gn-icon.gn-icon-reportes").click(function(event){
 	event.preventDefault();
-	cierraMenu();
+	cierraMenu();clearInterval(intervalLider);
 //	$("#mapa").dialogExtend("minimize");
 	$('#top,#generico').removeClass("open");
 	$("#loading").show();
 	muestraReportes();
 });
 $(".gn-icon.gn-icon-mapa").click(function(event){
-	cierraMenu();
+	cierraMenu();clearInterval(intervalLider);
 	todosdiv='principal';
 	$("#loading").show();
 	viendo='Distrito';
@@ -2478,3 +2553,17 @@ $("#mapa").dialog({title:"Mapa C4 Telmex",height:mh,
 	minimizeLocation:"right"
 });
 */
+var idleTime=0;
+function timerIncrement(){
+	idleTime=idleTime+1;
+	if(idleTime>4) salir();
+}
+$(document).ready(function(){
+	var idleInterval=setInterval(timerIncrement,60000);
+	$(this).mousemove(function(e){
+		idleTime=0;
+	});
+	$(this).keypress(function(e){
+		idleTime=0;
+	});
+});
