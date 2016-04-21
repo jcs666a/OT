@@ -82,6 +82,7 @@ function creandoObjeto(){
 			localStorage.setItem('fielderCamp','{}');			vy=JSON.stringify(x.Campanas);		if(x.hasOwnProperty("Campanas"))localStorage.setItem('fielderCamp',vy);
 			localStorage.setItem('fielderTien','{}');			vy=JSON.stringify(x.Tiendas);		if(x.hasOwnProperty("Tiendas"))localStorage.setItem('fielderTien',vy);
 			localStorage.setItem('fielderCalendar','{}');		vy=JSON.stringify(x.Calendario);	if(x.hasOwnProperty("Calendario")){localStorage.setItem('fielderCalendar',vy);}
+			createCal();
 			return 'Listo';
 		}
 	};
@@ -130,3 +131,141 @@ $(window, document, undefined).ready(function(){
 		$(this).removeClass('is-active');
 	});
 });
+function createCal(){
+  Calendar = {};
+	fielderCamp = JSON.parse(localStorage.getItem('fielderCamp'));
+  for(var i = 0; i <= fielderCamp.length-1; i++){
+    c = fielderCamp[i].campana.fechaInicio;
+    b = fielderCamp[i].campana.fechaFin;
+    splitInicio = c.split('-'),
+    splitFinal = b.split('-'),
+    oneDay = 24*60*60*1000,
+    firstDate = new Date(splitInicio[0],splitInicio[1],splitInicio[2]),
+    secondDate = new Date(splitFinal[0],splitFinal[1],splitFinal[2]),
+    diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay))),
+    mm = splitInicio[1]-1,
+    yy = splitInicio[0],
+    changeMonth = 0;
+    mmdif = parseInt( splitFinal[1]) -  parseInt(splitInicio[1]);
+    for(var f = 0; f <= diffDays;){
+      monthLength = new Date(yy, mm+1, 0).getDate();
+    for (a = 1; a <= monthLength; a++){
+    if(changeMonth == 0){
+      if(mm == splitInicio[1]-1){
+        a = splitInicio[0];
+        diffDays - parseInt(a);
+        changeMonth++;
+      }
+    }
+    if(a == parseInt(splitFinal[0])+1){
+      patt = /^0[0-9].*$/,
+      monthNum = parseInt(splitFinal[1])-1;
+      if(patt.test(monthNum)){
+        var mmParse = monthNum.toString().split('');
+        if(mm == mmParse[1]){
+          break;
+        }
+      }
+      else{
+        if(mm == monthNum){
+          break;
+        }
+      }
+    }
+    if(!Calendar[yy]){
+      Calendar[yy] ={};
+    }
+    if(!Calendar[yy][mm]){
+      Calendar[yy][mm] = {};
+    }
+      if(!Calendar[yy][mm][a]){
+        Calendar[yy][mm][a] = {};
+      }
+    if(Calendar[yy][mm][a]){
+      newObj = Calendar[yy][mm][a];
+        if(a >= splitInicio[2] || mm >= splitInicio[1]){
+          printDates();
+        }
+      }
+      if(a == monthLength){
+        mm++;
+      }
+      if(mm == 12){
+        yy++;
+        mm = 0;
+      }
+      function printDates(){
+        if(f <= (diffDays + parseInt(splitInicio[2]) + mmdif)){
+          if(!newObj.campInfo){
+            newObj.campInfo = [];
+          }
+          if(newObj.campInfo){
+            newObj.campInfo[newObj.campInfo.length] = {},
+            newObj.campInfo[newObj.campInfo.length-1]['id'] = fielderCamp[i].campana.id,
+            newObj.campInfo[newObj.campInfo.length-1]['color'] = fielderCamp[i].campana.color;
+          }
+        }
+          hasSomeThing(newObj,yy,mm,a);
+      }
+      f++;
+    }
+  }
+}
+}
+function ObjectSize(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+}
+function hasSomeThing(o,y,m,a){
+	fielderCalendar = JSON.parse(localStorage.getItem('fielderCalendar'));
+  if(!o.campInfo){
+  }
+  else{
+    for(var i = 0; i <= o.campInfo.length-1; i++){
+      if(!o.asignacion){
+        o.asignacion = {};
+      }
+      if(!fielderCalendar.Libres){}
+      else{
+        if(fielderCalendar.Libres.Visitas[y]){
+          if(fielderCalendar.Libres.Visitas[y][m]){
+            if(fielderCalendar.Libres.Visitas[y][m][a]){
+              o.asignacion["Libres"] = fielderCalendar.Libres.Visitas[y][m][a];
+            }
+          }
+        }
+      }
+
+        if(!fielderCalendar[o.campInfo[i].id]){
+          fielderCalendar[o.campInfo[i].id] = {};
+          fielderCalendar[o.campInfo[i].id].Visitas = {};
+        }
+        if(!fielderCalendar[o.campInfo[i].id].Visitas[y]){
+          fielderCalendar[o.campInfo[i].id].Visitas[y] = {};
+        }if(!fielderCalendar[o.campInfo[i].id].Visitas[y][m]){
+         fielderCalendar[o.campInfo[i].id].Visitas[y][m] ={};
+        }
+        if(!fielderCalendar[o.campInfo[i].id].Visitas[y][m][a]){
+          fielderCalendar[o.campInfo[i].id].Visitas[y][m][a] = {};
+        }
+        if(!o.asignacion[o.campInfo[i].id]){
+          o.asignacion[o.campInfo[i].id] = {};
+        }
+        o.asignacion[o.campInfo[i].id] = {};
+        o.asignacion[o.campInfo[i].id]["clientes"] = [],
+        o.asignacion[o.campInfo[i].id]["clientes"] = fielderCalendar[o.campInfo[i].id].Visitas[y][m][a];
+        for(var y = 0; y <= fielderCamp.length-1; y++){
+          if(fielderCamp[y].campana.id == o.campInfo[i].id){
+            o.asignacion[o.campInfo[i].id]["descripcion"] = fielderCamp[y].campana.titulo;
+          }
+        }
+    }
+  }
+//localStorage.setItem('Calendar',{});
+Calendar = JSON.stringify(Calendar);
+localStorage.setItem('Calendar',Calendar);
+Calendar = JSON.parse(localStorage.getItem('Calendar'));
+}

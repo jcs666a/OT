@@ -16,11 +16,11 @@ var loadPage = $(".map-go"),
     longitude = 0,
     tope=0,
     reportObj = {},
-    imagesPlaces  = 'http://187.217.179.35/c4/imgCamps/',
-    hostVar = 'http://187.217.179.35',
+    imagesPlaces  = 'http://10.105.116.187/c4/imgCamps/',
+    hostVar = 'http://10.105.116.187',
     expressPhone = 0,
     domicilio = "",
-    Calendar = {},
+    reporte = JSON.stringify([{"id":532,"idFielder":7,"idCampaign":null,"pesco":true,"region":"","razon":null,"createAt":"2016-04-21","accion":"Nuevo","direccion":"parque via, 190, 123, DISTRITO FEDERAL, CUAUHTEMOC, CUAUHTEMOC 6500","latitud":"19.4357544","longitud":"-99.16803219999997","nombre":"HOMERO TEST TEST","vivo":true,"servicio":"OT"}]);
     urlVars=function(){
       var query_string={};
       var query=window.location.search.substring(1);
@@ -58,10 +58,10 @@ function global(){
         return true;
       }
     });
-  //connect();
-  //geoRefer();
-  createCal();
+  connect();
+  geoRefer();
   core();
+  Calendar= JSON.parse(localStorage.getItem('Calendar'));
 }
 function logout(){
   $.ajax({type:"PUT",
@@ -238,18 +238,14 @@ function connect() {
            var type = 'cfr';
            socketResponse(greeting.body, type);
         });
-        stompClient.subscribe('/user/'+userId+'/topic/calendariof', function(greeting){
-           var type = 'calendario';
-           socketResponse(greeting.body, type);
-        });
-        stompClient.subscribe('/user/'+userId+'/topic/calendario',function(greeting){
-          var type = 'calendario';
-          socketResponse(greeting.body, 'calendario');
-        });
        stompClient.subscribe('/topic/dns', function(greeting){
             type = "DNS";
             socketResponse(greeting.body, type);
         });
+        stompClient.subscribe('/topic/reporte/campaña', function(greeting){
+             type = "reporte";
+             socketResponse(greeting.body, type);
+         });
     });
   var socketg = new SockJS(''+hostVar+':8080/coordenadas');
     stompClientg = Stomp.over(socketg);
@@ -300,11 +296,6 @@ function socketResponse(response, type){
     name = 'fielderCamp';
     NewContent(type,Obj, response, name);
   }
-  if(type == "calendario"){
-    Obj = fielderCalendar;
-    name = 'fielderCalendar';
-    NewContent(type, Obj, response,name)
-  }
   if(type == "cfr"){
     Obj = fielderCamp;
     name= 'fielderCamp';
@@ -315,6 +306,11 @@ function socketResponse(response, type){
   }
   if(type == "usario"){
     logout();
+  }
+  if(type == "reporte"){
+    Obj = Calendar;
+    name='Calendar';
+    NewContent(type,Obj,response, name);
   }
 }
 function NewContent(url, Obj, r, name){
@@ -344,11 +340,11 @@ function NewContent(url, Obj, r, name){
       	Obj[ObjectSize(Obj)] = r;
       }
     }
-    if(url == "calendario"){
-      newCampaign(r);
-    }
     if(url == "cfr"){
       commerceCamp(r);
+    }
+    if(url == "reporte"){
+      exReport(r);
     }
     Obj = JSON.stringify(Obj);
     Obj = localStorage.setItem(name,Obj);
@@ -371,6 +367,9 @@ function NewContent(url, Obj, r, name){
           PutInMapCamp();
         }
       }
+      if(window.location.hash == "#calendario" && url == "reporte"){
+        location.reload();
+      }
       if(r.accion == "Eliminado"){
 
         for(var c = 0; c <= fielderCamp.length-1; c++){
@@ -392,159 +391,6 @@ function NewContent(url, Obj, r, name){
         }
       }
     }
-  function newCampaign(r){
-    for(var i = 0; i <= r.length-1; i++){
-      if(r[i].accion == "Nuevo"){
-        console.log(r);
-        splitInicio = r[i].calendario.fechaInit.split('-'),
-        splitFinal = r[i].calendario.fechaEnd.split('-'),
-        oneDay = 24*60*60*1000,
-        firstDate = new Date(splitInicio[2],splitInicio[1],splitInicio[0]),
-        secondDate = new Date(splitFinal[2],splitFinal[1],splitFinal[0]),
-        diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay))),
-        perDay = parseInt(r[i].calendario.meta)/parseInt(diffDays),
-        mm = splitInicio[1]-1,
-        yy = splitInicio[2],
-        changeMonth = 0;
-        console.log("diferencia de dias: "+diffDays);
-        for(var f = 0; f <= diffDays;){
-          monthLength = new Date(yy, mm+1, 0).getDate();
-          console.log("duracion del mes: "+monthLength);
-          for (a = 1; a <= monthLength; a++){
-            if(changeMonth == 0){
-              if(mm == splitInicio[1]-1){
-                a = splitInicio[0];
-                diffDays - parseInt(a);
-                changeMonth++;
-              }
-            }
-            if(a == parseInt(splitFinal[0])+1){
-              patt = /^0[0-9].*$/,
-              monthNum = parseInt(splitFinal[1])-1;
-              if(patt.test(monthNum)){
-                  var mmParse = monthNum.toString().split('');
-                  if(mm == mmParse[1]){
-                    break;
-                  }
-              }
-              else{
-                if(mm == monthNum){
-                  break;
-                }
-              }
-
-            }
-            if(!fielderCalendar[yy]){
-              fielderCalendar[yy] ={};
-            }
-            if(!fielderCalendar[yy][mm]){
-              fielderCalendar[yy][mm] = {};
-            }
-            if(fielderCalendar[yy][mm][a]){
-              newObj = fielderCalendar[yy][mm][a];
-                if(!newObj.asignacion){
-                  newObj.asignacion = {};
-                  newObj.asignacion[ObjectSize(newObj.asignacion)]={};
-                  //newObj.asignacion[ObjectSize(newObj.asignacion)-1]["clientes"] = {}
-                }
-                if(!newObj.campInfo){
-                  newObj.campInfo = [],
-                  newObj.campInfo[0] = {},
-                  newObj.campInfo[0]["idCr"] = r[i].idCalendar,
-                  newObj.campInfo[0]["idCamp"] = r[i].camp.id,
-                  newObj.campInfo[0]["color"] = r[i].camp.color,
-                  newObj.campInfo[0]["meta"] = {},
-                  newObj.campInfo[0].meta.meta = r[i].calendario.meta,
-                  newObj.campInfo[0].meta.visitas = 0,
-                  newObj.campInfo[0].meta.ventas = 0;
-                }
-                if(newObj.campInfo){
-                  newObj.campInfo[newObj.campInfo.length] = {},
-                  newObj.campInfo[newObj.campInfo.length-1]["idCr"] = r[i].idCalendar,
-                  newObj.campInfo[newObj.campInfo.length-1]["idCamp"] = r[i].camp.id,
-                  newObj.campInfo[newObj.campInfo.length-1]["color"] = r[i].camp.color,
-                  newObj.campInfo[newObj.campInfo.length-1]["meta"] = {},
-                  newObj.campInfo[newObj.campInfo.length-1].meta.meta = r[i].calendario.meta,
-                  newObj.campInfo[newObj.campInfo.length-1].meta.visitas = 0,
-                  newObj.campInfo[newObj.campInfo.length-1].meta.ventas = 0;
-                }
-            }
-            if(!fielderCalendar[yy][mm][a]){
-              fielderCalendar[yy][mm][a] = {};
-              newObj = fielderCalendar[yy][mm][a],
-              newObj.asignacion = {},
-              newObj.asignacion[ObjectSize(newObj.asignacion)]={},
-              newObj.asignacion[ObjectSize(newObj.asignacion)-1]["clientes"] = {},
-              newObj.campInfo = [],
-              newObj.campInfo[0] = {},
-              newObj.campInfo[0]["idCr"] = r[i].idCalendar,
-              newObj.campInfo[0]["idCamp"] = r[i].camp.id,
-              newObj.campInfo[0]["color"] = r[i].camp.color,
-              newObj.campInfo[0]["meta"] = {},
-              newObj.campInfo[0].meta.meta = r[i].calendario.meta,
-              newObj.campInfo[0].meta.visitas = 0,
-              newObj.campInfo[0].meta.ventas = 0;
-            }
-            if(a == monthLength){
-              mm++;
-            }
-            if(mm == 12){
-              yy++;
-              mm = 0;
-            }
-            console.log(a);
-            f++;
-          }
-        }
-      }
-      if(r[i].accion == "Eliminado"){
-        $.each(fielderCalendar, function(index, val) {
-          $.each(fielderCalendar[index], function(index2, val) {
-            $.each(fielderCalendar[index][index2], function(index3, val) {
-              if(r[i].idCalendar == fielderCalendar[index][index2][index3].idCalendar){
-                delete fielderCalendar[index][index2][index3];
-              }
-            });
-          });
-        });
-      }
-    }
-    if(r.accion == "Actualizado"){
-      var forNext = {};
-      $.each(fielderCalendar, function(a, b) {
-        $.each(fielderCalendar[a], function(aa, bb) {
-          $.each(fielderCalendar[a][aa], function(aaa, bbb) {
-            if(fielderCalendar[a][aa][aaa].campInfo){
-              for(var i = 0; i <= fielderCalendar[a][aa][aaa].campInfo.length-1; i++){
-                if(fielderCalendar[a][aa][aaa].campInfo[i].idCr == r.idCr){
-                  forNext = fielderCalendar[a][aa][aaa].campInfo[i];
-                  fielderCalendar[a][aa][aaa].campInfo.splice(i,1);
-                }
-              }
-            }
-            else{
-            }
-          });
-        });
-      });
-      newResponse = [],
-      pushObj = {},
-      pushObj['accion'] =  "Nuevo",
-      pushObj['idCalendar'] = forNext.idCr,
-      pushObj['camp'] = {},
-      pushObj.camp['id'] =  forNext.idCamp,
-      pushObj.camp['color'] = forNext.color,
-      pushObj['calendario'] = {},
-      pushObj.calendario['meta'] = forNext.meta,
-      pushObj.calendario.fechaInit = r.fechaInit,
-      pushObj.calendario.fechaEnd = r.fechaEnd;
-      newResponse.push(pushObj);
-      newCampaign(newResponse);
-    }
-    Calendar = JSON.stringify(Calendar);
-    localStorage.setItem('Calendar',Calendar);
-    Calendar = JSON.parse(localStorage.getItem('Calendar'));
-  }
     function borraCamp(r){
 		console.log('delete');
 		for(var c = 0; c <= fielderCamp.length-1; c++){
@@ -737,45 +583,53 @@ obj.pop();
 }
 //calendario
 function calendar(t){
-  var hoy = new Date(),
-      d = hoy.getDate(),
-      m = hoy.getMonth(),
-      y = hoy.getFullYear();
+  var hoy = new Date(),data,dataYear;
   if(t == undefined){
+    var d = hoy.getDate(),
+        m = hoy.getMonth(),
+        y = hoy.getFullYear();
     calCostruct(d, m, y);
   }
   else{
     if(t.dataset.action){
-      var data = t.dataset.action;
+      data = t.dataset.action;
       getInfoDay(data);
       $(".row").removeClass("activeDay2");
       t.classList.add("activeDay2");
     }
     if(t.dataset.prev){
-      data = t.dataset.prev;
-    var go = new Date(),
-      d = go.getDate(),
-      m = parseInt(data)-1,
-      y = go.getFullYear();
-          calCostruct(d, m, y);
-         var currentDate = new Date(),
-          mm = currentDate.getDate();
-          if(m != mm ){
-            $('.row').removeClass('activeDay');
-          }
+      data = t.dataset.prev,
+      dataYear = t.dataset.year;
+      var go = new Date();
+      var d = go.getDate(),
+          m = parseInt(data)-1,
+          y = dataYear;
+      if(m<0){
+        m=11;y=parseInt(y)-1;
+      }
+      calCostruct(d, m, y);
+      var currentDate = new Date(),
+      mm = currentDate.getDate();
+      if(m != mm ){
+        $('.row').removeClass('activeDay');
+      }
     }
     if(t.dataset.next){
-    data = t.dataset.next;
-    var go = new Date(),
-      d = go.getDate(),
-      m = parseInt(data)+1,
-      y = go.getFullYear();
-          calCostruct(d, m, y);
-         var currentDate = new Date(),
-          mm = currentDate.getDate();
-          if(m != mm ){
-            $('.row').removeClass('activeDay');
-          }
+      data = t.dataset.next,
+      dataYear = t.dataset.year;
+      var go = new Date();
+      var d = go.getDate(),
+          m = parseInt(data)+1,
+          y = dataYear;
+      if(m>11){
+        m=0;y=parseInt(y)+1;
+      }
+      calCostruct(d, m, y);
+      var currentDate = new Date(),
+      mm = currentDate.getDate();
+      if(m != mm ){
+        $('.row').removeClass('activeDay');
+      }
     }
   }
   function calCostruct(d, m, y){
@@ -787,9 +641,9 @@ function calendar(t){
         body = '',
         header = '';
       header += '<div class="nav">';
-      header += '<p data-prev="'+m+'" onclick="calendar(this);" style="left:0px;"><i class="fa fa-arrow-left"></i></p>';
+      header += '<p data-prev="'+m+'" data-year="'+y+'" onclick="calendar(this);" style="left:0px;"><i class="fa fa-arrow-left"></i></p>';
       header +=  "<h3>"+mes[m] + "&nbsp;" +y+"</h3>";
-      header += '<p data-next="'+m+'" onclick="calendar(this);" style="right:0px;"><i class="fa fa-arrow-right"></i></p>';
+      header += '<p data-next="'+m+'" data-year="'+y+'" onclick="calendar(this);" style="right:0px;"><i class="fa fa-arrow-right"></i></p>';
       header += '</div>';
       header += '<div class="header">';
       for(var i = 0; i <= 6; i++ ){
@@ -862,6 +716,7 @@ function calendar(t){
   }
   function getInfoDay(data){
     var data = data.split('-',3),
+    agendOb={},
     agend = '';
     if(!Calendar[data[2]][data[1]]){
       document.getElementById('day-content').innerHTML = "<p><div class='errorCal'><p>Lo sentimos no existe contenido para el mes buscado.</p></div>";
@@ -870,31 +725,48 @@ function calendar(t){
       $("#visitas small").html('0');
     }
     if(!Calendar[data[2]][data[1]][data[0]] || !Calendar[data[2]][data[1]][data[0]].asignacion){
-      document.getElementById('day-content').innerHTML = "<p><div class='errorCal'><p>Lo sentimos no existe el contenido para este dÃ­a.</p></div>";
+      document.getElementById('day-content').innerHTML = "<p><div class='errorCal'><p>Lo sentimos no existe contenido para este día.</p></div>";
       $("#calc small").html('0');
       $("#ventasRealizadas small").html('0');
       $("#visitas small").html('0');
     }
     else{
-      var i = 0;
-      $.each(Calendar[data[2]][data[1]][data[0]].asignacion, function(index, val) {
-        $.each(val.clientes, function(index2, val2) {
-          var desc = val2.distrito;
-          agend += '<div class="holder">';
-          agend += '<h3  data-place ="'+i+'" data-origin="'+[data[0]]+'-'+[data[1]]+'-'+[data[2]]+'" data-asig="'+desc+'" onclick="getInfoThis(this);">Distrito '+desc+'</h3>';
-          agend += '<div id="'+desc+'" class="loadDay"></div>';
-          agend += '</div>';
-          i++;
-        });
-        if(index == 'Libres'){
-          desc = 'Libres';
-            agend += '<div class="holder">';
-            agend += '<h3  data-place ="'+(parseInt(i)+1)+'" data-origin="'+[data[0]]+'-'+[data[1]]+'-'+[data[2]]+'" data-asig="'+desc+'" onclick="getInfoThis(this);">Ventas Libres</h3>';
-            agend += '<div id="'+desc+'" class="loadDay"></div>';
-            agend += '</div>';
-        }
+      var i = 0,ventas=0,libres=0,visitas=0;
+      $.when(
+        $.each(Calendar[data[2]][data[1]][data[0]].asignacion, function(index, val){
+          if(!val.clientes){
+            if(index == 'Libres'){
+              libres=val.length;
+              desc = 'Libres';
+                agend += '<div class="holder">';
+                agend += '<h3  data-place ="'+(parseInt(i)+1)+'" data-origin="'+[data[0]]+'-'+[data[1]]+'-'+[data[2]]+'" data-asig="'+desc+'" onclick="getInfoThis(this);">Ventas Libres</h3>';
+                agend += '<div id="'+desc+'" class="loadDay"></div>';
+                agend += '</div>';
+            }
+          }
+            else{
+            $.each(val.clientes, function(index2,val2){
+              var desc = val2.distrito;
+              visitas++;
+              if(val2.status==true || val2.status==1 || val2.status=='true')
+                  ventas++;
+              if(!agendOb.hasOwnProperty(desc)){
+                agendOb[desc]='';
+                agend += '<div class="holder">';
+                agend += '<h3  data-place ="'+i+'" data-origin="'+[data[0]]+'-'+[data[1]]+'-'+[data[2]]+'" data-asig="'+desc+'" onclick="getInfoThis(this);">Distrito '+desc+'</h3>';
+                agend += '<div id="'+desc+'" class="loadDay"></div>';
+                agend += '</div>';
+                i++;
+              }
+            });
+          }
+        })
+      ).done(function(){
+        $('#ventasRealizadas small').text(ventas);
+        $('#visitas small').text(visitas);
+        $('#calc small').text(libres);
+        document.getElementById('day-content').innerHTML = agend;
       });
-      document.getElementById('day-content').innerHTML = agend;
     }
   }
 }
@@ -919,7 +791,6 @@ function getInfoThis(t){
         else{
           date = origin.split('-'),
           place =  Calendar[date[2]][date[1]][date[0]].asignacion.Libres;
-          console.log(asig);
          loadThis = '<div id="load-'+asig+'"></div>';
           document.getElementById(''+asig+'').innerHTML = loadThis;
             Print(place,'todo',asig,origin);
@@ -943,13 +814,15 @@ function loadCont(t){
         dataLoad = t.dataset.cam,
         obj = {},
         type = "campania";
-        $.each(place, function(index, val) {
+        $.each(place, function(index, val){
+          var clien=[];
+          $.each(val.clientes,function(i,v){if(v.distrito==asig)clien.push(v);});
           if(!obj[val.descripcion]){
             obj[val.descripcion] = {};
-            obj[val.descripcion]= val.clientes;
+            obj[val.descripcion]= clien;
           }
           else{
-            obj[val.descripcion] = val.clientes;
+            obj[val.descripcion] = clien;
           }
           Print(obj,type,asig,t.dataset.origin);
         });
@@ -969,10 +842,12 @@ function loadCont(t){
           t.classList.add('open');
         $.each(place, function(index, val) {
           $.each(val.clientes, function(index2, val2) {
-            if(val2.status == "venta" || val2.status == true || val2.status == "Venta"){
-              val2.status = "Venta";
-              obj[i] = val2;
-              i++;
+            if(val2.distrito==asig){
+              if(val2.status == "venta" || val2.status == true || val2.status == "Venta"){
+                val2.status = "Venta";
+                obj[i] = val2;
+                i++;
+              }
             }
           });
         });
@@ -982,10 +857,12 @@ function loadCont(t){
           t.classList.add('open');
         $.each(place, function(index, val) {
           $.each(val.clientes, function(index2, val2) {
-            if(val2.status == "sin venta" || val2.status == false || val2.status == "Sin Venta"){
-              val2.status = "Sin Venta";
-              obj[i] = val2;
-              i++;
+            if(val2.distrito==asig){
+              if(val2.status == "sin venta" || val2.status == false || val2.status == "Sin Venta"){
+                val2.status = "Sin Venta";
+                obj[i] = val2;
+                i++;
+              }
             }
           });
         });
@@ -1005,12 +882,13 @@ function loadCont(t){
       type = "todo",
       i = 0;
         $.each(place, function(index, val) {
-          $.each(val.clientes, function(index2, val2) {
-             obj[i] = val2;
-             i++;
+          $.each(val.clientes, function(index2, val2){
+            if(val2.distrito==asig){
+              obj[i] = val2;
+              i++;
+            }
           });
         });
-        console.log(obj);
       Print(obj,type,asig);
     }
   }
@@ -1093,12 +971,11 @@ function printCamps(){
           printCampDone.push(fielderCamp[i].campana.id);
           agend+='<div class="row">';
             agend+='<div class="color" style="background:#'+fielderCamp[i].campana.color+';"></div>';
-            agend+='<div class="titulo">';
-              agend+='<p style="color:#'+fielderCamp[i].campana.color+';">'+fielderCamp[i].campana.titulo+'</p>';
-            agend+='</div>';
-            agend+='<div class="descripcion">';
-              agend+='<p>'+fielderCamp[i].campana.descripcion+'</p>';
-            agend+='</div>';
+            agend+='<p class="titulo" style="color:#'+fielderCamp[i].campana.color+';">'+
+                      fielderCamp[i].campana.titulo+'</p>';
+            agend+='<p>'+fielderCamp[i].campana.descripcion+'</p>';
+            agend+='<p class="mets"><span>'+fielderCamp[i].campana.meta+'</span><span>'+
+              fielderCalendar[fielderCamp[i].campana.id].TotalVentas+'</span></p>'
           agend+= '</div>';
         }
     }
@@ -1116,6 +993,7 @@ function printCamps(){
   printCampDone = [];
 }
 function createCal(){
+  Calendar = {};
   for(var i = 0; i <= fielderCamp.length-1; i++){
     c = fielderCamp[i].campana.fechaInicio;
     b = fielderCamp[i].campana.fechaFin;
@@ -1219,8 +1097,7 @@ function hasSomeThing(o,y,m,a){
           }
         }
       }
-      //if(!fielderCalendar[o.campInfo[i].id]){}
-    //  else {
+
         if(!fielderCalendar[o.campInfo[i].id]){
           fielderCalendar[o.campInfo[i].id] = {};
           fielderCalendar[o.campInfo[i].id].Visitas = {};
@@ -1244,9 +1121,9 @@ function hasSomeThing(o,y,m,a){
             o.asignacion[o.campInfo[i].id]["descripcion"] = fielderCamp[y].campana.titulo;
           }
         }
-      //}
     }
   }
+localStorage.setItem('Calendar',{});
 Calendar = JSON.stringify(Calendar);
 localStorage.setItem('Calendar',Calendar);
 Calendar = JSON.parse(localStorage.getItem('Calendar'));
@@ -1597,131 +1474,58 @@ function geocodeLatLng(geocoder, map, infowindow,data) {
   }
   //recibo objeto
 function saveInCalendar(obj){
-  //proceso objeto funcion que acopla contendio con calendario
     var hoy = new Date(),
         d = hoy.getDate(),
         m = hoy.getMonth(),
         y = hoy.getFullYear();
-        if(!fielderCalendar[y]){
-        fielderCalendar[y] = {};
+        if(!Calendar[y]){
+        Calendar[y] = {};
         }
-        if(!fielderCalendar[y][m]){
-          fielderCalendar[y][m] = {};
+        if(!Calendar[y][m]){
+          Calendar[y][m] = {};
         }
-        if(!fielderCalendar[y][m][d]){
-          fielderCalendar[y][m][d] = {};
+        if(!Calendar[y][m][d]){
+          Calendar[y][m][d] = {};
         }
-        size = fielderCalendar[y][m][d];
-        if(!fielderCalendar[y][m][d].campInfo){
-          //checar esto no me cuadra mucho
-          fielderCalendar[y][m][d].campInfo = {};
-          fielderCalendar[y][m][d].campInfo.meta = {};
-        }
-        meta = fielderCalendar[y][m][d].campInfo,
-        split = obj.llave.split('-');
-        if(!size["asignacion"]){
-          size["asignacion"] ={},
-          size.asignacion[0] ={},
-          size.asignacion[0]["descripcion"] = split[2],
-          size.asignacion[0]["clientes"] = {};
-        }
-        size = size.asignacion;
-          var check = 2;
-          for(var i = 0; i <= ObjectSize(size)-1; i++){
-             if(size[i].descripcion == split[2]){
-              check = 1;
-              break;
-             }
-             else{
-              check = 0;
-             }
+        size = Calendar[y][m][d];
+        if(obj.llave == "" || obj.llave == undefined){
+          if(!size.asignacion["Libres"]){
+            size.asignacion["Libres"] = {};
+          }
+          size = size.asignacion["Libres"],
+          size[ObjectSize(size)] = {},
+          size[ObjectSize(size)-1]["nombre"] = obj.usuario[1],
+          size[ObjectSize(size)-1]["telefono"] = obj.usuario[2],
+          size[ObjectSize(size)-1]["geo"] = obj.usuario[4],
+          size[ObjectSize(size)-1]["direccion"] = obj.usuario[3];
+          size[ObjectSize(size)-1]["status"] = obj.status;
+          size[ObjectSize(size)-1]["tipo"] = obj.tipo;
+          size[ObjectSize(size)-1]["razon"] = obj.razon;
+          size[ObjectSize(size)-1]["distrito"] = "venta sin distrito";
+          for(var n = 0; n <= fielderCamp.length-1; n++){
+            if(fielderCamp[n].campana.id = obj.usuario[0]){
+              size[ObjectSize(size)-1]["campaña"] = fielderCamp[n].campana.titulo ;
             }
-            if(check == 0){
-              size[ObjectSize(size)] = {},
-              size[ObjectSize(size)-1]["descripcion"] = split[2],
-              size[ObjectSize(size)-1]["clientes"] = {};
-              size[i].clientes[ObjectSize(size[i].clientes)] = {},
-              size[i].clientes[ObjectSize(size[i].clientes)-1]["nombre"] = obj.usuario[1],
-              size[i].clientes[ObjectSize(size[i].clientes)-1]["telefono"] = obj.usuario[2],
-              size[i].clientes[ObjectSize(size[i].clientes)-1]["geo"] = obj.usuario[4],
-              size[i].clientes[ObjectSize(size[i].clientes)-1]["direccion"] = obj.usuario[3];
-     if(obj.status == true){
-                obj.status = 'Venta';
-              }
-              else{
-                obj.status = 'Sin Venta';
-              }
-              size[i].clientes[ObjectSize(size[i].clientes)-1]["status"] = obj.status;
-              if(obj.tipo == true){
-                  obj.tipo = 'Cliente Telmex';
-              }
-              else{
-                obj.tipo = 'No Cliente';
-              }
-              size[i].clientes[ObjectSize(size[i].clientes)-1]["tipo"] = obj.tipo;
-              size[i].clientes[ObjectSize(size[i].clientes)-1]["razon"] = obj.razon;
-              for(var n = 0; n <= fielderCamp.length-1; n++){
-                if(fielderCamp[n].campana.id = obj.usuario[0]){
-                  size[i].clientes[ObjectSize(size[i].clientes)-1]["campaña"] = fielderCamp[n].campana.titulo ;
-                }
-              }
-              for(var f = 0; f <= meta.length-1; f++){
-                if(obj.usuario[0] == meta[f].idCamp){
-                  if(obj.status == "venta"){
-                    meta[f].meta.ventas = parseInt(meta[f].meta.ventas)+1;
-                    meta[f].meta.visitas = parseInt(meta[f].meta.visitas)+1;
-                  }
-                  if(obj.status == "sin venta"){
-                    meta[f].meta.visitas = parseInt(meta[f].meta.visitas)+1;
-                  }
-                  break;
-                }
-              }
+          }
+        }
+        else{
+          size = size.asignacion[obj.campañas[0]];
+          size.clientes[ObjectSize(size.clientes)] = {},
+          size.clientes[ObjectSize(size.clientes)-1]["nombre"] = obj.usuario[1],
+          size.clientes[ObjectSize(size.clientes)-1]["telefono"] = obj.usuario[2],
+          size.clientes[ObjectSize(size.clientes)-1]["geo"] = obj.usuario[4],
+          size.clientes[ObjectSize(size.clientes)-1]["direccion"] = obj.usuario[3];
+          size.clientes[ObjectSize(size.clientes)-1]["status"] = obj.status;
+          size.clientes[ObjectSize(size.clientes)-1]["tipo"] = obj.tipo;
+          size.clientes[ObjectSize(size.clientes)-1]["razon"] = obj.razon;
+          split = obj.llave.split('-');
+          size.clientes[ObjectSize(size.clientes)-1]["distrito"] = split[2];
+          for(var n = 0; n <= fielderCamp.length-1; n++){
+            if(fielderCamp[n].campana.id = obj.usuario[0]){
+              size.clientes[ObjectSize(size.clientes)-1]["campaña"] = fielderCamp[n].campana.titulo ;
             }
-            else{
-              for(var i = 0; i <= ObjectSize(size)-1; i++){
-                if(size[i].descripcion  == split[2]){
-                  size[i].clientes[ObjectSize(size[i].clientes)] = {},
-                  size[i].clientes[ObjectSize(size[i].clientes)-1]["nombre"] = obj.usuario[1],
-                  size[i].clientes[ObjectSize(size[i].clientes)-1]["telefono"] = obj.usuario[2],
-                  size[i].clientes[ObjectSize(size[i].clientes)-1]["geo"] = obj.usuario[4],
-                  size[i].clientes[ObjectSize(size[i].clientes)-1]["direccion"] = obj.usuario[3];
-                  if(obj.status == true){
-                    obj.status = 'Venta';
-                  }
-                  else{
-                    obj.status = 'Sin Venta';
-                  }
-                  size[i].clientes[ObjectSize(size[i].clientes)-1]["status"] = obj.status;
-                  if(obj.tipo == true){
-                      obj.tipo = 'Cliente Telmex';
-                  }
-                  else{
-                    obj.tipo = 'No Cliente';
-                  }
-                  size[i].clientes[ObjectSize(size[i].clientes)-1]["tipo"] = obj.tipo;
-                  size[i].clientes[ObjectSize(size[i].clientes)-1]["razon"] = obj.razon;
-                    for(var n = 0; n <= fielderCamp.length-1; n++){
-                      if(fielderCamp[n].campana.id = obj.usuario[0]){
-                        size[i].clientes[ObjectSize(size[i].clientes)-1]["campaña"] = fielderCamp[n].campana.titulo ;
-                      }
-                    }
-                  //size[i].clientes[ObjectSize(size[i].clientes)-1]["campaña"] = obj.usuario[0];
-                  for(var f = 0; f <= meta.length-1; f++){
-                    if(obj.usuario[0] == meta[f].idCamp){
-                      if(obj.status == "venta"){
-                        meta[f].meta.ventas = parseInt(meta[f].meta.ventas)+1;
-                        meta[f].meta.visitas = parseInt(meta[f].meta.visitas)+1;
-                      }
-                      if(obj.status == "sin venta"){
-                        meta[f].meta.visitas = parseInt(meta[f].meta.visitas)+1;
-                      }
-                      break;
-                    }
-                  }
-                }
-              }
-            }
+          }
+        }
   Calendar = JSON.stringify(Calendar);
   localStorage.setItem('Calendar',Calendar);
   Calendar = JSON.parse( localStorage.getItem('Calendar'));
@@ -1787,11 +1591,6 @@ $(document).on("click","#campaniasAsignadas .row",function(){
           }
         }
       }
-  /*if(fielderImag[imageId])
-    $('body').append("<div id='imageDisplay'>"+
-      "<a id='closeImageDisplay'></a>"+
-      "<img src='"+imagesPlaces+imageId+"'/></div>");
-  else masterAlert("Imagen de campaña no disponible");*/
 });
 $(document).on("click","#closeImageDisplay",function(){$(this).parent().remove();});
 areIn = [];
@@ -1921,7 +1720,7 @@ function campCrossModul(t){
       name = document.getElementById('nameSend'),
       telefono = document.getElementById('telefonoSend'),
       address = document.getElementById('direccion'),
-      document.getElementsByClassName('getData')[0].addEventListener('click',getInfoEnd),
+      document.getElementsByClassName('getData')[1].addEventListener('click',getInfoEnd),
       document.getElementsByClassName('getData2')[0].addEventListener('click',getInfo);
       },700);
    }
@@ -1933,7 +1732,7 @@ function campCrossModul(t){
       name = document.getElementById('nameSend'),
       telefono = document.getElementById('telefonoSend'),
       address = document.getElementById('direccion'),
-      document.getElementsByClassName('getData')[0].addEventListener('click',getInfoEnd),
+      document.getElementsByClassName('getData')[1].addEventListener('click',getInfoEnd),
       document.getElementsByClassName('getData2')[0].addEventListener('click',getInfo);
    }
       function getInfoEnd(){
@@ -1948,6 +1747,8 @@ function campCrossModul(t){
             masterLogin();
             var datos = [idAdq,document.getElementById('nameSend').value,telefono.value,address.value,geo.value];
             reportObj["usuario"] = datos;
+            reportObj["campañas"] = [],
+            reportObj.campañas[0] = idAdq;
             document.getElementById('clientPosition').classList.remove('open');
             $("#mercaBox").load("formularios.html #expressTelmex", function(){
               loadInfo();
@@ -1964,7 +1765,7 @@ function campCrossModul(t){
         if (status === google.maps.GeocoderStatus.OK) {
           if (results[0]) {
             document.getElementById('direccion').innerHTML = String(results[0].formatted_address);
-            }
+          }
             else {
               window.alert('No results found');
             }
@@ -2037,11 +1838,13 @@ function reportBox(t){
 			function getInfoEnd(){
 				var datos = [idAdq,name.value,telefono.value,address.value,geo.value];
 				reportObj["usuario"] = datos;
+        reportObj.campañas[0]=idAdq;
 			}
 			function getInfo(){
         masterLogin();
 				var datos = [idAdq,name.value,telefono.value,address.value,geo.value];
 				reportObj["usuario"] = datos;
+        reportObj.campañas[0]=idAdq;
 				document.getElementById('clientPosition').classList.remove('open');
 				$("#mercaBox").load("formularios.html #expressTelmex");
 					loadInfo();
@@ -2070,17 +1873,17 @@ function reportBox(t){
 				}
 			latlng = latitude+','+longitude;
 			reportObj["usuario"].push(latlng);
-			document.getElementsByClassName('getData')[1].addEventListener('click',getInfoEnd);
-			document.getElementsByClassName('getData2')[0].addEventListener('click',getInfo);
-			function getInfoEnd(){
+      function getInfoEnd(){
 				var datos = [idAdq,name.value,telefono.value,address.value,geo.value];
 				reportObj["usuario"] = datos;
+        reportObj.campañas[0]=idAdq;
 			}
-			function getInfo(){
+      function getInfo(){
         masterLogin();
           setTimeout(function(){
             var datos = [idAdq,name.value,telefono.value,address.value,geo.value];
             reportObj["usuario"] = datos;
+            reportObj.campañas[0]=idAdq;
             document.getElementById('clientPosition').classList.remove('open');
             $("#mercaBox").load("formularios.html #expressTelmex", function(){
               loadInfo();
@@ -2090,6 +1893,8 @@ function reportBox(t){
             document.getElementById('masterLogin').style.display = "none";
           },1000);
 			}
+			document.getElementsByClassName('getData')[1].addEventListener('click',getInfoEnd);
+			document.getElementsByClassName('getData2')[0].addEventListener('click',getInfo);
 		}
 	}
 document.getElementsByClassName('sendReport')[0].addEventListener('click',finishRepo);
@@ -2478,4 +2283,35 @@ function iframeMethod(type){
       }
     }
   }
+}
+function exReport(r){
+  split = r[0].createAt.split('-'),
+  regExp = /^0[0-9].*$/;
+  for(var i = 0; i <= split.length-1; i++){
+    if(regExp.test(split[i])){
+       slice = split[i].split('');
+       split[i] = slice[1];
+    }
+  }
+  newObj = Calendar[split[0]][(parseInt(split[1])-1)][split[2]];
+  if(!newObj.asignacion){
+    newObj['asignacion'] ={},
+    newObj.asignacion['Libres'] = {};
+  }
+  if(!newObj.asignacion.Libres){
+    newObj.asignacion['Libres'] = {};
+  }
+  newObj = Calendar[split[0]][(parseInt(split[1])-1)][split[2]].asignacion.Libres;
+  console.log(split[0],split[1],split[2]);
+  newObj[ObjectSize(newObj)] = {},
+  newObj[ObjectSize(newObj)-1]["nombre"] = r[0].nombre,
+  newObj[ObjectSize(newObj)-1]["geo"] = r[0].latitud,r[0].longitud,
+  newObj[ObjectSize(newObj)-1]["direccion"] = r[0].direccion;
+  newObj[ObjectSize(newObj)-1]["status"] = r[0].pesco;
+  newObj[ObjectSize(newObj)-1]["tipo"] = r[0].vivo;
+  newObj[ObjectSize(newObj)-1]["distrito"] = "venta sin distrito";
+
+  Calendar = JSON.stringify(Calendar);
+  Calendar = localStorage.setItem('Calendar',Calendar);
+  Calendar = JSON.parse( localStorage.getItem('Calendar'));
 }

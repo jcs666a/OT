@@ -1,6 +1,6 @@
 <?php ob_start();
-$ipServ='http://187.217.179.35:9090/'; //'http://localhost:9090/';
-//$ipServ='http://10.105.116.52:9090/'; //'http://localhost:9090/';
+//$ipServ='http://187.217.179.35:9090/'; //'http://localhost:9090/';
+$ipServ='http://10.105.116.52:9090/'; //'http://localhost:9090/';
 if($_POST['pDf']=='ñrRp3}.'){ //Crea GCM o no
     $data=array(
         'idUsuario'=>array(
@@ -397,7 +397,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
     $jsan=json_decode($jsan);
     foreach($jsan->apiResponse[0] as $k=>$v){
         $createAt=strtotime($v->createAt);
-        $ano=date('Y',$createAt);$mes=date('m',$createAt);$dia=date('d',$createAt);
+        $ano=date('Y',$createAt);$mes=date('n',$createAt);$dia=date('j',$createAt);
         $mes--;$region=explode("-",$v->region);
 
         if($v->idCampania!='' && $v->idCampania!=null && $v->idCampania!='null' && $v->idCampania!="''"
@@ -414,6 +414,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                 'geo'=>$v->latitud.','.$v->longitud,
                 'distrito'=>$region[2],
                 'CP'=>'',
+                'CPcc'=>'-'.$mes.'-',
                 'direccion'=>$v->direccion,
                 'status'=>$v->pesco,
                 'tipo'=>$v->vivo,
@@ -432,6 +433,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                 'geo'=>$v->latitud.','.$v->longitud,
                 'distrito'=>'',
                 'CP'=>'',
+                'CPcc'=>'-'.$mes.'-',
                 'direccion'=>$v->direccion,
                 'status'=>true,
                 'tipo'=>false,
