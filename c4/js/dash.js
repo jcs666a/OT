@@ -61,8 +61,8 @@ Highcharts.theme={
 	plotOptions:{series:{dataLabels:{color:'#333',style:{fontSize:'15px',fontWeight:'300',textShadow:false}}}}
 };Highcharts.setOptions(Highcharts.theme);
 function connect(){
-//	var socket=new SockJS('http://10.105.116.187:8080/messaging');
-	var socket=new SockJS('http://187.217.179.35:8080/messaging');
+	var socket=new SockJS('http://10.105.116.187:8080/messaging');
+//	var socket=new SockJS('http://187.217.179.35:8080/messaging');
 //	var socket=new SockJS('http://10.105.116.207:8080/messaging');
 	stompClient=Stomp.over(socket);
 	stompClient.debug=null
@@ -341,16 +341,19 @@ function muestraUsuarios(){
 							var cdc='<a data=\'{"x":"Eliminar","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'"}\' title="Eliminar a '+a.nombre+'"><i class="fa fa-trash"></i></a>',
 								adc='<a data=\'{"x":"Sacar","idUser":"'+a.idUsuario+'"}\' title="Cerrar sesión de '+a.nombre+'"><i class="fa fa-unlock-alt"></i></a>',
 								msj='<a data=\'{"x":"Mensaje","regid":"'+a.gcm+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'"}\' title="Enviar mensaje a '+a.nombre+'"><i class="fa fa-comment"></i></a>',
-								use='<a data=\'{"x":"MuestraUsers","rol":"'+a.role+'","regs":"'+areg+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'","creg":"'+reg+'"}\' title="Mostrar usuarios de '+a.nombre+'"><i class="fa fa-users"></i></a>';
+								use='<a data=\'{"x":"MuestraUsers","rol":"'+a.role+'","regs":"'+areg+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'","creg":"'+reg+'"}\' title="Mostrar usuarios de '+a.nombre+'"><i class="fa fa-users"></i></a>',
+								dit='<a data=\'{"x":"Editar","y":1,"role":"'+a.role+'","idUser":"'+a.idUsuario+'","GCM":"'+a.gcm+'"}\' title="Editar a '+a.nombre+'"><i class="fa fa-pencil-square"></i></a>';
 							if(a.idUsuario==8) cdc='';
 							if(a.role<5) adc='';
 							if(a.role!=7) msj='';
 							if(idRol==6 || a.role==4 || a.role==8 || a.role==7) use='';
+							if((idRol=='5' || idRol=='4') && a.role==7) dit='';
+							if(idRol=='4' && a.role==6) dit='';
 							$('#tablaFielders tbody').append('<tr><td>'+
 								a.nombre+'</td><td>'+
 								perfiles(a.role)+'</td><td>'+
 								reg+'</td><td>'+
-								'<a data=\'{"x":"Editar","y":1,"role":"'+a.role+'","idUser":"'+a.idUsuario+'","GCM":"'+a.gcm+'"}\' title="Editar a '+a.nombre+'"><i class="fa fa-pencil-square"></i></a>'+
+								dit+
 								msj+
 								adc+
 								cdc+
@@ -1401,6 +1404,10 @@ function agregaRegFielder(dist,asig,empl,rgcm,y,rol){
 						creanotificacion('Error',x.errorSinMensaje,'','','error');
 						btn.removeClass('guardando').addClass('bad');
 					}
+					else if(x.hasOwnProperty("error")){
+						creanotificacion('Error',x.error,'','','advertencia');
+						btn.removeClass('guardando').addClass('bad');
+					}
 					else{
 						if(x.hasOwnProperty("errorMessage"))
 							creanotificacion('No se envió mensaje',x.errorMessage+':<br /><b>'+x.error+'</b><br /><br /><b>id:</b> '+x.multicast_id,'','','advertencia');
@@ -1446,11 +1453,11 @@ function nuevoUsuario(){
 			'</fieldset>';
 	}
 	else if(idRol=="5"){
-		dire='';admi='';dise='';nvByLider='Si';
+		prom='';dire='';admi='';dise='';nvByLider='dire';
 		formaB='<fieldset><h4>Añadir región:</h4>'+
 			'<label>División<select class="divisiones"></select></label>'+
 			'<label>Área<select class="areas" disabled="disabled"></select></label>'+
-			'<label>Distrito/Colonia<select class="distritos" disabled="disabled">'+
+			'<label style="display:none;">Distrito/Colonia<select class="distritos" disabled="disabled">'+
 			'<option value="0"> --- </option>'+
 			'<option value="1">Distritos</option>'+
 			'<option value="3">Colonias</option>'+
@@ -1459,8 +1466,17 @@ function nuevoUsuario(){
 			'</fieldset>';
 	}
 	else{
-		prom='';
-		if(idRol==5){dire='';admi='';dise='';}
+		prom='';lide='';nvByLider='admin';
+		formaB='<fieldset><h4>Añadir región:</h4>'+
+			'<label>División<select class="divisiones"></select></label>'+
+			'<label style="display:none;">Área<select class="areas" disabled="disabled"></select></label>'+
+			'<label style="display:none;">Distrito/Colonia<select class="distritos" disabled="disabled">'+
+			'<option value="0"> --- </option>'+
+			'<option value="1">Distritos</option>'+
+			'<option value="3">Colonias</option>'+
+			'</select></label>'+
+			'<label class="busca">Agregar<input type="text" class="ui-autocomplete-input" value="" /></label>'+
+			'</fieldset>';
 	}
 	forma='<form class="edUS" data="Usuarios" title="Nuevo usuario">'+
 	'<fieldset><h4>Información:</h4>'+
@@ -1710,7 +1726,9 @@ function editarUsuario(e){ //id,reggcm,nombre
 		abrNu=0;
 		if(idRol=="6"){
 			dire='';admi='';dise='';lide='';}
-		else prom='';
+		else if(idRol=="5"){
+			dire='';admi='';dise='';prom='';}
+		else{ prom='';lide='';}
 		var forma='<form class="edUS'+spr+'" data="Usuarios" title="Editando a '+d.nombre+'">'+
 			'<fieldset><h4>Información:</h4>'+
 			'<input type="hidden" class="id_editado" value="'+e.idUser+'" />'+
@@ -1827,12 +1845,16 @@ function inicia(){
 }inicia();
 $(document).on("change",".ChangeColorMapa",function(event){event.preventDefault();creaMapa($(this).val(),"");});
 $(document).on("click",".gn-icon.gn-icon-salir",function(event){event.preventDefault();salir();});
-$(document).on("change",".smpr .rol",function(){
+$(document).on("change",".edUS .rol",function(){
 	if(Rol!="Lider Promotor"){
-		if($(this).val()==4 || $(this).val()==8)
+		if($(this).val()==4 || $(this).val()==8){
+			$(this).parent().parent().find('fieldset').hide();
 			$(this).parent().parent().parent().find('fieldset:nth-child(2)').hide();
-		else
-			$(this).parent().parent().parent().find('fieldset:nth-child(2)').show();
+		}
+		else{
+			$(this).parent().parent().find('fieldset').show();
+			$(this).parent().parent().parent().find('fieldset:nth-child(2)').hide();
+		}
 	}
 });
 $(document).on("change",".divisiones",function(){
@@ -2179,9 +2201,41 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 					setTimeout(function(){b.removeClass('bad');},500);
 				}
 			}
+			else if(a=='dire'){
+				var aaa=$(this).parent().find('.divisiones').val(),
+					aab=$(this).parent().find('.areas').val();
+				if(aaa!='' && aaa!=null && aab!='' && aab!=null){
+					reg=aaa+'-'+aab+'-0-0';
+					if(reg!='')paso=1;
+				}
+				else{
+					creanotificacion('No se guardó el usuario',
+						'Dejaste al fielder sin región, debes asignarle una para guardar el registro',
+						'','','advertencia');
+					b.removeClass('guardando').addClass('bad');
+					$('#loading').hide();
+					setTimeout(function(){b.removeClass('bad');},500);
+				}
+			}
+			else if(a=='admin' && r==5){
+				var aaa=$(this).parent().find('.divisiones').val();
+				if(aaa!='' && aaa!=null){
+					reg=aaa+'-0-0-0';
+					if(reg!='')paso=1;
+				}
+				else{
+					creanotificacion('No se guardó el usuario',
+						'Dejaste al fielder sin región, debes asignarle una para guardar el registro',
+						'','','advertencia');
+					b.removeClass('guardando').addClass('bad');
+					$('#loading').hide();
+					setTimeout(function(){b.removeClass('bad');},500);
+				}
+			}
 			else paso=1;
 			if(paso==1){
 				$.when(promesas.AddingUse(n,e,u,p,r,s,reg)).done(function(x){
+					console.log(x);
 					x=jQuery.parseJSON(x);
 					if(x.Error!=''){
 						creanotificacion('Error en Akame',x.Error,'','','error');

@@ -9,10 +9,10 @@ if($_POST['pky']!='')
 else
 	header("Location: ../");
 //Vars:
-$ipServ='http://10.105.116.52:9090/';
+//$ipServ='http://10.105.116.52:9090/';
 //$ipServ='http://localhost:9090/';
 //$ipServ='http://187.217.179.35:9090/';
-//$ipServ='http://10.105.116.187:9090/';
+$ipServ='http://10.105.116.187:9090/';
 //Clases:
 class GCM{
 	function __construct(){}
@@ -688,7 +688,7 @@ else if($pky=='bH-.!sdT'){ //Guardo nuevo usuario
 				$ch=curl_init($ipServ.'telmex/add/regiones');
 				curl_setopt_array($ch, array(
 					CURLOPT_CONNECTTIMEOUT => 15,
-					CURLOPT_TIMEOUT => 30,
+					CURLOPT_TIMEOUT => 20,
 					CURLOPT_POST => TRUE,
 					CURLOPT_RETURNTRANSFER => TRUE,
 					CURLOPT_HTTPHEADER => array(
@@ -725,7 +725,7 @@ else if($pky=='Nb%423d'){ //Guardo y envío información de nueva región asigna
 	$ch = curl_init($ipServ.'telmex/add/regiones');
 	curl_setopt_array($ch, array(
 		CURLOPT_CONNECTTIMEOUT => 15,
-		CURLOPT_TIMEOUT => 30,
+		CURLOPT_TIMEOUT => 20,
 		CURLOPT_POST => TRUE,
 		CURLOPT_RETURNTRANSFER => TRUE,
 		CURLOPT_HTTPHEADER => array(
@@ -737,6 +737,9 @@ else if($pky=='Nb%423d'){ //Guardo y envío información de nueva región asigna
 	if($response === FALSE){
 		$obj['error_curl']=curl_error($ch);
 	}
+/*	else if($response==null || $response=='null' || $response=='' || $response==0){
+		$obj['error']='No se recibió dato alguno del servicio para agregar una región, vuelve a cargar la página, probablemente si se agregó la región, si no, inténtalo nuevamente.';
+	} */
 	else{
 		$responseData=json_decode($response);
 		if($responseData->errorCode>=0){
