@@ -1,6 +1,7 @@
 <?php ob_start();
 //$ipServ='http://187.217.179.35:9090/'; //'http://localhost:9090/';
-$ipServ='http://10.105.116.52:9090/'; //'http://localhost:9090/';
+//$ipServ='http://10.105.116.52:9090/'; //'http://localhost:9090/';
+$ipServ='http://10.105.116.187:9090/';
 if($_POST['pDf']=='ñrRp3}.'){ //Crea GCM o no
     $data=array(
         'idUsuario'=>array(
@@ -47,7 +48,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
         switch($i){
             case 1:
                 $colorLe = "5FB404";
-                break;  
+                break;
             case 2:
                 $colorLe = "FF8000";
                 break;
@@ -76,7 +77,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
         switch($i){
             case 1:
                 $colorLe = "poiATM.png";
-                break;  
+                break;
             case 2:
                 $colorLe = "poiFTTH.png";
                 break;
@@ -189,34 +190,61 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                     $cdist=json_decode($cdist);
                     $cdist=$cdist->apiResponse[0];
                     if(count($cdist)>0){
-                        $ix=0;
+                        $ix=0;$ixx=0;
                         foreach($cdist as $ki=>$vl){
                             if($vl->latitud!='' && $vl->longitud!=''){
-                                $tel[$ix]['id']=$vl->id;
-                                $tel[$ix]['tcode']=$vl->tcode;
-                                $tel[$ix]['campaigncode']=$vl->campaigncode;
-                                $tel[$ix]['offercode']=$vl->offercode;
-                                $tel[$ix]['titulo']=$vl->titulo;
-                                $tel[$ix]['descripcion']=$vl->descripcion;
-                                $tel[$ix]['estado']=$vl->estado;
-                                $tel[$ix]['color']=$vl->color;
-                                $tel[$ix]['telefono']=$vl->telefono;
-                                $tel[$ix]['region']=$vl->region;
-                                $tel[$ix]['direccion']=$vl->direccion;
-                                $tel[$ix]['latitud']=$vl->latitud;
-                                $tel[$ix]['longitud']=$vl->longitud;
-                                $tel[$ix]['cliente']=$vl->cliente;
-                                $tel[$ix]['vivo']=$vl->vivo;
-                                $tel[$ix]['producto']=$vl->producto;
-                                $tel[$ix]['ofertaAdicional']=$vl->ofertaAdicional;
-                                $ix++;
+                                if($vl->tcode!='' && $vl->campaigncode!='' && $vl->offercode!='' &&
+                                    $vl->tcode!=null && $vl->campaigncode!=null && $vl->offercode!=null &&
+                                    $vl->tcode!='null' && $vl->campaigncode!='null' && $vl->offercode!='null'){
+                                    $tel[$ix]['id']=$vl->id;
+                                    $tel[$ix]['tcode']=$vl->tcode;
+                                    $tel[$ix]['campaigncode']=$vl->campaigncode;
+                                    $tel[$ix]['offercode']=$vl->offercode;
+                                    $tel[$ix]['titulo']=$vl->titulo;
+                                    $tel[$ix]['descripcion']=$vl->descripcion;
+                                    $tel[$ix]['estado']=$vl->estado;
+                                    $tel[$ix]['color']=$vl->color;
+                                    $tel[$ix]['telefono']=$vl->telefono;
+                                    $tel[$ix]['region']=$vl->region;
+                                    $tel[$ix]['direccion']=$vl->direccion;
+                                    $tel[$ix]['latitud']=$vl->latitud;
+                                    $tel[$ix]['longitud']=$vl->longitud;
+                                    $tel[$ix]['cliente']=$vl->cliente;
+                                    $tel[$ix]['vivo']=$vl->vivo;
+                                    $tel[$ix]['producto']=$vl->producto;
+                                    $tel[$ix]['ofertaAdicional']=$vl->ofertaAdicional;
+                                    $ix++;
+                                }
+                                else{
+                                    $telb[$ixx]['id']=$vl->id;
+                                    $telb[$ixx]['tcode']='';
+                                    $telb[$ixx]['campaigncode']='';
+                                    $telb[$ixx]['offercode']='';
+                                    $telb[$ixx]['titulo']=$vl->titulo;
+                                    $telb[$ixx]['descripcion']=$vl->descripcion;
+                                    $telb[$ixx]['estado']=$vl->estado;
+                                    $telb[$ixx]['color']=$vl->color;
+                                    $telb[$ixx]['telefono']=$vl->telefono;
+                                    $telb[$ixx]['region']=$vl->region;
+                                    $telb[$ixx]['direccion']=$vl->direccion;
+                                    $telb[$ixx]['latitud']=$vl->latitud;
+                                    $telb[$ixx]['longitud']=$vl->longitud;
+                                    $telb[$ixx]['cliente']=$vl->cliente;
+                                    $telb[$ixx]['vivo']=$vl->vivo;
+                                    $telb[$ixx]['producto']=$vl->producto;
+                                    $telb[$ixx]['ofertaAdicional']=$vl->ofertaAdicional;
+                                    $ixx++;
+                                }
                             }
                         }
                     }
-                    else
-                    $tel=count($cdist);
+                    else{
+                        $tel=count($cdist);
+                        $telb=count($cdist);
+                    }
                 }
-                $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['Clientes']=$tel;unset($tel);
+                $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['Clientes']=$telb;unset($telb);
+                $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['clienteDirigido']=$tel;unset($tel);
                 $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['urlC']=$ipServ.'telmex/cct/dist/'.$zonas[1].'/'.$zonas[2];
                 unset($cdist);
                 $cdist=file_get_contents($ipServ.'telmex/clientes/notClientByAreaDto/'.$zonas[1].'/'.$zonas[2]);
@@ -241,7 +269,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                         }
                     }
                     else
-                    $tel=count($cdist);
+                        $tel=count($cdist);
                 }
                 $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['NoClientes']=$tel;unset($tel);
                 $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['urlN']=$ipServ.'telmex/clientes/notClientByAreaDto/'.$zonas[1].'/'.$zonas[2];
