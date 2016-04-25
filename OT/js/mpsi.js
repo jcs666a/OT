@@ -281,8 +281,8 @@ var cc = {},
 function pintaClientes(){
 	var x=0,muestralo,fClientes={},puntoColor;
 	function metoElPunto(c,x,k){
-			cc[nam] = c;
-		if(c.tcode!=null && c.vivo == true){
+		cc[nam] = c;
+		if(c.tcode!='' && (c.vivo==true || c.vivo=='t')){
 			puntoColor='verde.png';
 			var centrob=new google.maps.LatLng(c.latitud,c.longitud),oAdic='',pAdic='';
 			if(c.ofertaAdicional!=null && c.ofertaAdicional!='null' && c.ofertaAdicional!='')
@@ -309,7 +309,34 @@ function pintaClientes(){
 				infowindow.open(map,this);
 			});
 		}
-		if(c.vivo==false){
+		else if(c.vivo==true || c.vivo=='t'){
+			puntoColor='amarillo.png';
+			var centrob=new google.maps.LatLng(c.latitud,c.longitud),oAdic='',pAdic='';
+			if(c.ofertaAdicional!=null && c.ofertaAdicional!='null' && c.ofertaAdicional!='')
+				oAdic='<p><b>Oferta</b>: '+c.ofertaAdicional+'</p>';
+			if(c.producto!=null && c.producto!='null' && c.producto!='')
+				pAdic='<p><b>Producto</b>: '+c.producto+'</p>';
+			PointsClientes[x]=new google.maps.Marker({
+				position:centrob,
+				map		: map,
+				title	: c.cliente,
+				icon	: "css/img/assets/"+puntoColor,
+				html	:
+					'<div class="title">'+
+						c.cliente+
+					'</div>'+
+					'<div style="margin:0 0 10px 0;"><b>Distrito</b>: '+k+'<br><br>'+
+					'<b>Campaña</b>: '+c.titulo+'<br><b>Descripción</b>: '+c.descripcion+'<br><br>'+
+					'<b>Domicilio</b>: '+c.direccion+'<br><b>Teléfono</b>: '+c.telefono+'</div>'+
+					oAdic+pAdic+
+					'<a class="btnCtnMap" onclick="mercaCrossModul('+nam+');">Contratación</a>'
+			});
+			PointsClientes[x].addListener('click',function(){
+				infowindow.setContent(this.html);
+				infowindow.open(map,this);
+			});
+		}
+		else if(c.vivo==false || c.vivo=='f'){
 			puntoColor='rojo.png';
 			var centrob=new google.maps.LatLng(c.latitud,c.longitud);
 			PointsClientes[x]=new google.maps.Marker({
@@ -327,24 +354,7 @@ function pintaClientes(){
 				infowindow.open(map,this);
 			});
 		}
-		if(c.vivo == true && c.tcode!=null){
-			puntoColor='amarillo.png';
-			var centrob=new google.maps.LatLng(c.latitud,c.longitud);
-			PointsClientes[x]=new google.maps.Marker({
-				position:centrob,
-				map		: map,
-				title	: c.cliente,
-				icon	: "css/img/assets/"+puntoColor,
-				html	:
-					'<div style="margin:0 0 10px 0;"><b>Distrito</b>: '+k+'<br><br>'+
-					'<b>Domicilio</b>: '+c.direccion+'<br>'+
-					'<a class="btnCtnMap" data-direccion="'+c.direccion+'" onclick="salesIframe(this)">Contratación</a>'
-			});
-			PointsClientes[x].addListener('click',function(){
-				infowindow.setContent(this.html);
-				infowindow.open(map,this);
-			});
-		}
+		else console.log(c);
 		nam++;
 	}
 	$.when(
@@ -360,11 +370,8 @@ function pintaClientes(){
 		})
 	).done(function(){
 		if(fielderRegs.hasOwnProperty('Areas')){
-			console.log(fielderRegs.Areas);
 			$.each(fielderRegs.Areas,function(i,a){
-				if(!a.Distritos){
-
-				}else{
+				if(!a.Distritos){}else{
 					$.each(a.Distritos,function(k,b){
 						muestralo="No";
 						if(fClientes.hasOwnProperty(k)){
@@ -383,14 +390,13 @@ function pintaClientes(){
 						if(muestralo=="Si"){
 							if(cualesPinto == 'No Clientes' && filtrosMapa.FirstTime!="SI"){
 								if(b.NoClientes.length>0){
-									console.log('no clientes');
 									$.each(b.NoClientes,function(j,c){
 										metoElPunto(c,x,k);
 										x++;
 									});
 								}
 							}
-							if(cualesPinto == 'Clientes' && filtrosMapa.FirstTime!="SI"){
+							else if(cualesPinto == 'Clientes' && filtrosMapa.FirstTime!="SI"){
 								if(b.Clientes.length>0){
 									$.each(b.Clientes,function(j,c){
 										metoElPunto(c,x,k);
@@ -398,7 +404,7 @@ function pintaClientes(){
 									});
 								}
 							}
-							if(cualesPinto == 'Cliente Dirigido' && filtrosMapa.FirstTime!="SI"){
+							else if(cualesPinto == 'Cliente Dirigido' && filtrosMapa.FirstTime!="SI"){
 								if(b.clienteDirigido.length>0){
 									$.each(b.clienteDirigido,function(j,c){
 										metoElPunto(c,x,k);
@@ -406,7 +412,7 @@ function pintaClientes(){
 									});
 								}
 							}
-							if(cualesPinto == 'Todos' || filtrosMapa.FirstTime=="SI"){
+							else if(cualesPinto == 'Todos' || filtrosMapa.FirstTime=="SI"){
 								if(b.Clientes.length>0){
 									$.each(b.Clientes,function(j,c){
 										metoElPunto(c,x,k);
@@ -418,9 +424,6 @@ function pintaClientes(){
 										metoElPunto(c,x,k);
 										x++;
 									});
-								}
-								if(b.clienteDirigido == null || b.clienteDirigido == undefined){
-									b.clienteDirigido = 0;
 								}
 								if(b.clienteDirigido.length>0){
 									$.each(b.clienteDirigido,function(j,c){
@@ -707,8 +710,8 @@ function meteFiltro(){
 			cualesPinto='Clientes';
 		else if(clients=='NoClientes')
 			cualesPinto='No Clientes';
-			else if(clients=='clienteDirigido')
-				cualesPinto='Cliente Dirigido';
+		else if(clients=='clienteDirigido')
+			cualesPinto='Cliente Dirigido';
 	});
 }
 $(document).on("change","#nameDistrict #loadInMap .row :checkbox",function(){
