@@ -304,6 +304,7 @@ function pintaClientes(){
 					oAdic+pAdic+
 					'<a class="btnCtnMap" onclick="mercaCrossModul('+nam+');">Contratación</a>'
 			});
+//			PointsClientes[x].setMap(map);
 			PointsClientes[x].addListener('click',function(){
 				infowindow.setContent(this.html);
 				infowindow.open(map,this);
@@ -337,6 +338,7 @@ function pintaClientes(){
 			});
 		}
 		else if(c.vivo==false || c.vivo=='f'){
+		if(c.vivo==false){
 			puntoColor='rojo.png';
 			var centrob=new google.maps.LatLng(c.latitud,c.longitud);
 			PointsClientes[x]=new google.maps.Marker({
@@ -398,6 +400,7 @@ function pintaClientes(){
 							}
 							else if(cualesPinto == 'Clientes' && filtrosMapa.FirstTime!="SI"){
 								if(b.Clientes.length>0){
+									console.log('clientes');
 									$.each(b.Clientes,function(j,c){
 										metoElPunto(c,x,k);
 										x++;
@@ -656,6 +659,7 @@ function marcaCheckBoxes(a,b,c,e){
 		});
 	}
 	else if(a=='distZone'){
+		console.log(a);
 		$("#distZone .row[distrito='"+b+"']").find(':checkbox').each(function(){
 			if(c=='Checked'){
 				$(this).parent().addClass("checked");

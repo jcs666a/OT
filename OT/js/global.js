@@ -58,8 +58,8 @@ function global(){
         return true;
       }
     });
-  connect();
-  geoRefer();
+//  connect();
+  //geoRefer();
   core();
   Calendar= JSON.parse(localStorage.getItem('Calendar'));
 }
