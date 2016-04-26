@@ -11,8 +11,9 @@ else
 //Vars:
 //$ipServ='http://10.105.116.52:9090/';
 //$ipServ='http://localhost:9090/';
-//$ipServ='http://187.217.179.35:9090/';
-$ipServ='http://10.105.116.187:9090/';
+$ipServ='http://187.217.179.35:9090/';
+//$ipServ='http://10.105.116.187:9090/';
+//$ipServ='http://10.105.116.207:9090/';
 //Clases:
 class GCM{
 	function __construct(){}
@@ -1799,6 +1800,23 @@ else if($pky=='7%&7fBh{'){ // Graficos, contratos mapa calor tiempo real....
 	}
 	else $obj['Error']='No se logro obtener respuesta del servicio que devuelve la información para graficar en tiempo real.';
 	echo json_encode($obj);
+}
+else if($pky=='wGhj/&i:'){
+	$p=$_POST['P'];
+	$ch = curl_init($ipServ."telmex/user/UpdateSession/".$p);
+	curl_setopt_array($ch, array(
+		CURLOPT_CUSTOMREQUEST => "PUT",
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_HTTPHEADER => array(
+			'Content-Type: application/json'
+		)
+	));
+	$response = curl_exec($ch);
+	if($response===FALSE){
+		print_r(curl_error($ch));
+	}
+	else
+		print_r($response);
 }
 else
 	header("Location: ../");

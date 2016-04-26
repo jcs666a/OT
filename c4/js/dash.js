@@ -61,19 +61,22 @@ Highcharts.theme={
 	plotOptions:{series:{dataLabels:{color:'#333',style:{fontSize:'15px',fontWeight:'300',textShadow:false}}}}
 };Highcharts.setOptions(Highcharts.theme);
 function connect(){
-	var socket=new SockJS('http://10.105.116.187:8080/messaging');
-//	var socket=new SockJS('http://187.217.179.35:8080/messaging');
+//	var socket=new SockJS('http://10.105.116.187:8080/messaging');
+	var socket=new SockJS('http://187.217.179.35:8080/messaging');
 //	var socket=new SockJS('http://10.105.116.207:8080/messaging');
 	stompClient=Stomp.over(socket);
 	stompClient.debug=null
 	stompClient.connect({},function(frame){
 		clearInterval(reintento);
+		stompClient.subscribe('/user/'+idBoss+'/topic/mensaje', function(greeting){
+			var x=jQuery.parseJSON(greeting.body);creaMapaCaliente();
+			if(x.accion=='Usuario inactivo')
+				salir();
+		});
 		stompClient.subscribe('/topic/reporte/campaña', function(greeting){
-			console.log(greeting);
 			muestraGraficoReal('H');
 		});
 		stompClient.subscribe('/topic/reporte/contratacion', function(greeting){
-			console.log(greeting);
 			var x=jQuery.parseJSON(greeting.body);creaMapaCaliente();
 			creanotificacion('Nuevo contrato','Para la región '+x.region,'','','');
 		});
@@ -227,35 +230,39 @@ function liderLogin(){
 	function pintaFil(){
 		limpiaMarcadores();
 		$.when(promesas.UbicaFiel(ubicandoFiLid)).done(function(x){
-			x=jQuery.parseJSON(x);
-			var infowindow=new google.maps.InfoWindow({content:'Espere por favor, cargando...'}),
-				i=0,datosMarker,centro;
-			if(x.Error!='')
-				creanotificacion('Error:',x.errorMessage,'','','error');
+			if(x.match("^{")){
+				x=jQuery.parseJSON(x);
+				var infowindow=new google.maps.InfoWindow({content:'Espere por favor, cargando...'}),
+					i=0,datosMarker,centro;
+				if(x.Error!='')
+					creanotificacion('Error:',x.errorMessage,'','','error');
+				else
+					$.each(x.r[0],function(i,f){
+						var Pts=f.createAt.split('-'),
+							feN;feN=Pts[2].substring(0,4)+'-'+Pts[1]+'-'+Pts[0]+' '+Pts[2].substring(5,13);
+						if(ubicalosFirst==1)
+							creanotificacion(f.nombre+', ubicado...',f.latitud+', '+f.longitud+'<br/>'+dateFormat(feN,"fullDate")+' a las '+dateFormat(feN,"shortTime"),'','','');
+						datosMarker='<div>'+
+							'<h3>'+f.nombre+'</h3>'+
+							'<p>Expediente: <b>'+f.expediente+'</b><br />Visto el '+dateFormat(feN,"fullDate")+' a las '+dateFormat(feN,"shortTime")+'</p>'+
+							'</div>';
+						centro=new google.maps.LatLng(f.latitud,f.longitud);
+						marcadores[i]=new google.maps.Marker({
+							position:centro,
+							map:map,
+							title:f.nombre,
+							icon:'../img/geo_a.png',
+							html:datosMarker
+						});
+						marcadores[i].addListener('click', function(){
+							infowindow.setContent(this.html);
+							infowindow.open(map, this);
+						});
+						i++;
+					});
+			}
 			else
-				$.each(x.r[0],function(i,f){
-					var Pts=f.createAt.split('-'),
-						feN;feN=Pts[2].substring(0,4)+'-'+Pts[1]+'-'+Pts[0]+' '+Pts[2].substring(5,13);
-					if(ubicalosFirst==1)
-						creanotificacion(f.nombre+', ubicado...',f.latitud+', '+f.longitud+'<br/>'+dateFormat(feN,"fullDate")+' a las '+dateFormat(feN,"shortTime"),'','','');
-					datosMarker='<div>'+
-						'<h3>'+f.nombre+'</h3>'+
-						'<p>Expediente: <b>'+f.expediente+'</b><br />Visto el '+dateFormat(feN,"fullDate")+' a las '+dateFormat(feN,"shortTime")+'</p>'+
-						'</div>';
-					centro=new google.maps.LatLng(f.latitud,f.longitud);
-					marcadores[i]=new google.maps.Marker({
-						position:centro,
-						map:map,
-						title:f.nombre,
-						icon:'../img/geo_a.png',
-						html:datosMarker
-					});
-					marcadores[i].addListener('click', function(){
-						infowindow.setContent(this.html);
-						infowindow.open(map, this);
-					});
-					i++;
-				});
+				creanotificacion('Error:',x,'','','error');
 		});
 	}
 	function startFiel(region){
@@ -263,8 +270,10 @@ function liderLogin(){
 			datosFielders(region)
 		).done(function(x){
 			x=jQuery.parseJSON(x);
-			if($.inArray(x[0][0],ubicandoFiLid)<0)
-				ubicandoFiLid.push(x[0][0]);
+			if(x.length>0){
+				if($.inArray(x[0][0],ubicandoFiLid)<0)
+					ubicandoFiLid.push(x[0][0]);
+			}
 		}).fail(function(jqXHR,textStatus,error){
 			creanotificacion('Error:','No se recibió respuesta del servicio de para obtener los datos de los fielders buscados.',error,textStatus,'error');
 		});
@@ -302,7 +311,6 @@ function muestraUsuarios(){
 		if(x!=null && x!='null'){
 			x=jQuery.parseJSON(x);
 			if(x.hasOwnProperty("errorMessage")){
-				console.log(x.url);
 				creanotificacion('Error','<b>'+x.errorMessage,'','','error');
 				$.when(
 					mstraUsrTi={k:'',i:'',r:'',n:''},
@@ -2394,10 +2402,21 @@ $(document).on("click","#quest span a",function(event){event.preventDefault();
 			$.when(promesas.CierraSec(id)).done(function(x){
 				$('#quest').dialog("close");
 			});
+		else if(h=='cierroSesionAuto'){
+			$.when(promesas.sacoAutom(id)).done(function(x){
+				$('#quest').dialog("close");
+			});
+		}
 		else
 			alert(h);
 	}
-	else $('#quest').dialog("close");
+	else if(c=='N' && h=='cierroSesionAuto'){
+		$('#quest').dialog("close");
+		salir();
+	}
+	else{
+		$('#quest').dialog("close");
+	}
 });
 $(document).on("click",".edUS h5 a",function(event){event.preventDefault();
 	var P=$(this).parent().parent().parent().find('.id_editado').val(),
@@ -2612,8 +2631,16 @@ function timerIncrement(){
 	idleTime=idleTime+1;
 	if(idleTime>4) salir();
 }
+function sacaloBertha(){
+	$('#quest').dialog("close");
+	dialogos('<div id="quest" title="Mensaje de cierre de sesión">'+
+		'<h4>Tu sesión esta por expirar.<br />¿Deseas continuar trabajando?</h4>'+
+		'<span><a class="Y" data-h="cierroSesionAuto" data-id="'+idBoss+
+	'">Si</a><a class="N" data-h="cierroSesionAuto">No</a></span></div>',340);
+}
 $(document).ready(function(){
-	var idleInterval=setInterval(timerIncrement,60000);
+	var idleInterval=setInterval(timerIncrement,60000),
+		bertha=setInterval(sacaloBertha,1680000);
 	$(this).mousemove(function(e){
 		idleTime=0;
 	});
