@@ -11,7 +11,7 @@ function GCM() {
 	function successHandler(result) {
 		alert("Result" + result);
 	}
-	
+
 	function successHandler(result) {
 		alert("Error" + result);
 	}
@@ -24,10 +24,10 @@ function GCM() {
 				sendRequest(e.regid);
 				alert("Successfully Registered");
 				break;
-			case 'message':	
+			case 'message':
 				alert("Message: "+ e.payload.message);
 				var sound = new Media("assets/www/"+e.soundname);
-				sound.play();	
+				sound.play();
 				break;
 			default:
 				alert("unknown event");
@@ -45,5 +45,3 @@ function GCM() {
 			expediente:"10101010101"
 			});
 		}
-
-

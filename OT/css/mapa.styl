@@ -92,28 +92,28 @@ Divider = #B6B6B6
 	background rgba(0,0,0,.3)
 	opacity 1
 	transition opacity 1.3s
-#menu 
-	width 100% 
-	height 100% 
+#menu
+	width 100%
+	height 100%
 	position absolute
 	background blueTelmex
 	z-index 9999
 	top 100%
-	opacity 0 
-	select 
+	opacity 0
+	select
 		margin-top 20px
-		width 80% 
-		padding 10px 
+		width 80%
+		padding 10px
 		background transparent url(../../css/img/select.png) no-repeat 90% center/ 10px auto
-		outline none 
+		outline none
 		border none
 		color #fff
 		border-bottom 1px solid #fff
 		text-align center
 	#distritosText
-		display none 
-		small 
-			color #fff 
+		display none
+		small
+			color #fff
 			text-align center
 			display block
 		input[type="text"]
@@ -146,10 +146,10 @@ Divider = #B6B6B6
 		background #fff
 		text-align center
 		border-bottom 1px solid #fff
-		i 
-			display block 
+		i
+			display block
 			color blueTelmex
-			font-size 35px 
+			font-size 35px
 			padding 5px
 	.inner
 		text-align center
@@ -281,19 +281,25 @@ Divider = #B6B6B6
 					padding 0
 					label
 						background #efefef
-						margin 5px 0 0 1%
+						margin 5px 0 0 2%
 						color #aaa
-						width 49%
+						width 32%
 						float left
 						box-shadow inset 1px 1px 2px #aaa
 						border-bottom 1px solid #e1e1e1
+						font-size 13px
 						&:before
 							display inline
 							content '\f096'
 							font-family 'FontAwesome'
 						input
 							opacity 0
+							width 2px
+							margin-left -10px
 					label:nth-child(2)
+						margin-left 0
+						box-shadow inset 0px 1px 2px #aaa
+					label:nth-child(3)
 						margin-left 0
 						box-shadow inset -1px 1px 2px #aaa
 					label.checked
@@ -334,7 +340,7 @@ Divider = #B6B6B6
 		.row
 			background #7BD099
 			border-bottom 1px solid #68A583
-#nameDistrict.open 
+#nameDistrict.open
 	height 60%
 	.inner
 		&:before
@@ -349,23 +355,23 @@ Divider = #B6B6B6
 	top 0
 	width 100%
 	height 100%
-#openFilter 
+#openFilter
 	display block
-	width 100% 
-	height 100% 
+	width 100%
+	height 100%
 	position fixed
 	top 0%
 	left 100%
 	background rgba(255,255,255,.7)
 	opacity 0
 	z-index: 9999999;
-#openFilter.open 
+#openFilter.open
 	left 0
 	//z-index: 999
 	opacity 1
 #tecnoDialog,#genericLoad,#poiLoad
 	overflow hidden
-	width 100% 
+	width 100%
 	height 0px
 	position fixed
 	bottom 0
@@ -400,23 +406,23 @@ Divider = #B6B6B6
 		h5
 			color blueTelmex
 			text-align center
-		.filtersLine 
+		.filtersLine
 			width 90%
 			margin 0 auto
 			.filter
 				width 100%
 				text-align center
 				background blueTelmex
-				border-radius 5px 
+				border-radius 5px
 				margin 5px
 				cursor pointer
 				h1
 					padding 20px 0px
-					color #fff 
-					font-weight 100 
-					font-size 15px 
-		.loadArea 
-			h1 
+					color #fff
+					font-weight 100
+					font-size 15px
+		.loadArea
+			h1
 				display none !important
 		.tecnoCheck
 			display none
@@ -432,39 +438,39 @@ Divider = #B6B6B6
 				float none
 				list-style none
 				width 38%
-				border-bottom 1px solid blueTelmex	
+				border-bottom 1px solid blueTelmex
 		#poiCheck
-			width 100%  
-			height 70% 
+			width 100%
+			height 70%
 			position absolute
 			overflow-x hidden
-			li 
-				width 100% 
-				padding 10px 
-				font-size 12px 
+			li
+				width 100%
+				padding 10px
+				font-size 12px
 				color blueTelmex
 				border-bottom 1px solid blueTelmex
 				background rgba(255,255,255,.5)
 				vertical-align middle
-				input  
+				input
 					vertical-align middle
 		.center
-			text-align center 
-			width 100% 
+			text-align center
+			width 100%
 			color blueTelmex
 		#verSelecion
-			background green 
+			background green
 			padding 10px 5px
-			width 120px 
+			width 120px
 			border-radius 5px
 			margin 20px auto
 			p
 				display inline-block
-				color #fff 
+				color #fff
 				margin 0
 				font-size 15px
 			i
-				display inline-block 
+				display inline-block
 				color #fff
 				font-size 20px
 				margin-left 5px
@@ -563,8 +569,8 @@ Divider = #B6B6B6
 					background transparent
 					border none
 					outline none
-				textarea.edit 
-					border 1px solid #fff 
+				textarea.edit
+					border 1px solid #fff
 					background rgba(255,255,255,.8)
 					color blueTelmex
 #tecnoDialog.open,#genericLoad.open,#poiLoad.open
@@ -595,7 +601,7 @@ Divider = #B6B6B6
 			transform translateY(-50%) !important
 			color #fff
 			background blueTelmex
-			z-index 9 
+			z-index 9
 			padding 6px 8px
 			border-radius 5px
 #goTo.open
@@ -613,7 +619,7 @@ Divider = #B6B6B6
 	border-radius 50%
 	text-align center
 	box-shadow 0 0 1px #ABABAB
-	i 
+	i
 		color #666
 		font-size 23px
 		line-height 35px
@@ -622,14 +628,14 @@ Divider = #B6B6B6
 			position:absolute;
 			background-image:url(../images/menu_top.png);
 			z-index:1;
-			width:37px; 
+			width:37px;
 			height:36px;
 			cursor:pointer;
 			right:0;
 			top:8px;
 			margin-right:23px;
-		}		
-		
+		}
+
 		.titleMenu{
 			font-family:Verdana, Arial, Helvetica, sans-serif;
 			font-size:18px;
@@ -640,7 +646,7 @@ Divider = #B6B6B6
 			padding-left:30px;
 			border-top:#CCCCCC solid 1px;
 		}
-		
+
 		.titleMenuWiket{
 			font-family:Verdana, Arial, Helvetica, sans-serif;
 			font-size:18px;
@@ -651,8 +657,8 @@ Divider = #B6B6B6
 			padding-left:15px;
 			text-align:left;
 			border-top:#CCCCCC solid 1px;
-		}		
-		
+		}
+
 		.widg{
 			width:400px;
 			height:430px;
@@ -666,7 +672,7 @@ Divider = #B6B6B6
 			border:#CCCCCC solid 1px;
 			list-style:none;
 		}
-		
+
 		#socketizable{
 			width:450px;
 			height:550px;
@@ -681,7 +687,7 @@ Divider = #B6B6B6
 			list-style:none;
 			overflow:hidden;
 		}
-		
+
 		.mapaDin{
 			width:450px;
 			height:550px;
@@ -695,20 +701,20 @@ Divider = #B6B6B6
 			border:#000000 solid 2px;
 			list-style:none;
 			overflow:hidden;
-			visibility:hidden; 
+			visibility:hidden;
 			min-width:400px;
 		}
-		
+
 		#distritosXareaPOP{
 			width:1000px;
 			height:900px;
 		}
-		
+
 		/*.mapaDin{
 			width:1000px;
 			height:900px;
-		}	*/	
-		
+		}	*/
+
 		#graphs{
 			width:400px;
 			height:400px;
@@ -720,17 +726,17 @@ Divider = #B6B6B6
 			filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#CCffffff', endColorstr='#CCffffff');
 			z-index:1;
 			border:#CCCCCC solid 1px;
-		}		
-		
+		}
+
 		.manejador{
 			background-color:#CCCCCC;
 			height:25px;
 			cursor:move;
 			border-bottom:#999999 solid 1px;
 			width:inherit;
-		}	
+		}
 
-		
+
 		#gallery{
 			margin:10px;
 			list-style:none;
@@ -748,23 +754,23 @@ Divider = #B6B6B6
 			text-align:center;
 			padding:0px;
 			font-family:Verdana, Arial, Helvetica, sans-serif;
-			line-height:25px;			
+			line-height:25px;
 		}
 
 		#widgets{
 			display:block;
 			width:200px;
 			height:200px;
-			zindex:2; 
-			position:absolute; 
-			top:420px; 
-			left:10px; 
+			zindex:2;
+			position:absolute;
+			top:420px;
+			left:10px;
 			/*background-color:rgba(250,250,250,0.8);
 			filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#CCffffff', endColorstr='#CCffffff');*/
 		}
-		
-				
-		
+
+
+
 		#divic td, #ares td, #distr td{
 			/*margin:5px 20px;*/
 			background-color:rgba(235,248,204,0.8);
@@ -773,32 +779,32 @@ Divider = #B6B6B6
 			padding:3px;
 			border-bottom:#FFFFFF solid 1px;
 		}
-		
+
 		#widgets ul{
-			margin:0px; 
+			margin:0px;
 			padding:0px;
 			list-style:none;
-		}		
-		
+		}
 
-		
-		
+
+
+
 		#detalleSlide{
-			right:0; 
-			top:50px;		
+			right:0;
+			top:50px;
 			position:absolute;
 			filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#CCffffff', endColorstr='#CCffffff');
 			background-color:rgba(250,250,250,0.9);
 			z-index:1;
-			width:100%; 
+			width:100%;
 			height:95%;
 			color:#333333;
 			font-size:12px;
 			float:right;
 			border-left:#CCCCCC solid 1px;
 			overflow:auto;
-		}		
-		
+		}
+
 
 
 
@@ -820,12 +826,12 @@ Divider = #B6B6B6
 		opacity 0
 		width 0
 		right -200px
-	25%,75% 
+	25%,75%
 		opacity 1
 		width 130px
 		right 28px
 	100%
-		opacity 0 
+		opacity 0
 		width 0
 		right -200px
 
@@ -833,98 +839,98 @@ Divider = #B6B6B6
 	position relative
 	background red !important
 	padding-bottom 0px !important
-	
-	.tecnoCheck 
+
+	.tecnoCheck
 		display block !important
-.toolTipMap 
-	div 
+.toolTipMap
+	div
 		margin 5px 0px
-		display block 
-		small 
-			display block 
-			
+		display block
+		small
+			display block
+
 		span
-			display block 
-			
-.uncheck 
+			display block
+
+.uncheck
 	background grey !important
-	i 
+	i
 		color red !important
-//funcionalidad reporte 
-#mapReport 
-	width 100% 
-	height 100% 
-	position fixed 
-	top 0px 
-	left 100% 
+//funcionalidad reporte
+#mapReport
+	width 100%
+	height 100%
+	position fixed
+	top 0px
+	left 100%
 	background url(../../css/img/assets/blur.jpg) no-repeat center center /cover
-	#closeReport 
-		width 50px 
-		height 50px 
-		background red 
-		border-radius 100% 
+	#closeReport
+		width 50px
+		height 50px
+		background red
+		border-radius 100%
 		position absolute
 		right 20px
 		top 20px
 		cursor pointer
-		p 
+		p
 			transform translateY(-50%) rotate(45deg)
-			top 50% 
+			top 50%
 			position absolute
-			text-align center 
-			margin 0px 
+			text-align center
+			margin 0px
 			padding 0px
 			width 100%
-			font-size 30px 
+			font-size 30px
 			font-weight 800
-	.holder 
-		width 100% 
+	.holder
+		width 100%
 		height calc(100% - 90px)
 		margin-top 90px
-		.holderSelect 
-			width 100% 
-			position relative 
-			height auto 
-			top 50% 
+		.holderSelect
+			width 100%
+			position relative
+			height auto
+			top 50%
 			transform translateY(-50%)
 			text-align center
 			width 90%
 			margin 0 auto
-			h3 
-				font-weight 100 
+			h3
+				font-weight 100
 				font-size 22px
 				text-shadow 2px 2px 2px black
 			div
-				color #fff 
-				font-size 18px 
+				color #fff
+				font-size 18px
 				font-weight 100
 				background blueTelmex
-				width 100% 
+				width 100%
 				padding 20px 0
 				margin 10px 0
-				.cliente 
-					width 100% 
-					height 100px 
-					background url(../../css/img/assets/001.png) no-repeat center center 
-				.no-cliente 
-					width 100% 
-					height 150px 
-					background url(../../css/img/assets/001.png) no-repeat center center 
-			#dataFor 
+				.cliente
+					width 100%
+					height 100px
+					background url(../../css/img/assets/001.png) no-repeat center center
+				.no-cliente
+					width 100%
+					height 150px
+					background url(../../css/img/assets/001.png) no-repeat center center
+			#dataFor
 				background transparent
-			.getData 
+			.getData
 				background transparent
 				input[type="text"]
 					color #fff
 					background transparent
 					border none
-					border-bottom 1px solid #fff 
+					border-bottom 1px solid #fff
 					outline none
 					margin 10px 0
 				.textcontent
 					position relative
 					background transparent
-					textarea 
+					textarea
 						background rgba(0,0,0,.25)
 						outline none
 						margin-top 15px
@@ -934,17 +940,17 @@ Divider = #B6B6B6
 						border none
 						padding 10px
 					textarea.edit
-						color black 
+						color black
 						background #fff
 						border-color #9ecaed
 						box-shadow 0 0 10px #9ecaed
-					button 
-						color #fff 
-						background red 
-						border none 
-						margin 20px 
+					button
+						color #fff
+						background red
+						border none
+						margin 20px
 						font-size 15px
-						padding 10px 20px 
+						padding 10px 20px
 						outline none
 						position absolute
 						right -2%
@@ -953,9 +959,9 @@ Divider = #B6B6B6
 						padding 10px 12px
 						box-shadow -3px 2px 5px black
 				.camp
-					width 90% 
+					width 90%
 					background blueTelmex
-					border 1px solid #fff 
+					border 1px solid #fff
 					border-radius 5px
 					padding 10px 0px
 					text-align center
@@ -964,55 +970,55 @@ Divider = #B6B6B6
 						margin 0
 						background transparent
 						width auto
-				.camp.active 
+				.camp.active
 					background red
-				p 
+				p
 					background green
-					width 120px 
+					width 120px
 					margin 0 10px
-					padding 10px 
+					padding 10px
 					margin 0 10px
 					cursor pointer
 					display inline-block
-					i 
+					i
 						padding-left 5px
-				p.end 
+				p.end
 					background red
-				select 
+				select
 					width 100%
 					background transparent url(../../css/img/assets/arrowBottom.png) no-repeat 98% center /10px
-					border none 
+					border none
 					border-bottom 1px solid #fff
 					text-shadow -3px 2px 1px black
 					margin-bottom 40px
-#mapReport.open 
+#mapReport.open
 	left 0px
 	#textRepo
 		transition all .5s linear
 		width 250px
 		right -250px
 		top 10px
-		position absolute  
+		position absolute
 		border-radius 15px
-		border-top-right-radius 0px 
-		border-bottom-right-radius 0px 
-		color #fff 
+		border-top-right-radius 0px
+		border-bottom-right-radius 0px
+		color #fff
 		text-shadow -1px 0px 2px black
 		font-weight 800
 		box-shadow -2px 5px 15px black
 	#textRepo.open
 		transition all .5s linear
 		right 0px
-	#textRepo.open.error 
+	#textRepo.open.error
 		background red
-	#textRepo.open.alert 
-		background #2196F3 
+	#textRepo.open.alert
+		background #2196F3
 
 #campaniasAsignadas
 	width 95%
 	margin 20px auto 0 auto
 	padding 0px
-	h3 
+	h3
 		color #fff
 		padding 20px 0px
 		margin 0px
