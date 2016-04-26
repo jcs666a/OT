@@ -61,8 +61,8 @@ Highcharts.theme={
 	plotOptions:{series:{dataLabels:{color:'#333',style:{fontSize:'15px',fontWeight:'300',textShadow:false}}}}
 };Highcharts.setOptions(Highcharts.theme);
 function connect(){
-//	var socket=new SockJS('http://10.105.116.187:8080/messaging');
-	var socket=new SockJS('http://187.217.179.35:8080/messaging');
+	var socket=new SockJS('http://10.105.116.187:8080/messaging');
+//	var socket=new SockJS('http://187.217.179.35:8080/messaging');
 //	var socket=new SockJS('http://10.105.116.207:8080/messaging');
 	stompClient=Stomp.over(socket);
 	stompClient.debug=null
@@ -217,12 +217,14 @@ function liderLogin(){
 		$.when(
 			promesas.areas(p,u)
 		).done(function(x){
-			x=jQuery.parseJSON(x);
-			if(x.hasOwnProperty("errorMessage"))
-				creanotificacion('Error:',
-					x.errorMessage,'','','error');
-			else
-				PintaPolis(x);
+			if(x!='null' && x!=null){
+				x=jQuery.parseJSON(x);
+				if(x.hasOwnProperty("errorMessage"))
+					creanotificacion('Error:',
+						x.errorMessage,'','','error');
+				else
+					PintaPolis(x);
+			}
 		}).fail(function(jqXHR,textStatus,error){
 			creanotificacion('Error:','No se recibió respuesta del servicio de para obtener poligonos de las areas.',error,textStatus,'error');
 		});
@@ -234,7 +236,11 @@ function liderLogin(){
 				x=jQuery.parseJSON(x);
 				var infowindow=new google.maps.InfoWindow({content:'Espere por favor, cargando...'}),
 					i=0,datosMarker,centro;
-				if(x.Error!='')
+				if(x.respon.errorCode<0){
+					creanotificacion('Mensaje:','No hay fielders para ubicar','','','');
+					clearInterval(intervalLider);
+				}
+				else if(x.Error!='')
 					creanotificacion('Error:',x.errorMessage,'','','error');
 				else
 					$.each(x.r[0],function(i,f){
@@ -1840,7 +1846,7 @@ function inicia(){
 		$('#midatos .data .r').text(Rol+', '+Usuario);
 		muestraGraficoReal('H');
 		selectDivisiones('.principal');
-		if(idRol==6){liderLogin();intervalLider=setInterval(function(){liderLogin()},20000);}
+		if(idRol==6){liderLogin();intervalLider=setInterval(function(){liderLogin()},60000);}
 		connect();
 	}
 	else{
@@ -2243,7 +2249,6 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 			else paso=1;
 			if(paso==1){
 				$.when(promesas.AddingUse(n,e,u,p,r,s,reg)).done(function(x){
-					console.log(x);
 					x=jQuery.parseJSON(x);
 					if(x.Error!=''){
 						creanotificacion('Error en Akame',x.Error,'','','error');

@@ -11,8 +11,8 @@ else
 //Vars:
 //$ipServ='http://10.105.116.52:9090/';
 //$ipServ='http://localhost:9090/';
-$ipServ='http://187.217.179.35:9090/';
-//$ipServ='http://10.105.116.187:9090/';
+//$ipServ='http://187.217.179.35:9090/';
+$ipServ='http://10.105.116.187:9090/';
 //$ipServ='http://10.105.116.207:9090/';
 //Clases:
 class GCM{
@@ -743,6 +743,7 @@ else if($pky=='Nb%423d'){ //Guardo y envío información de nueva región asigna
 	} */
 	else{
 		$responseData=json_decode($response);
+		$obj['z']=$z;
 		if($responseData->errorCode>=0){
 			if($z==7)
 				$obj['men']=mensajes($g,'Has sido asignado a la region '.$b,$j,$i);
