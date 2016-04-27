@@ -64,6 +64,10 @@ function connect(){
 	var socket=new SockJS('http://10.105.116.187:8080/messaging');
 //	var socket=new SockJS('http://187.217.179.35:8080/messaging');
 //	var socket=new SockJS('http://10.105.116.207:8080/messaging');
+//	var socket=new SockJS('http://10.105.116.52:8080/messaging');
+// Quitar punto cuando no hay usuarios en tablas, (de colores)
+// Quitar punto en tabla de campañas, mostrar mejor color de campaña
+// Dar estilo a administracion de usuarios
 	stompClient=Stomp.over(socket);
 	stompClient.debug=null
 	stompClient.connect({},function(frame){
@@ -344,7 +348,7 @@ function muestraUsuarios(){
 							if(a.hasOwnProperty("regiones")){
 								$.each(a.regiones,function(il,al){
 									var il=regisdivareas(al);
-									 reg=reg+il.region+'<br />';
+									 reg=reg+'<i>'+il.region+'</i>';
 									 if(a.role==5)
 									 	al=al.substring(0,1);
 									 if(a.role==6)
@@ -356,14 +360,17 @@ function muestraUsuarios(){
 								adc='<a data=\'{"x":"Sacar","idUser":"'+a.idUsuario+'"}\' title="Cerrar sesión de '+a.nombre+'"><i class="fa fa-unlock-alt"></i></a>',
 								msj='<a data=\'{"x":"Mensaje","regid":"'+a.gcm+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'"}\' title="Enviar mensaje a '+a.nombre+'"><i class="fa fa-comment"></i></a>',
 								use='<a data=\'{"x":"MuestraUsers","rol":"'+a.role+'","regs":"'+areg+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'","creg":"'+reg+'"}\' title="Mostrar usuarios de '+a.nombre+'"><i class="fa fa-users"></i></a>',
-								dit='<a data=\'{"x":"Editar","y":1,"role":"'+a.role+'","idUser":"'+a.idUsuario+'","GCM":"'+a.gcm+'"}\' title="Editar a '+a.nombre+'"><i class="fa fa-pencil-square"></i></a>';
+								dit='<a data=\'{"x":"Editar","y":1,"role":"'+a.role+'","idUser":"'+a.idUsuario+'","GCM":"'+a.gcm+'"}\' title="Editar a '+a.nombre+'"><i class="fa fa-pencil-square"></i></a>',
+								st_Con='';
 							if(a.idUsuario==8) cdc='';
 							if(a.role<5) adc='';
 							if(a.role!=7) msj='';
 							if(idRol==6 || a.role==4 || a.role==8 || a.role==7) use='';
 							if((idRol=='5' || idRol=='4') && a.role==7) dit='';
 							if(idRol=='4' && a.role==6) dit='';
-							$('#tablaFielders tbody').append('<tr><td>'+
+							if(a.conectado!=false && a.conectado!='false' && a.conectado!=0)
+								st_Con=' data="con"';
+							$('#tablaFielders tbody').append('<tr><td'+st_Con+'>'+
 								a.nombre+'</td><td>'+
 								perfiles(a.role)+'</td><td>'+
 								reg+'</td><td>'+
@@ -1075,7 +1082,8 @@ function muestraCampanas(){
 			if(x.Error!='') creanotificacion('Error 404:',x.Error,'','','error');
 			else if(x.Sin!='') creanotificacion('Sin regiones',x.Sin,'','','advertencia');
 			else $.each(x.Regiones,function(i,a){
-				$('#tablaFielders tbody').append('<tr><td>'+
+				var colo=' style="color:#'+a.color+';"';
+				$('#tablaFielders tbody').append('<tr><td class="nu"><span'+colo+'></span>'+
 					a.titulo+'</td><td>'+
 					a.tcode+'<br />'+
 					a.campaigncode+'<br />'+
@@ -1096,7 +1104,8 @@ function muestraCampanas(){
 				creanotificacion('Error','<b>'+x.errorMessage,'','','error');
 			else{
 				$.each(x,function(i,a){
-					$('#tablaFielders tbody').append('<tr><td>'+
+					var colo=' style="color:#'+a.color+';"';
+					$('#tablaFielders tbody').append('<tr><td class="nu"><span'+colo+'></span>'+
 						a.titulo+'</td><td>'+
 						a.tcode+'<br />'+
 						a.campaigncode+'<br />'+
@@ -1132,12 +1141,15 @@ function buscaFielders(){
 		'</tr>');
 		var li=0;
 		$.each(f,function(i,a){
+			var st_Con='';
+			if(a[9]!=false && a[9]!='false' && a[9]!=0)
+				st_Con=' data="con"';
 			var ase='<a data=\'{"x":"Mensaje","regid":"'+a[11]+'","idUser":'+a[0]+',"nombre":"'+a[2]+'"}\' title="Enviar mensaje a '+a[2]+'"><i class="fa fa-comment"></i></a>'+
 				'<a data=\'{"x":"Editar","y":2,"idUser":'+a[0]+',"GCM":"'+a[11]+'"}\' title="Editar regiones de '+a[2]+'"><i class="fa fa-pencil-square"></i></a>'+
 				'<a data=\'{"x":"Sacar","idUser":'+a[0]+'}\' title="Cerrar la sesión de '+a[2]+'"><i class="fa fa-unlock-alt"></i></a>'+
 				'<a data=\'{"x":"Eliminar","idUser":'+a[0]+',"nombre":"'+a[2]+'"}\' title="Eliminar cuenta de '+a[2]+'"><i class="fa fa-trash"></i></a>';
 			IdsFielders.push(a[0]); if(misRegiones[0]=='Todas las campañas') ase='';
-			$('#tablaFielders tbody').append('<tr><td>'+a[2]+'</td><td>'+a[5]+'</td><td>'+ase+'</td></tr>');
+			$('#tablaFielders tbody').append('<tr><td'+st_Con+'>'+a[2]+'</td><td>'+a[5]+'</td><td>'+ase+'</td></tr>');
 			li++;
 		});
 		if(li>0)$(".broadcast").show();else $(".broadcast").hide();
@@ -1177,10 +1189,10 @@ function buscaFielders(){
 		});
 	}
 	function pintaFielders(f){
-		var s=[];
+		var s=[],st_Con='';
 		f=jQuery.parseJSON(f);
 		limpiaMarcadores();
-		$.when(clearTabla(f)).done(function(x){
+		$.when(clearTabla(f)).done(function(){
 			tablaFielders=$('#tablaFielders').DataTable({language:{url:"../js/esp.json"},columnDefs:[{orderable:false,targets:[2]}],"pageLength":50});
 			if(IdsFielders.length>0){
 				encuentraFielders(IdsFielders);
@@ -1239,7 +1251,7 @@ function buscaFielders(){
 				'<th></th>'+
 			'</tr>');
 		}
-		if(dis_o_col!=''){console.log(region);
+		if(dis_o_col!=''){
 			$.when(
 				datosFielders(region)
 			).done(function(x){
@@ -1847,7 +1859,7 @@ function inicia(){
 		muestraGraficoReal('H');
 		selectDivisiones('.principal');
 		if(idRol==6){liderLogin();intervalLider=setInterval(function(){liderLogin()},60000);}
-		connect();
+//		connect();
 	}
 	else{
 		if(typeof online==='undefined')
@@ -2446,36 +2458,42 @@ $(document).on("click",".edUS h5 a",function(event){event.preventDefault();
 });
 $(document).on("click",".edUS .fuera a",function(event){event.preventDefault();
 	$('#loading').show();
-	$('.fue :selected').each(function(i,v){
-		var id=$(v).attr('value'),
-			tx=$(v).text(),
-			P=$('.edUS fieldset .id_editado').val();
-		$.when(promesas.RegaddCFR(P,id)).done(function(x){
-			x=jQuery.parseJSON(x);
-			if(x.Error==''){
-				$('.den').append('<option value="'+id+'" cfr="'+x.id+'">'+tx+'</option>');
-				$(v).remove();
-			}
-			else creanotificacion('Error',x.Error,'','','error');
-			$('#loading').hide();
+	if($(".fue :selected").length>0){
+		$('.fue :selected').each(function(i,v){
+			var id=$(v).attr('value'),
+				tx=$(v).text(),
+				P=$('.edUS fieldset .id_editado').val();
+			$.when(promesas.RegaddCFR(P,id)).done(function(x){
+				x=jQuery.parseJSON(x);
+				if(x.Error==''){
+					$('.den').append('<option value="'+id+'" cfr="'+x.id+'">'+tx+'</option>');
+					$(v).remove();
+				}
+				else creanotificacion('Error',x.Error,'','','error');
+				$('#loading').hide();
+			});
 		});
-	});
+	}
+	else $('#loading').hide();
 });
 $(document).on("click",".edUS .dentro a",function(event){event.preventDefault();
 	$('#loading').show();
-	$('.den :selected').each(function(i,v){
-		var id=$(v).attr('value'),
-			tx=$(v).text(),
-			fr=$(v).attr('cfr');
-		$.when(promesas.RegDelCFR(id,fr)).done(function(x){
-			if(x==''){
-				$('.fue').append('<option value="'+id+'">'+tx+'</option>');
-				$(v).remove();
-			}
-			else creanotificacion('Error',x,'','','error');
-			$('#loading').hide();
+	if($(".den :selected").length>0){
+		$('.den :selected').each(function(i,v){
+			var id=$(v).attr('value'),
+				tx=$(v).text(),
+				fr=$(v).attr('cfr');
+			$.when(promesas.RegDelCFR(id,fr)).done(function(x){
+				if(x==''){
+					$('.fue').append('<option value="'+id+'">'+tx+'</option>');
+					$(v).remove();
+				}
+				else creanotificacion('Error',x,'','','error');
+				$('#loading').hide();
+			});
 		});
-	});
+	}
+	else $('#loading').hide();
 });
 $(document).on("click",".FielderCalTarea .fuera a",function(event){event.preventDefault();
 	$('.fue :selected').each(function(i,v){
