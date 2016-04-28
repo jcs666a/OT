@@ -691,10 +691,13 @@ html
 								span
 									color #333
 								span.sub
-									font-style italic
 									font-size .6em
 									display block
 									margin-bottom 10px
+									i
+										color #ccc
+										font-style normal
+										margin-right 10px
 								a
 									float right
 									display block
@@ -733,6 +736,34 @@ html
 												text-overflow ellipsis
 											td:last-child
 												white-space normal
+									tbody
+										tr
+											td:not(:last-child)
+												i
+													font-style normal
+													display block
+													white-space nowrap
+													text-overflow ellipsis
+													width 100%
+													overflow hidden
+											td:first-child:not(.nu)
+												&:before
+													color #D80606
+													margin-right 10px
+													font-family 'FontAwesome'
+													display inline-block
+													content '\f111'
+											td:first-child:not(.nu)[data='con']
+												&:before
+													color #87C573
+											td.nu
+												span
+													&:before
+														display inline-block
+														margin-right 10px
+														font-family 'FontAwesome'
+														display inline-block
+														content '\f111'
 						#ctable.s,#calendar.s,#reportes.s
 							display block
 						#reportes

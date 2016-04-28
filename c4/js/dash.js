@@ -64,16 +64,23 @@ function connect(){
 	var socket=new SockJS('http://10.105.116.187:8080/messaging');
 //	var socket=new SockJS('http://187.217.179.35:8080/messaging');
 //	var socket=new SockJS('http://10.105.116.207:8080/messaging');
+//	var socket=new SockJS('http://10.105.116.52:8080/messaging');
+// Quitar punto cuando no hay usuarios en tablas, (de colores)
+// Quitar punto en tabla de campañas, mostrar mejor color de campaña
+// Dar estilo a administracion de usuarios
 	stompClient=Stomp.over(socket);
 	stompClient.debug=null
 	stompClient.connect({},function(frame){
 		clearInterval(reintento);
+		stompClient.subscribe('/user/'+idBoss+'/topic/mensaje', function(greeting){
+			var x=jQuery.parseJSON(greeting.body);creaMapaCaliente();
+			if(x.accion=='Usuario inactivo')
+				salir();
+		});
 		stompClient.subscribe('/topic/reporte/campaña', function(greeting){
-			console.log(greeting);
 			muestraGraficoReal('H');
 		});
 		stompClient.subscribe('/topic/reporte/contratacion', function(greeting){
-			console.log(greeting);
 			var x=jQuery.parseJSON(greeting.body);creaMapaCaliente();
 			creanotificacion('Nuevo contrato','Para la región '+x.region,'','','');
 		});
@@ -214,12 +221,14 @@ function liderLogin(){
 		$.when(
 			promesas.areas(p,u)
 		).done(function(x){
-			x=jQuery.parseJSON(x);
-			if(x.hasOwnProperty("errorMessage"))
-				creanotificacion('Error:',
-					x.errorMessage,'','','error');
-			else
-				PintaPolis(x);
+			if(x!='null' && x!=null){
+				x=jQuery.parseJSON(x);
+				if(x.hasOwnProperty("errorMessage"))
+					creanotificacion('Error:',
+						x.errorMessage,'','','error');
+				else
+					PintaPolis(x);
+			}
 		}).fail(function(jqXHR,textStatus,error){
 			creanotificacion('Error:','No se recibió respuesta del servicio de para obtener poligonos de las areas.',error,textStatus,'error');
 		});
@@ -227,35 +236,43 @@ function liderLogin(){
 	function pintaFil(){
 		limpiaMarcadores();
 		$.when(promesas.UbicaFiel(ubicandoFiLid)).done(function(x){
-			x=jQuery.parseJSON(x);
-			var infowindow=new google.maps.InfoWindow({content:'Espere por favor, cargando...'}),
-				i=0,datosMarker,centro;
-			if(x.Error!='')
-				creanotificacion('Error:',x.errorMessage,'','','error');
+			if(x.match("^{")){
+				x=jQuery.parseJSON(x);
+				var infowindow=new google.maps.InfoWindow({content:'Espere por favor, cargando...'}),
+					i=0,datosMarker,centro;
+				if(x.respon.errorCode<0){
+					creanotificacion('Mensaje:','No hay fielders para ubicar','','','');
+					clearInterval(intervalLider);
+				}
+				else if(x.Error!='')
+					creanotificacion('Error:',x.errorMessage,'','','error');
+				else
+					$.each(x.r[0],function(i,f){
+						var Pts=f.createAt.split('-'),
+							feN;feN=Pts[2].substring(0,4)+'-'+Pts[1]+'-'+Pts[0]+' '+Pts[2].substring(5,13);
+						if(ubicalosFirst==1)
+							creanotificacion(f.nombre+', ubicado...',f.latitud+', '+f.longitud+'<br/>'+dateFormat(feN,"fullDate")+' a las '+dateFormat(feN,"shortTime"),'','','');
+						datosMarker='<div>'+
+							'<h3>'+f.nombre+'</h3>'+
+							'<p>Expediente: <b>'+f.expediente+'</b><br />Visto el '+dateFormat(feN,"fullDate")+' a las '+dateFormat(feN,"shortTime")+'</p>'+
+							'</div>';
+						centro=new google.maps.LatLng(f.latitud,f.longitud);
+						marcadores[i]=new google.maps.Marker({
+							position:centro,
+							map:map,
+							title:f.nombre,
+							icon:'../img/geo_a.png',
+							html:datosMarker
+						});
+						marcadores[i].addListener('click', function(){
+							infowindow.setContent(this.html);
+							infowindow.open(map, this);
+						});
+						i++;
+					});
+			}
 			else
-				$.each(x.r[0],function(i,f){
-					var Pts=f.createAt.split('-'),
-						feN;feN=Pts[2].substring(0,4)+'-'+Pts[1]+'-'+Pts[0]+' '+Pts[2].substring(5,13);
-					if(ubicalosFirst==1)
-						creanotificacion(f.nombre+', ubicado...',f.latitud+', '+f.longitud+'<br/>'+dateFormat(feN,"fullDate")+' a las '+dateFormat(feN,"shortTime"),'','','');
-					datosMarker='<div>'+
-						'<h3>'+f.nombre+'</h3>'+
-						'<p>Expediente: <b>'+f.expediente+'</b><br />Visto el '+dateFormat(feN,"fullDate")+' a las '+dateFormat(feN,"shortTime")+'</p>'+
-						'</div>';
-					centro=new google.maps.LatLng(f.latitud,f.longitud);
-					marcadores[i]=new google.maps.Marker({
-						position:centro,
-						map:map,
-						title:f.nombre,
-						icon:'../img/geo_a.png',
-						html:datosMarker
-					});
-					marcadores[i].addListener('click', function(){
-						infowindow.setContent(this.html);
-						infowindow.open(map, this);
-					});
-					i++;
-				});
+				creanotificacion('Error:',x,'','','error');
 		});
 	}
 	function startFiel(region){
@@ -263,8 +280,10 @@ function liderLogin(){
 			datosFielders(region)
 		).done(function(x){
 			x=jQuery.parseJSON(x);
-			if($.inArray(x[0][0],ubicandoFiLid)<0)
-				ubicandoFiLid.push(x[0][0]);
+			if(x.length>0){
+				if($.inArray(x[0][0],ubicandoFiLid)<0)
+					ubicandoFiLid.push(x[0][0]);
+			}
 		}).fail(function(jqXHR,textStatus,error){
 			creanotificacion('Error:','No se recibió respuesta del servicio de para obtener los datos de los fielders buscados.',error,textStatus,'error');
 		});
@@ -302,7 +321,6 @@ function muestraUsuarios(){
 		if(x!=null && x!='null'){
 			x=jQuery.parseJSON(x);
 			if(x.hasOwnProperty("errorMessage")){
-				console.log(x.url);
 				creanotificacion('Error','<b>'+x.errorMessage,'','','error');
 				$.when(
 					mstraUsrTi={k:'',i:'',r:'',n:''},
@@ -330,7 +348,7 @@ function muestraUsuarios(){
 							if(a.hasOwnProperty("regiones")){
 								$.each(a.regiones,function(il,al){
 									var il=regisdivareas(al);
-									 reg=reg+il.region+'<br />';
+									 reg=reg+'<i>'+il.region+'</i>';
 									 if(a.role==5)
 									 	al=al.substring(0,1);
 									 if(a.role==6)
@@ -342,14 +360,17 @@ function muestraUsuarios(){
 								adc='<a data=\'{"x":"Sacar","idUser":"'+a.idUsuario+'"}\' title="Cerrar sesión de '+a.nombre+'"><i class="fa fa-unlock-alt"></i></a>',
 								msj='<a data=\'{"x":"Mensaje","regid":"'+a.gcm+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'"}\' title="Enviar mensaje a '+a.nombre+'"><i class="fa fa-comment"></i></a>',
 								use='<a data=\'{"x":"MuestraUsers","rol":"'+a.role+'","regs":"'+areg+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'","creg":"'+reg+'"}\' title="Mostrar usuarios de '+a.nombre+'"><i class="fa fa-users"></i></a>',
-								dit='<a data=\'{"x":"Editar","y":1,"role":"'+a.role+'","idUser":"'+a.idUsuario+'","GCM":"'+a.gcm+'"}\' title="Editar a '+a.nombre+'"><i class="fa fa-pencil-square"></i></a>';
+								dit='<a data=\'{"x":"Editar","y":1,"role":"'+a.role+'","idUser":"'+a.idUsuario+'","GCM":"'+a.gcm+'"}\' title="Editar a '+a.nombre+'"><i class="fa fa-pencil-square"></i></a>',
+								st_Con='';
 							if(a.idUsuario==8) cdc='';
 							if(a.role<5) adc='';
 							if(a.role!=7) msj='';
 							if(idRol==6 || a.role==4 || a.role==8 || a.role==7) use='';
 							if((idRol=='5' || idRol=='4') && a.role==7) dit='';
 							if(idRol=='4' && a.role==6) dit='';
-							$('#tablaFielders tbody').append('<tr><td>'+
+							if(a.conectado!=false && a.conectado!='false' && a.conectado!=0)
+								st_Con=' data="con"';
+							$('#tablaFielders tbody').append('<tr><td'+st_Con+'>'+
 								a.nombre+'</td><td>'+
 								perfiles(a.role)+'</td><td>'+
 								reg+'</td><td>'+
@@ -1061,7 +1082,8 @@ function muestraCampanas(){
 			if(x.Error!='') creanotificacion('Error 404:',x.Error,'','','error');
 			else if(x.Sin!='') creanotificacion('Sin regiones',x.Sin,'','','advertencia');
 			else $.each(x.Regiones,function(i,a){
-				$('#tablaFielders tbody').append('<tr><td>'+
+				var colo=' style="color:#'+a.color+';"';
+				$('#tablaFielders tbody').append('<tr><td class="nu"><span'+colo+'></span>'+
 					a.titulo+'</td><td>'+
 					a.tcode+'<br />'+
 					a.campaigncode+'<br />'+
@@ -1082,7 +1104,8 @@ function muestraCampanas(){
 				creanotificacion('Error','<b>'+x.errorMessage,'','','error');
 			else{
 				$.each(x,function(i,a){
-					$('#tablaFielders tbody').append('<tr><td>'+
+					var colo=' style="color:#'+a.color+';"';
+					$('#tablaFielders tbody').append('<tr><td class="nu"><span'+colo+'></span>'+
 						a.titulo+'</td><td>'+
 						a.tcode+'<br />'+
 						a.campaigncode+'<br />'+
@@ -1118,12 +1141,15 @@ function buscaFielders(){
 		'</tr>');
 		var li=0;
 		$.each(f,function(i,a){
+			var st_Con='';
+			if(a[9]!=false && a[9]!='false' && a[9]!=0)
+				st_Con=' data="con"';
 			var ase='<a data=\'{"x":"Mensaje","regid":"'+a[11]+'","idUser":'+a[0]+',"nombre":"'+a[2]+'"}\' title="Enviar mensaje a '+a[2]+'"><i class="fa fa-comment"></i></a>'+
 				'<a data=\'{"x":"Editar","y":2,"idUser":'+a[0]+',"GCM":"'+a[11]+'"}\' title="Editar regiones de '+a[2]+'"><i class="fa fa-pencil-square"></i></a>'+
 				'<a data=\'{"x":"Sacar","idUser":'+a[0]+'}\' title="Cerrar la sesión de '+a[2]+'"><i class="fa fa-unlock-alt"></i></a>'+
 				'<a data=\'{"x":"Eliminar","idUser":'+a[0]+',"nombre":"'+a[2]+'"}\' title="Eliminar cuenta de '+a[2]+'"><i class="fa fa-trash"></i></a>';
 			IdsFielders.push(a[0]); if(misRegiones[0]=='Todas las campañas') ase='';
-			$('#tablaFielders tbody').append('<tr><td>'+a[2]+'</td><td>'+a[5]+'</td><td>'+ase+'</td></tr>');
+			$('#tablaFielders tbody').append('<tr><td'+st_Con+'>'+a[2]+'</td><td>'+a[5]+'</td><td>'+ase+'</td></tr>');
 			li++;
 		});
 		if(li>0)$(".broadcast").show();else $(".broadcast").hide();
@@ -1163,10 +1189,10 @@ function buscaFielders(){
 		});
 	}
 	function pintaFielders(f){
-		var s=[];
+		var s=[],st_Con='';
 		f=jQuery.parseJSON(f);
 		limpiaMarcadores();
-		$.when(clearTabla(f)).done(function(x){
+		$.when(clearTabla(f)).done(function(){
 			tablaFielders=$('#tablaFielders').DataTable({language:{url:"../js/esp.json"},columnDefs:[{orderable:false,targets:[2]}],"pageLength":50});
 			if(IdsFielders.length>0){
 				encuentraFielders(IdsFielders);
@@ -1225,7 +1251,7 @@ function buscaFielders(){
 				'<th></th>'+
 			'</tr>');
 		}
-		if(dis_o_col!=''){console.log(region);
+		if(dis_o_col!=''){
 			$.when(
 				datosFielders(region)
 			).done(function(x){
@@ -1832,8 +1858,8 @@ function inicia(){
 		$('#midatos .data .r').text(Rol+', '+Usuario);
 		muestraGraficoReal('H');
 		selectDivisiones('.principal');
-		if(idRol==6){liderLogin();intervalLider=setInterval(function(){liderLogin()},20000);}
-		connect();
+		if(idRol==6){liderLogin();intervalLider=setInterval(function(){liderLogin()},60000);}
+//		connect();
 	}
 	else{
 		if(typeof online==='undefined')
@@ -2235,7 +2261,6 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 			else paso=1;
 			if(paso==1){
 				$.when(promesas.AddingUse(n,e,u,p,r,s,reg)).done(function(x){
-					console.log(x);
 					x=jQuery.parseJSON(x);
 					if(x.Error!=''){
 						creanotificacion('Error en Akame',x.Error,'','','error');
@@ -2394,10 +2419,21 @@ $(document).on("click","#quest span a",function(event){event.preventDefault();
 			$.when(promesas.CierraSec(id)).done(function(x){
 				$('#quest').dialog("close");
 			});
+		else if(h=='cierroSesionAuto'){
+			$.when(promesas.sacoAutom(id)).done(function(x){
+				$('#quest').dialog("close");
+			});
+		}
 		else
 			alert(h);
 	}
-	else $('#quest').dialog("close");
+	else if(c=='N' && h=='cierroSesionAuto'){
+		$('#quest').dialog("close");
+		salir();
+	}
+	else{
+		$('#quest').dialog("close");
+	}
 });
 $(document).on("click",".edUS h5 a",function(event){event.preventDefault();
 	var P=$(this).parent().parent().parent().find('.id_editado').val(),
@@ -2422,36 +2458,42 @@ $(document).on("click",".edUS h5 a",function(event){event.preventDefault();
 });
 $(document).on("click",".edUS .fuera a",function(event){event.preventDefault();
 	$('#loading').show();
-	$('.fue :selected').each(function(i,v){
-		var id=$(v).attr('value'),
-			tx=$(v).text(),
-			P=$('.edUS fieldset .id_editado').val();
-		$.when(promesas.RegaddCFR(P,id)).done(function(x){
-			x=jQuery.parseJSON(x);
-			if(x.Error==''){
-				$('.den').append('<option value="'+id+'" cfr="'+x.id+'">'+tx+'</option>');
-				$(v).remove();
-			}
-			else creanotificacion('Error',x.Error,'','','error');
-			$('#loading').hide();
+	if($(".fue :selected").length>0){
+		$('.fue :selected').each(function(i,v){
+			var id=$(v).attr('value'),
+				tx=$(v).text(),
+				P=$('.edUS fieldset .id_editado').val();
+			$.when(promesas.RegaddCFR(P,id)).done(function(x){
+				x=jQuery.parseJSON(x);
+				if(x.Error==''){
+					$('.den').append('<option value="'+id+'" cfr="'+x.id+'">'+tx+'</option>');
+					$(v).remove();
+				}
+				else creanotificacion('Error',x.Error,'','','error');
+				$('#loading').hide();
+			});
 		});
-	});
+	}
+	else $('#loading').hide();
 });
 $(document).on("click",".edUS .dentro a",function(event){event.preventDefault();
 	$('#loading').show();
-	$('.den :selected').each(function(i,v){
-		var id=$(v).attr('value'),
-			tx=$(v).text(),
-			fr=$(v).attr('cfr');
-		$.when(promesas.RegDelCFR(id,fr)).done(function(x){
-			if(x==''){
-				$('.fue').append('<option value="'+id+'">'+tx+'</option>');
-				$(v).remove();
-			}
-			else creanotificacion('Error',x,'','','error');
-			$('#loading').hide();
+	if($(".den :selected").length>0){
+		$('.den :selected').each(function(i,v){
+			var id=$(v).attr('value'),
+				tx=$(v).text(),
+				fr=$(v).attr('cfr');
+			$.when(promesas.RegDelCFR(id,fr)).done(function(x){
+				if(x==''){
+					$('.fue').append('<option value="'+id+'">'+tx+'</option>');
+					$(v).remove();
+				}
+				else creanotificacion('Error',x,'','','error');
+				$('#loading').hide();
+			});
 		});
-	});
+	}
+	else $('#loading').hide();
 });
 $(document).on("click",".FielderCalTarea .fuera a",function(event){event.preventDefault();
 	$('.fue :selected').each(function(i,v){
@@ -2612,8 +2654,16 @@ function timerIncrement(){
 	idleTime=idleTime+1;
 	if(idleTime>4) salir();
 }
+function sacaloBertha(){
+	$('#quest').dialog("close");
+	dialogos('<div id="quest" title="Mensaje de cierre de sesión">'+
+		'<h4>Tu sesión esta por expirar.<br />¿Deseas continuar trabajando?</h4>'+
+		'<span><a class="Y" data-h="cierroSesionAuto" data-id="'+idBoss+
+	'">Si</a><a class="N" data-h="cierroSesionAuto">No</a></span></div>',340);
+}
 $(document).ready(function(){
-	var idleInterval=setInterval(timerIncrement,60000);
+	var idleInterval=setInterval(timerIncrement,60000),
+		bertha=setInterval(sacaloBertha,1680000);
 	$(this).mousemove(function(e){
 		idleTime=0;
 	});

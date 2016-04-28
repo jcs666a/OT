@@ -207,6 +207,7 @@ var path=window.location.pathname,myCookie=getCookie("Cinf"),Nombre='',Usuario='
 		DeleteUse:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'Ñpf[0o',P:p}});},
 		addRegion:function(i,j,r,g,b,z){return $.ajax({method:"POST",url:Ñ,data:{pky:'Nb%423d',I:i,J:j,R:r,G:g,B:b,Z:z}});},
 		RegDelete:function(p,r){return $.ajax({method:"POST",url:Ñ,data:{pky:'0"#rGf4sxV',P:p,R:r}});},
+		sacoAutom:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'wGhj/&i:',P:p}});},
 		DeleteCam:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'h-&7/f5D',P:p}});},
 		UpdateCpm:function(D){return $.ajax({url:Ñ,method:'POST',data:D,processData:false});},
 		AddingCpm:function(D){return $.ajax({method:"POST",url:Ñ,data:D});},
