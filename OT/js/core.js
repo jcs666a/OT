@@ -1,4 +1,4 @@
-	//almacen de variables globales
+//almacen de variables globales
   var globalHash = "",
       fielderInfo=jQuery.parseJSON(localStorage.getItem('fielderInfo')),
       fielderMsgs=jQuery.parseJSON(localStorage.getItem('fielderMsgs')),

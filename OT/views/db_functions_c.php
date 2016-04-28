@@ -1,7 +1,6 @@
 <?php ob_start();
 //$ipServ='http://187.217.179.35:9090/'; //'http://localhost:9090/';
-//$ipServ='http://10.105.116.52:9090/'; //'http://localhost:9090/';
-$ipServ='http://10.105.116.187:9090/';
+$ipServ='http://10.105.116.187:9090/'; //'http://localhost:9090/';
 if($_POST['pDf']=='ñrRp3}.'){ //Crea GCM o no
     $data=array(
         'idUsuario'=>array(
@@ -426,7 +425,17 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
     foreach($jsan->apiResponse[0] as $k=>$v){
         $createAt=strtotime($v->createAt);
         $ano=date('Y',$createAt);$mes=date('n',$createAt);$dia=date('j',$createAt);
-        $mes--;$region=explode("-",$v->region);
+        $mes--;
+        if($v->region=='' || $v->region==null || $v->region=='null')
+            $region[2]='';
+        else
+            $region=explode("-",$v->region);
+        if($v->idCampania=='' || $v->idCampania==null || $v->idCampania=='null')
+            $v->idCampania='';
+        if($v->titulo=='' || $v->titulo==null || $v->titulo=='null')
+            $v->titulo='';
+        if($v->razon=='' || $v->razon==null || $v->razon=='null')
+            $v->razon='';
 
         if($v->idCampania!='' && $v->idCampania!=null && $v->idCampania!='null' && $v->idCampania!="''"
             && $v->region!='' && $v->region!=null && $v->region!='null' && $v->region!="''"){
