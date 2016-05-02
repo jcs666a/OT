@@ -218,7 +218,7 @@ html
 					label
 						padding 6px 6px 6px 0
 						display block
-						min-width 320px
+						min-width 270px
 						width 100%
 						overflow hidden
 						text-align right
@@ -388,7 +388,7 @@ html
 			right 0
 			z-index 9999
 			width 38%
-			min-width 320px
+			min-width 260px
 			margin 0
 			padding 10px
 			overflow hidden
@@ -522,9 +522,9 @@ html
 						opacity 0
 						transform rotate(-90deg) translateY(-20px)
 		.container
-			min-width 320px
+			min-width 290px
 			#gn-menu
-				min-width 320px
+				min-width 290px
 				z-index 12
 				background #00AEE8
 				box-shadow 0 0 10px #555
@@ -654,7 +654,7 @@ html
 												&:after
 													content ''
 			#wraper
-				min-width 320px
+				min-width 290px
 				height 100%
 				width auto
 				overflow hidden
@@ -683,7 +683,7 @@ html
 						overflow auto
 						#ctable,#calendar,#reportes
 							display none
-							min-width 310px
+							min-width 280px
 							h2
 								color #bbb
 								font-size 2em
@@ -695,20 +695,53 @@ html
 									display block
 									margin-bottom 10px
 									i
-										color #ccc
+										color #61D0F5
 										font-style normal
-										margin-right 10px
+										margin-right 5px
+										&:after
+											color #888
+											display inline-block
+											content ','
+									i:last-child:after
+										content ''
+										display none
 								a
 									float right
 									display block
 									color #00bbfa
 									margin-left 15px
 									text-decoration none
+									font-weight normal
+									cursor pointer
 									&:before
+										color #555
 										font-family 'FontAwesome'
 										content '\f0a8'
 										display inline-block
 										margin-right 5px
+								a.relCamps
+									margin 0 0 15px 0
+									float right
+									color #fff
+									padding 4px 10px
+									background #00AEE8
+									box-shadow -2px 2px 8px #bbb
+									&:before
+										color #fff
+										content '\f1da'
+									&:after
+										content ' Actualizar'
+									&:hover
+										color #FFCF40
+							h2.campin
+								overflow hidden
+								text-transform none
+								&:after
+									margin-bottom 10px
+									clear both
+									display block
+									content ''
+									border 1px solid #E4E4E4
 							.broadcast
 								display block
 								text-align center
@@ -764,14 +797,15 @@ html
 														font-family 'FontAwesome'
 														display inline-block
 														content '\f111'
+								table.NiUsers tbody tr td:first-child:before
+									display none
 						#ctable.s,#calendar.s,#reportes.s
 							display block
 						#reportes
 							.camps
 								padding 20px
-								margin-bottom 40px
-								border 1px solid #eee
-								background #f8f8f8
+								margin-top 40px
+								background #e8e8e8
 								span
 									margin-bottom 30px
 									display block
@@ -834,7 +868,6 @@ html
 											background rgba(0,174,232,.3)
 											transition all .2s ease
 							#reales
-								border-bottom 1px dashed #FFBF00
 								overflow hidden
 								clear both
 								margin 0
@@ -846,7 +879,7 @@ html
 									margin 0
 									padding 0
 								&:before
-									content 'Contratos en tiempo real durante el mes actual'
+									content 'Mapa de calor y Contratos en tiempo real, datos de 30 días a hoy'
 									display block
 									clear both
 									margin 0 0 15px 0
@@ -893,10 +926,9 @@ html
 										margin 0
 										padding 0
 							#fechas
-								margin 60px 0 0 0
+								margin 0
 								padding 20px
-								border 1px solid #eee
-								background #f0f0f0
+								background #e8e8e8
 								color #333
 								font-size 1.5em
 								text-align center
@@ -1109,7 +1141,6 @@ html
 									width 100%
 									margin-bottom 10px
 								#fechas
-									margin-top 20px
 									font-size 1.2em
 									overflow hidden
 									label
@@ -1123,8 +1154,9 @@ html
 								#todos_graficos
 									.titulos
 										h3.sub
-											font-size 18px
+											font-size 16px
 											margin-top 15px
+											text-align left
 										a.xls
 											margin 20px 0 0 0
 			.ui-datepicker
@@ -1152,19 +1184,24 @@ html
 				#wraper
 					overflow auto
 					#generico .contenedor
-						#reportes .camps
-							span
-								margin-bottom 10px
-							label
-								display block
-								height 20px
+						#reportes
+							#reales:before
+								font-size 1.2em
+								text-align left
+							.camps
+								margin-top 10px
 								span
-									font-size 16px
-									margin 0
-									padding-left 26px
-									&:before
-										font-size 20px
-										height 21px
+									margin-bottom 10px
+								label
+									display block
+									height 20px
+									span
+										font-size 16px
+										margin 0
+										padding-left 26px
+										&:before
+											font-size 20px
+											height 21px
 						#ctable h2,#calendar h2,#reportes h2
 							font-size 18px
 						.dataTables_wrapper

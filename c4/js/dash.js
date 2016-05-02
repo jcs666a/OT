@@ -336,10 +336,12 @@ function muestraUsuarios(){
 					$("#loading").hide();
 				});
 			}
-			else{ var muetralo=1;
+			else{ var muetralo=1,ctosusers=0;
 				$.when(
 					$.each(x.u,function(i,a){
+						ctosusers=1;
 						muetralo=1;
+						$('#tablaFielders').removeClass('NiUsers');
 						if(idRol!='6' && mstraUsrTi.k=='')
 							if(a.role=='7')
 								muetralo=0;
@@ -383,6 +385,8 @@ function muestraUsuarios(){
 						}
 					})
 				).done(function(){
+					if(ctosusers==0)
+						$('#tablaFielders').addClass('NiUsers');
 					tablaFielders=$('#tablaFielders').DataTable({
 						language:{url:"../js/esp.json"},columnDefs:[{orderable:false,targets:[3]}],"pageLength":50
 					});
@@ -1049,7 +1053,7 @@ function AddCalendarFielder(c,d,i){
 function muestraCampanas(){
 	tablaFielders.destroy();
 	limpiaTablaG();
-	$('#ctable h2').text('').hide();
+	$('#ctable h2').addClass('campin').html('<a class="relCamps"></a>').show();
 	if(Rol=='Lider Promotor')
 		$('#tablaFielders thead').append('<tr>'+
 			'<th>Título</th>'+
@@ -2456,6 +2460,7 @@ $(document).on("click",".edUS h5 a",function(event){event.preventDefault();
 	V.removeClass('eliminando');
 	$(this).parent().hide();
 });
+$(document).on("click","h2 .relCamps",function(event){event.preventDefault();muestraCampanas();});
 $(document).on("click",".edUS .fuera a",function(event){event.preventDefault();
 	$('#loading').show();
 	if($(".fue :selected").length>0){

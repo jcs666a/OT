@@ -9,10 +9,10 @@ if($_POST['pky']!='')
 else
 	header("Location: ../");
 //Vars:
-//$ipServ='http://10.105.116.52:9090/';
+$ipServ='http://10.105.116.52:9090/';
 //$ipServ='http://localhost:9090/';
 //$ipServ='http://187.217.179.35:9090/';
-$ipServ='http://10.105.116.187:9090/';
+//$ipServ='http://10.105.116.187:9090/';
 //$ipServ='http://10.105.116.207:9090/';
 //Clases:
 class GCM{
