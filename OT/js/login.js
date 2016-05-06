@@ -76,6 +76,7 @@ function creandoObjeto(){
 				'","UserID":"'+x.Datos.UserID+'"}}');
 			localStorage.setItem('fielderMsgs','{}');		var vy=JSON.stringify(x.Mensajes);		if(x.hasOwnProperty("Mensajes"))localStorage.setItem('fielderMsgs',vy);
 			localStorage.setItem('fielderRegs','{}');			vy=JSON.stringify(x.Regiones);		if(x.hasOwnProperty("Regiones"))localStorage.setItem('fielderRegs',vy);
+			console.log(vy);
 			localStorage.setItem('fielderPols','{}');			vy=JSON.stringify(x.Poligonos);		if(x.hasOwnProperty("Poligonos"))localStorage.setItem('fielderPols',vy);
 			localStorage.setItem('fielderTecs','{}');			vy=JSON.stringify(x.Tecnologias);	if(x.hasOwnProperty("Tecnologias"))localStorage.setItem('fielderTecs',vy);
 			localStorage.setItem('fielderGrap','{}');			vy=JSON.stringify(x.Graficos);		if(x.hasOwnProperty("Graficos"))localStorage.setItem('fielderGrap',vy);

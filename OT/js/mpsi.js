@@ -389,6 +389,9 @@ function pintaClientes(){
 							muestralo="Si";
 						if(muestralo=="Si"){
 							if(cualesPinto == 'No Clientes' && filtrosMapa.FirstTime!="SI"){
+								if(b.NoClientes == null || b.NoClientes == undefined){
+	 									b.NoClientes = 0;
+	 								}
 								if(b.NoClientes.length>0){
 									$.each(b.NoClientes,function(j,c){
 										metoElPunto(c,x,k);
@@ -397,6 +400,9 @@ function pintaClientes(){
 								}
 							}
 							else if(cualesPinto == 'Clientes' && filtrosMapa.FirstTime!="SI"){
+								if(b.Clientes == null || b.Clientes == undefined){
+										b.Clientes = 0;
+								}
 								if(b.Clientes.length>0){
 									$.each(b.Clientes,function(j,c){
 										metoElPunto(c,x,k);
@@ -405,6 +411,9 @@ function pintaClientes(){
 								}
 							}
 							else if(cualesPinto == 'Cliente Dirigido' && filtrosMapa.FirstTime!="SI"){
+								if(b.clienteDirigido == null || b.clienteDirigido == undefined){
+	 									b.clienteDirigido = 0;
+	 								}
 								if(b.clienteDirigido.length>0){
 									$.each(b.clienteDirigido,function(j,c){
 										metoElPunto(c,x,k);
@@ -413,18 +422,27 @@ function pintaClientes(){
 								}
 							}
 							else if(cualesPinto == 'Todos' || filtrosMapa.FirstTime=="SI"){
+								if(b.Clientes == null || b.Clientes == undefined){
+										b.Clientes = 0;
+								}
 								if(b.Clientes.length>0){
 									$.each(b.Clientes,function(j,c){
 										metoElPunto(c,x,k);
 										x++;
 									});
 								}
+								if(b.NoClientes == null || b.NoClientes == undefined){
+	 									b.NoClientes = 0;
+	 								}
 								if(b.NoClientes.length>0){
 									$.each(b.NoClientes,function(j,c){
 										metoElPunto(c,x,k);
 										x++;
 									});
 								}
+							if(b.clienteDirigido == null || b.clienteDirigido == undefined){
+ 									b.clienteDirigido = 0;
+ 								}
 								if(b.clienteDirigido.length>0){
 									$.each(b.clienteDirigido,function(j,c){
 										metoElPunto(c,x,k);
