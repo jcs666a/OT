@@ -286,7 +286,7 @@ function salir(){
 		window.location='../';
 	}).fail(function(jqXHR,textStatus,error){
 		creanotificacion('Error 404:',
-				'No se recibió respuesta del servicio de salida.',
+				'No se recibió respuesta del servicio de logout.',
 				error,textStatus,'error');
 	});
 }

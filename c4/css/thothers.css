@@ -667,8 +667,8 @@ table.dataTable.compact thead th,table.dataTable.compact thead td{padding:4px 17
 table.dataTable.compact tfoot th,table.dataTable.compact tfoot td{padding:4px}
 table.dataTable.compact tbody th,table.dataTable.compact tbody td{padding:4px}
 table.dataTable th.dt-left,table.dataTable td.dt-left{text-align:left}
-table.dataTable th.dt-center,table.dataTable td.dt-center,table.dataTable td.dataTables_empty{
-text-align:center;font-size:2.5em !important;color:#666 !important;border:none !important;}
+table.dataTable th.dt-center,table.dataTable td.dt-center,table.dataTable td.dataTables_empty{color:#aaa !important;
+padding:20px 10px !important;text-align:center !important;font-size:1.9em !important;border:none !important;}
 table.dataTable th.dt-right,table.dataTable td.dt-right{text-align:right}
 table.dataTable th.dt-justify,table.dataTable td.dt-justify{text-align:justify}
 table.dataTable th.dt-nowrap,table.dataTable td.dt-nowrap{white-space:nowrap}
