@@ -1,6 +1,5 @@
 <?php ob_start();
-$ipServ='http://187.217.179.35:9090/'; //'http://localhost:9090/';
-//$ipServ='http://10.105.116.52:9090/'; //'http://localhost:9090/';
+$ipServ='http://localhost:9090/';
 if($_POST['pDf']=='ñrRp3}.'){ //Crea GCM o no
     $data=array(
         'idUsuario'=>array(

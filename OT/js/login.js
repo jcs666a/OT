@@ -24,7 +24,7 @@ $("#formulario").on("submit",function(event){
 		$("#formulario #error").addClass('si').html('Por favor llene los campos.');
 	else{
 		var gcm_regid=$('#regid').val(),
-			datos={ pDf:'}+ṕv$3ds',
+			datos={ pDf:'}+á¹•v$3ds',
 					ky:$("#clave").val(),
 					pw:$("#usuario").val()
 				};
@@ -41,7 +41,7 @@ $("#formulario").on("submit",function(event){
 						"&iduser="+respuesta.apiResponse[0].idUsuario+
 						"&gcm_regid="+gcm_regid;
 					else
-						$("#formulario #error").addClass('si').html('<small>No tienes acceso a esta aplicación</small>');
+						$("#formulario #error").addClass('si').html('<small>No tienes acceso a esta aplicaciÃ³n</small>');
 				}
 				else
 					$("#formulario #error").addClass('si').html('<small>Cuenta desactivada</small>');
@@ -89,7 +89,7 @@ function creandoObjeto(){
 	};
 	function paso2(){
 		$.when(
-			Voy.mGCM('4ýhHGr{')
+			Voy.mGCM('4Ã½hHGr{')
 		).done(function(x){
 			paso3(x);
 		});
@@ -102,7 +102,7 @@ function creandoObjeto(){
 		});
 	}
 	$.when(
-		Voy.mGCM('ñrRp3}.')
+		Voy.mGCM('Ã±rRp3}.')
 	).done(function(x){
 		paso2();
 	});
@@ -138,12 +138,19 @@ function createCal(){
   for(var i = 0; i <= fielderCamp.length-1; i++){
     c = fielderCamp[i].campana.fechaInicio;
     b = fielderCamp[i].campana.fechaFin;
+    console.log(fielderCamp[i].campana.id);
+    console.log(b);
     splitInicio = c.split('-'),
     splitFinal = b.split('-'),
     oneDay = 24*60*60*1000,
-    firstDate = new Date(splitInicio[0],splitInicio[1],splitInicio[2]),
-    secondDate = new Date(splitFinal[0],splitFinal[1],splitFinal[2]),
-    diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay))),
+    firstDate = new Date(splitInicio[0],splitInicio[1]-1,splitInicio[2]);
+    console.log(firstDate);
+    secondDate = new Date(splitFinal[0],splitFinal[1]-1,splitFinal[2]);
+    console.log(secondDate);
+    diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
+    diffDays = diffDays+parseInt(splitInicio[2]);
+    console.log(diffDays);
+    console.log('/////');
     mm = splitInicio[1]-1,
     yy = splitInicio[0],
     changeMonth = 0;
@@ -151,24 +158,19 @@ function createCal(){
     for(var f = 0; f <= diffDays;){
       monthLength = new Date(yy, mm+1, 0).getDate();
     for (a = 1; a <= monthLength; a++){
-    if(changeMonth == 0){
-      if(mm == splitInicio[1]-1){
-        a = splitInicio[0];
-        diffDays - parseInt(a);
-        changeMonth++;
-      }
-    }
-    if(a == parseInt(splitFinal[0])+1){
+    if(mm == parseInt(splitFinal[1])+1){
       patt = /^0[0-9].*$/,
       monthNum = parseInt(splitFinal[1])-1;
       if(patt.test(monthNum)){
         var mmParse = monthNum.toString().split('');
         if(mm == mmParse[1]){
+          console.log("L: 58");
           break;
         }
       }
       else{
         if(mm == monthNum){
+          console.log("L: 54");
           break;
         }
       }
@@ -189,6 +191,7 @@ function createCal(){
         }
       }
       if(a == monthLength){
+        console.log('jump');
         mm++;
       }
       if(mm == 12){
@@ -196,19 +199,30 @@ function createCal(){
         mm = 0;
       }
       function printDates(){
-        if(f <= (diffDays + parseInt(splitInicio[2]) + mmdif)){
+        if(f <= (diffDays + mmdif)){
           if(!newObj.campInfo){
             newObj.campInfo = [];
-          }
-          if(newObj.campInfo){
             newObj.campInfo[newObj.campInfo.length] = {},
             newObj.campInfo[newObj.campInfo.length-1]['id'] = fielderCamp[i].campana.id,
             newObj.campInfo[newObj.campInfo.length-1]['color'] = fielderCamp[i].campana.color;
+          }
+          else{
+            var found =  newObj.campInfo.some(function (el) {
+              return el.id === fielderCamp[i].campana.id;
+            });
+            if(!found){
+              newObj.campInfo[newObj.campInfo.length] = {},
+              newObj.campInfo[newObj.campInfo.length-1]['id'] = fielderCamp[i].campana.id,
+              newObj.campInfo[newObj.campInfo.length-1]['color'] = fielderCamp[i].campana.color;
+            }
           }
         }
           hasSomeThing(newObj,yy,mm,a);
       }
       f++;
+       if(f == diffDays){
+          break;
+        }
     }
   }
 }
