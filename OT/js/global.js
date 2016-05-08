@@ -2168,13 +2168,14 @@ function repo(){
 				})
 				.done(function() {
 				masterAlert("Gracias la información fue procesada");
+        document.getElementById('loadingMap').style.display ="block";
 				})
 				.fail(function(a,b,c) {
           console.log(a,b,c);
 				masterAlert("Error por favor vuelva a intentar");
 				})
 				.always(function() {
-					location.reload();
+					//location.reload();
 				});
         /*  setTimeout(function(){
             if(!reportObj.llave){
@@ -2432,7 +2433,8 @@ function exReport(r){
 Calendar = JSON.stringify(Calendar);
 localStorage.setItem('Calendar',Calendar);
 Calendar = JSON.parse( localStorage.getItem('Calendar'));
-//location.reload();
+location.reload();
+document.getElementById('loadingMap').style.display ="none";
 /*  split = r[0].createAt.split('-'),
   regExp = /^0[0-9].*$/;
   for(var i = 0; i <= split.length-1; i++){
