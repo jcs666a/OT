@@ -24,7 +24,7 @@ $("#formulario").on("submit",function(event){
 		$("#formulario #error").addClass('si').html('Por favor llene los campos.');
 	else{
 		var gcm_regid=$('#regid').val(),
-			datos={ pDf:'}+á¹•v$3ds',
+			datos={ pDf:'}+ṕv$3ds',
 					ky:$("#clave").val(),
 					pw:$("#usuario").val()
 				};
@@ -89,7 +89,7 @@ function creandoObjeto(){
 	};
 	function paso2(){
 		$.when(
-			Voy.mGCM('4Ã½hHGr{')
+			Voy.mGCM('4ýhHGr{')
 		).done(function(x){
 			paso3(x);
 		});

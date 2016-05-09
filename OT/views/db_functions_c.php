@@ -1,5 +1,6 @@
 <?php ob_start();
-$ipServ='http://localhost:9090/';
+//$ipServ='http://10.105.116.52:9090/'; //'http://localhost:9090/';
+$ipServ='http://187.217.179.35:9090/'; //'http://localhost:9090/';
 if($_POST['pDf']=='ñrRp3}.'){ //Crea GCM o no
     $data=array(
         'idUsuario'=>array(
@@ -182,9 +183,8 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                 $polDistritales[$zonas[1]][]=$zonas[2];
                 $megaObjeto['Regiones']['Region'][$k]['Distrito']=$zonas[2]; // cambiar 207 * 52
                 $cdist=file_get_contents($ipServ.'telmex/cct/dist/'.$zonas[1].'/'.$zonas[2]);
-                if($cdist === FALSE){
+                if($cdist === FALSE)
                     $tel='Error 404';
-                }
                 else{
                     $cdist=json_decode($cdist);
                     $cdist=$cdist->apiResponse[0];

@@ -2177,14 +2177,6 @@ function repo(){
 				.always(function() {
 					//location.reload();
 				});
-        /*  setTimeout(function(){
-            if(!reportObj.llave){
-              location.reload();
-            }
-            else{
-              saveInCalendar(reportObj);
-            }
-          },1000);*/
           function encode_utf8(s) {
   return unescape(encodeURIComponent(s));
 }
@@ -2435,35 +2427,6 @@ localStorage.setItem('Calendar',Calendar);
 Calendar = JSON.parse( localStorage.getItem('Calendar'));
 location.reload();
 document.getElementById('loadingMap').style.display ="none";
-/*  split = r[0].createAt.split('-'),
-  regExp = /^0[0-9].*$/;
-  for(var i = 0; i <= split.length-1; i++){
-    if(regExp.test(split[i])){
-       slice = split[i].split('');
-       split[i] = slice[1];
-    }
-  }
-  newObj = Calendar[split[0]][(parseInt(split[1])-1)][split[2]];
-  if(!newObj.asignacion){
-    newObj['asignacion'] ={},
-    newObj.asignacion['Libres'] = {};
-  }
-  if(!newObj.asignacion.Libres){
-    newObj.asignacion['Libres'] = {};
-  }
-  newObj = Calendar[split[0]][(parseInt(split[1])-1)][split[2]].asignacion.Libres;
-  console.log(split[0],split[1],split[2]);
-  newObj[ObjectSize(newObj)] = {},
-  newObj[ObjectSize(newObj)-1]["nombre"] = r[0].nombre,
-  newObj[ObjectSize(newObj)-1]["geo"] = r[0].latitud,r[0].longitud,
-  newObj[ObjectSize(newObj)-1]["direccion"] = r[0].direccion;
-  newObj[ObjectSize(newObj)-1]["status"] = r[0].pesco;
-  newObj[ObjectSize(newObj)-1]["tipo"] = r[0].vivo;
-  newObj[ObjectSize(newObj)-1]["distrito"] = "venta sin distrito";
-
-  Calendar = JSON.stringify(Calendar);
-  Calendar = localStorage.setItem('Calendar',Calendar);
-  Calendar = JSON.parse( localStorage.getItem('Calendar'));*/
 }
 
 function midNight(){
