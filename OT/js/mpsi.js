@@ -294,6 +294,7 @@ function pintaClientes(){
 				map		: map,
 				title	: c.cliente,
 				icon	: "css/img/assets/"+puntoColor,
+				image	: c.imagen,
 				html	:
 					'<div class="title">'+
 						c.cliente+
@@ -305,6 +306,7 @@ function pintaClientes(){
 					'<a class="btnCtnMap" onclick="mercaCrossModul('+nam+');">Contratación</a>'
 			});
 			PointsClientes[x].addListener('click',function(){
+				console.log(this.image);
 				infowindow.setContent(this.html);
 				infowindow.open(map,this);
 			});
@@ -363,9 +365,9 @@ function pintaClientes(){
 			var aa=a[2],
 				ab=a[3];
 			var jn={[aa]:ab};
-			if(fClientes.hasOwnProperty(aa))
-				$.extend(fClientes,{[aa]:'All'});
-			else
+//			if(fClientes.hasOwnProperty(aa))
+//				$.extend(fClientes,{[aa]:'All'});
+//			else
 				$.extend(fClientes,{[aa]:ab});
 		})
 	).done(function(){
@@ -587,7 +589,6 @@ function creaFiltroTecs(){
 	$("#nameDistrict #loadInMap #areaZone").html('');
 	$("#nameDistrict #loadInMap #distZone").html('');
 	$.each(fielderTecs,function(i,a){
-		console.log(a);
 		$.each(a,function(j,b){
 			if(j=='PorTipo')
 				$.each(b,function(k,c){

@@ -255,7 +255,7 @@ function loadThat(val){
         var response = data.apiResponse[0];
         $("#municipio").html('');
         $("#municipio").append('<select name="municipio" id="subMunicipio" class="mandatory"> </select>');
-        $("#subMunicipio").append('<option> selecione un municipio </option>');
+        $("#subMunicipio").append('<option value=""> selecione un municipio </option>');
           for(i = 0; i <= response.length; i++) {
             $("#subMunicipio").append('<option value='+response[i].idMunicipio +' name="delMun">'+response[i].descripcion+'</option>');
           }

@@ -41,7 +41,7 @@ $("#formulario").on("submit",function(event){
 						"&iduser="+respuesta.apiResponse[0].idUsuario+
 						"&gcm_regid="+gcm_regid;
 					else
-						$("#formulario #error").addClass('si').html('<small>No tienes acceso a esta aplicaciÃ³n</small>');
+						$("#formulario #error").addClass('si').html('<small>No tienes acceso a esta aplicación</small>');
 				}
 				else
 					$("#formulario #error").addClass('si').html('<small>Cuenta desactivada</small>');
@@ -76,7 +76,6 @@ function creandoObjeto(){
 				'","UserID":"'+x.Datos.UserID+'"}}');
 			localStorage.setItem('fielderMsgs','{}');		var vy=JSON.stringify(x.Mensajes);		if(x.hasOwnProperty("Mensajes"))localStorage.setItem('fielderMsgs',vy);
 			localStorage.setItem('fielderRegs','{}');			vy=JSON.stringify(x.Regiones);		if(x.hasOwnProperty("Regiones"))localStorage.setItem('fielderRegs',vy);
-			console.log(vy);
 			localStorage.setItem('fielderPols','{}');			vy=JSON.stringify(x.Poligonos);		if(x.hasOwnProperty("Poligonos"))localStorage.setItem('fielderPols',vy);
 			localStorage.setItem('fielderTecs','{}');			vy=JSON.stringify(x.Tecnologias);	if(x.hasOwnProperty("Tecnologias"))localStorage.setItem('fielderTecs',vy);
 			localStorage.setItem('fielderGrap','{}');			vy=JSON.stringify(x.Graficos);		if(x.hasOwnProperty("Graficos"))localStorage.setItem('fielderGrap',vy);
@@ -102,7 +101,7 @@ function creandoObjeto(){
 		});
 	}
 	$.when(
-		Voy.mGCM('Ã±rRp3}.')
+		Voy.mGCM('ñrRp3}.')
 	).done(function(x){
 		paso2();
 	});
@@ -138,8 +137,6 @@ function createCal(){
   for(var i = 0; i <= fielderCamp.length-1; i++){
     c = fielderCamp[i].campana.fechaInicio;
     b = fielderCamp[i].campana.fechaFin;
-    console.log(fielderCamp[i].campana.id);
-    console.log(b);
     splitInicio = c.split('-'),
     splitFinal = b.split('-'),
     oneDay = 24*60*60*1000,
@@ -164,13 +161,11 @@ function createCal(){
       if(patt.test(monthNum)){
         var mmParse = monthNum.toString().split('');
         if(mm == mmParse[1]){
-          console.log("L: 58");
           break;
         }
       }
       else{
         if(mm == monthNum){
-          console.log("L: 54");
           break;
         }
       }
@@ -191,7 +186,6 @@ function createCal(){
         }
       }
       if(a == monthLength){
-        console.log('jump');
         mm++;
       }
       if(mm == 12){

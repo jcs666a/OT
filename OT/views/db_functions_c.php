@@ -1,6 +1,5 @@
 <?php ob_start();
-//$ipServ='http://10.105.116.52:9090/'; //'http://localhost:9090/';
-$ipServ='http://187.217.179.35:9090/'; //'http://localhost:9090/';
+$ipServ='http://localhost:9090/';
 if($_POST['pDf']=='ñrRp3}.'){ //Crea GCM o no
     $data=array(
         'idUsuario'=>array(
@@ -183,8 +182,9 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                 $polDistritales[$zonas[1]][]=$zonas[2];
                 $megaObjeto['Regiones']['Region'][$k]['Distrito']=$zonas[2]; // cambiar 207 * 52
                 $cdist=file_get_contents($ipServ.'telmex/cct/dist/'.$zonas[1].'/'.$zonas[2]);
-                if($cdist === FALSE)
+                if($cdist === FALSE){
                     $tel='Error 404';
+                }
                 else{
                     $cdist=json_decode($cdist);
                     $cdist=$cdist->apiResponse[0];
@@ -199,6 +199,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                                     $tel[$ix]['tcode']=$vl->tcode;
                                     $tel[$ix]['campaigncode']=$vl->campaigncode;
                                     $tel[$ix]['offercode']=$vl->offercode;
+                                    $tel[$ix]['imagen']=$vl->imagen;
                                     $tel[$ix]['titulo']=$vl->titulo;
                                     $tel[$ix]['descripcion']=$vl->descripcion;
                                     $tel[$ix]['estado']=$vl->estado;
@@ -219,6 +220,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                                     $telb[$ixx]['tcode']='';
                                     $telb[$ixx]['campaigncode']='';
                                     $telb[$ixx]['offercode']='';
+                                    $telb[$ixx]['imagen']='';
                                     $telb[$ixx]['titulo']=$vl->titulo;
                                     $telb[$ixx]['descripcion']=$vl->descripcion;
                                     $telb[$ixx]['estado']=$vl->estado;
@@ -438,7 +440,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
             $v->razon='';
 
         if($v->idCampania!='' && $v->idCampania!=null && $v->idCampania!='null' && $v->idCampania!="''"
-            && $v->region!='' && $v->region!=null && $v->region!='null' && $v->region!="''"){
+            && $v->region!='' && $v->region!=null && $v->region!='null' && $v->region!="''" && $v->region!="'undefined'" && $v->region!=undefined){
             if($megaObjeto['Calendario'][$v->idCampania]['TotalVisitas']=='' || $megaObjeto['Calendario'][$v->idCampania]['TotalVisitas']==null)
                 $megaObjeto['Calendario'][$v->idCampania]['TotalVisitas']=0;
             if($megaObjeto['Calendario'][$v->idCampania]['TotalVentas']=='' || $megaObjeto['Calendario'][$v->idCampania]['TotalVentas']==null)
@@ -448,10 +450,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
             $megaObjeto['Calendario'][$v->idCampania]['Visitas'][$ano][$mes][$dia][]=array(
                 'nombre'=>$v->nombre,
                 'telefono'=>$v->telefono,
-                'geo'=>$v->latitud.','.$v->longitud,
                 'distrito'=>$region[2],
-                'CP'=>'',
-                'CPcc'=>'-'.$mes.'-',
                 'direccion'=>$v->direccion,
                 'status'=>$v->pesco,
                 'tipo'=>$v->vivo,
@@ -468,15 +467,12 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                 'nombre'=>$v->nombre,
                 'telefono'=>$v->telefono,
                 'geo'=>$v->latitud.','.$v->longitud,
-                'distrito'=>'',
-                'CP'=>'',
-                'CPcc'=>'-'.$mes.'-',
+                'distrito'=>'Sin distrito asignado',
                 'direccion'=>$v->direccion,
                 'status'=>true,
                 'tipo'=>false,
                 'razon'=>$v->razon,
-                'campaña'=>$v->idCampania,
-                'titulo'=>$v->titulo
+                'campaña'=>$v->titulo,
             );
         }
     }

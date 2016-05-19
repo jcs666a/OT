@@ -11,7 +11,6 @@ $("#entrar").on("submit",function(event){
 					P:p};
 		var P=getPromesa(datos);
 		P.done(function(data){
-			console.log(data);
 			data=jQuery.parseJSON(data);
 			if(data.errorMessage!='')
 				creanotificacion('Error:',

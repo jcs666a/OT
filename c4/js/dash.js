@@ -61,10 +61,7 @@ Highcharts.theme={
 	plotOptions:{series:{dataLabels:{color:'#333',style:{fontSize:'15px',fontWeight:'300',textShadow:false}}}}
 };Highcharts.setOptions(Highcharts.theme);
 function connect(){
-	var socket=new SockJS('http://10.105.116.187:8080/messaging');
-//	var socket=new SockJS('http://187.217.179.35:8080/messaging');
-//	var socket=new SockJS('http://10.105.116.207:8080/messaging');
-//	var socket=new SockJS('http://10.105.116.52:8080/messaging');
+	var socket=new SockJS('http://187.217.179.35:8080/messaging');
 // Quitar punto cuando no hay usuarios en tablas, (de colores)
 // Quitar punto en tabla de campañas, mostrar mejor color de campaña
 // Dar estilo a administracion de usuarios
@@ -77,7 +74,7 @@ function connect(){
 			if(x.accion=='Usuario inactivo')
 				salir();
 		});
-		stompClient.subscribe('/topic/reporte/campaña', function(greeting){
+		stompClient.subscribe('/topic/reporte/campana', function(greeting){
 			muestraGraficoReal('H');
 		});
 		stompClient.subscribe('/topic/reporte/contratacion', function(greeting){
@@ -90,8 +87,9 @@ function connect(){
 			reintento=setInterval(function(){connect()},20000);
 		},3000);
 }
-function sendMail(){
-	$.when(promesas.Mail(9)).done(function(x){
+function sendMail(a,m,c){
+	var k={pky:'b.4{d2xA',M:m,A:a,C:c};
+	$.when(promesas.all(k)).done(function(x){
 		console.log(x);
 	});
 }
@@ -170,17 +168,14 @@ function pintaPoligonos(gj){
 	setColores();
 }
 function creaDivsAreas(t,z,y){
-	var p=$(y+' .divisiones').find("option").filter(":selected").text(),
-		u=$(y+' .divisiones').val();
-	$.when(
-		promesas.divisiones(p,u,misRegiones)
-	).done(function(x){
+	var k={pky:'ñhj/4"1z',P:$(y+' .divisiones').find("option").filter(":selected").text(),U:$(y+' .divisiones').val(),X:misRegiones};
+	$.when(promesas.all(k)).done(function(x){
 		x=jQuery.parseJSON(x);
 		if(x.hasOwnProperty("errorMessage"))
 			creanotificacion('Error:',
 				x.errorMessage,'','','error');
 		else{
-			if(t=='Si')pintaPoligonos(x.mapa); // ERROR en METRO???
+			if(t=='Si')pintaPoligonos(x.mapa);
 		}
 		if(z=='Si')$(y+" .areas").append(x.areas);
 		$("#loading").hide();
@@ -189,10 +184,9 @@ function creaDivsAreas(t,z,y){
 	});
 }
 function creaAreas(t,z,y){
-	var p=$(y+' .areas').find("option").filter(":selected").text(),
-		u=$(y+' .areas').val();
+	var k={pky:'5yj[.-}',P:$(y+' .areas').find("option").filter(":selected").text(),U:$(y+' .areas').val()};
 	$.when(
-		promesas.areas(p,u)
+		promesas.all(k)
 	).done(function(x){
 		x=jQuery.parseJSON(x);
 		if(x.hasOwnProperty("errorMessage"))
@@ -217,9 +211,9 @@ function liderLogin(){
 		setColores();
 	}
 	function areas(p,u){
-		p=p.toUpperCase();
+		var k={pky:'5yj[.-}',P:p.toUpperCase(),U:u};
 		$.when(
-			promesas.areas(p,u)
+			promesas.all(k)
 		).done(function(x){
 			if(x!='null' && x!=null){
 				x=jQuery.parseJSON(x);
@@ -365,7 +359,6 @@ function muestraUsuarios(){
 								dit='<a data=\'{"x":"Editar","y":1,"role":"'+a.role+'","idUser":"'+a.idUsuario+'","GCM":"'+a.gcm+'"}\' title="Editar a '+a.nombre+'"><i class="fa fa-pencil-square"></i></a>',
 								st_Con='';
 							if(a.idUsuario==8) cdc='';
-							if(a.role<5) adc='';
 							if(a.role!=7) msj='';
 							if(idRol==6 || a.role==4 || a.role==8 || a.role==7) use='';
 							if((idRol=='5' || idRol=='4') && a.role==7) dit='';
@@ -482,7 +475,7 @@ function muestraGraficoReal(H){
 				var a=k.split('.');
 				dataNventGA.push([Date.UTC(a[0],a[1],a[2]),v]);
 			})
-		).done(function(){ // Contratos nuevos vs contratos ofrecidos
+		).done(function(){
 			GA=new Highcharts.Chart({
 				credits:{enabled:false},
 				chart:{renderTo:wer,zoomType:'x'},
@@ -513,11 +506,6 @@ function muestraGraficoReal(H){
 					data:dataVentaGA
 				}]
 			});
-	//			GA=$('#area').highcharts();
-	/*			dataNventGA.push([]);
-			dataVentaGA.push([]);
-			GA.series[0].setData(dataNventGA);
-			GA.series[1].setData(dataVentaGA); */
 		});
 	}
 	$.when(promesas.getRealcInt(lis,misRegiones)).done(function(x){
@@ -643,7 +631,6 @@ function creaOtrosGraficos(x){
 			})
 		).done(function(){
 			addSeries(x);
-//			grafMetas(); Hacer metas...
 			var dataPi={name:'Contratos',data:dataPie};
 			pie=new Highcharts.Chart({
 				credits:{enabled:false},
@@ -779,10 +766,8 @@ function preparaImagen(i){
 	var tipo=i.files[0].type,
 		tama=i.files[0].size/1000000;
 	var corr=["image/jpeg","image/jpg"];
-	if(!((tipo==corr[0]) || (tipo==corr[1]) || (tipo==corr[2]))){
+	if(!((tipo==corr[0]) || (tipo==corr[1]) || (tipo==corr[2])))
 		creanotificacion('Error','La imagen no se subirá porque no es un archivo JPG o JPEG tu tipo de archivo es <b>'+tipo+'</b>','','','error');
-		alert('tipo de archivo incorrecto '+tipo);
-	}
 	else if(tama>.6){
 		creanotificacion('Error','La imagen no se subirá porque excede el tamaño de <b>0.6Mb</b>, tu imagen tiene un tamaño de <b>'+tama+'Mb</b>','','','error');
 	}
@@ -808,23 +793,11 @@ function muestraCalendario(){
 		lang:'es',
 		selectable:selecta,
 		selectHelper:selecta,
-		select:function(event){
-			console.log(event);
-/*			if(Rol=='Lider Promotor')formCalendarA('',start);calendario.fullCalendar('unselect');
-			$.when(promesas.campById(data.id)).done(function(x){
-				x=jQuery.parseJSON(x);
-				$.extend(data,x);
-				editarCampana(data);
-			}); */
-		},
+		select:function(event){},
 		eventLimit:false,
 		editable:selecta,
-		eventDrop:function(event,delta,revertFunc){
-//			if(Rol=='Lider Promotor')updateEvent(event.start.format(),event.end.format(),event,'Drop');
-		},
-		eventResize:function(event,delta,revertFunc){
-//			if(Rol=='Lider Promotor')updateEvent(event.start.format(),event.end.format(),event,'Resize');
-		},
+		eventDrop:function(event,delta,revertFunc){},
+		eventResize:function(event,delta,revertFunc){},
 		eventClick:function(calEvent,jsEvent,view){
 			if(Rol=='Lider Promotor'){
 				var data;
@@ -846,7 +819,7 @@ function muestraCalendario(){
 	});
 	calendario.fullCalendar('removeEvents');
 	function GetCampasMias(){
-		$.when(promesas.GetCRdCam(misRegiones)).done(function(x){ //Region del lider..., falta createAt, linea 575 functions.php lj.m,-/5tD
+		$.when(promesas.GetCRdCam(misRegiones)).done(function(x){
 			x=jQuery.parseJSON(x);
 			if(x.Error!='') creanotificacion('Error 404:',x.Error,'','','error');
 			else if(x.Sin!='') creanotificacion('Sin regiones',x.Sin,'','','advertencia');
@@ -930,126 +903,6 @@ function addDays(d,y){
 	result.setDate(result.getDate()+y);
 	return result;
 }
-function formCalendarA(a,b){
-	var edi='',cam='',tit='',des='',met='',fro='',has='',but='',bat='',vfrom,tod=new Date();
-	a=='' ? a='No' : null;
-	b=='' ? b='No' : null;
-	$('#loading').show();
-	if(a!='No'){
-		edi=a.idActividad;
-		cam=a.idCR;
-		tit=a.titulo;
-		des=a.descripcion;
-		met=a.meta;
-		fro=a.from;
-		has=a.to;
-		bat='<button class="datos addFieldersCalendarAct">Agregar fielders</button>';
-		but='<button class="datos delCalendarAct" data="'+a.idActividad+'">Eliminar</button>';
-	}
-	if(b!='No'){
-		b=new Date(b);
-		if(b.setHours(0,0,0,0)<tod.setHours(0,0,0,0)){
-			fro=dateFormat(addDays(tod,1),"isoDate");
-			has=dateFormat(addDays(tod,2),"isoDate");
-		}
-		else{
-			fro=dateFormat(addDays(b,1),"isoDate");
-			has=dateFormat(addDays(b,2),"isoDate");
-		}
-	}
-	function getmiscampas(){
-		$.when(promesas.GetCRdCal(misRegiones)).done(function(x){ //Region del lider...
-			x=jQuery.parseJSON(x);console.log(x); // porque estoy mandando 1-0-0-0 por ejemplo...
-			if(x.Error!='') creanotificacion('Error 404:',x.Error,'','','error');
-			else if(x.Sin!='') creanotificacion('Sin regiones',x.Sin,'','','advertencia');
-			else $.each(x.Regiones,function(i,v){
-				var sel=' ',
-					rer=regisdivareas(v.region);
-				if(cam==v.id_CR)sel=' selected="selected" ';
-				$('.edUS fieldset select.camp').append('<option'+sel+'value="'+v.id_CR+','+v.region+'">'+rer.region+' '+v.titulo+'</option>');
-			});
-			$('#loading').hide();
-		});
-	}
-	var size=600,read='',disa='',save='<button class="datos" type="submit">Guardar</button>';
-	if(w<740) size=300;
-	if(Rol!='Lider Promotor'){save='';bat='';disa=' disabled="disabled"';read=' readonly="readonly"';}
-	if(Rol=='Administrador' || Rol=='Lider Promotor' || Rol=='Director'){}else but='';
-	$.when(
-		dialogos('<form class="edUS" title="Crear meta de campaña" data="AddCalendarEvent">'+
-			'<fieldset><input type="hidden" class="editando" value="'+edi+'" />'+
-				'<label>Campaña: <select'+disa+' class="camp"></select></label>'+
-				'<label>Título: <input type="text"'+read+' class="titulo" value="'+tit+'" /></label>'+
-				'<label>Descripción: <input type="text"'+read+' class="descripcion" value="'+des+'" /></label>'+
-				'<label>Meta: <input type="text"'+read+' id="meta" class="meta" value="'+met+'" /></label>'+
-				'<label>Desde: <input type="text" class="fromDate" readonly="readonly" value="'+fro+'" /></label>'+
-				'<label>Hasta: <input type="text" class="toDate" readonly="readonly" value="'+has+'" /></label>'+bat+but+
-				save+
-			'</fieldset>'+
-		'</form>',size)
-	).done(function(x){
-		if(Rol=='Lider Promotor'){
-			var meta=new LiveValidation('meta');meta.add(Validate.Presence).add(Validate.Numericality,{onlyInteger:true});
-			$(".edUS .fromDate").datepicker({monthNames:meses,dayNamesMin:diaM,dateFormat:'yy-mm-dd',onSelect:function(selected){
-				var ini=new Date(selected);ini.setDate(ini.getDate()+2);$(".edUS .toDate").datepicker("option","minDate",ini);
-			}});
-			tod.setDate(tod.getDate()+1);$(".edUS .fromDate").datepicker("option","minDate",tod);
-			$(".edUS .toDate").datepicker({monthNames:meses,dayNamesMin:diaM,dateFormat:'yy-mm-dd',onSelect:function(selected){
-				var ini=new Date(selected);ini.setDate(ini.getDate()+0);$(".edUS .fromDate").datepicker("option","maxDate",ini)}});
-			$(".edUS .toDate").datepicker("option","minDate",tod);
-		}
-		getmiscampas();
-	});
-}
-function AddCalendarEvent(b,c,s,e,m,t,d,i){
-	if(c!='' && s!='' && e!='' && m!='' && t!=''){
-		if(i=='')
-			$.when(promesas.AddCalAct(c,s,e,m,t,d)).done(function(x){
-				x=jQuery.parseJSON(x);
-				if(x.Error!=''){
-					b.addClass('bad').removeClass('guardando');
-					creanotificacion('Error',x.Error,'','','error');
-				}
-				else{
-					muestraCalendario();
-					b.addClass('ok').removeClass('guardando');
-				}
-			});
-		else{
-			var event={idActividad:i,idCR:c,meta:m,title:t,titulo:t,descripcion:d};
-			updateEvent(s,e,event,'Formul');
-		}
-	}
-	else
-		creanotificacion('No se creó evento','Uno o más campos requeridos están vacios, por favor llénalos e intentalo nuevamente.','','','advertencia');
-	setTimeout(function(){b.removeClass('bad').removeClass('ok').removeClass('guardando');},1500);
-}
-function AddCalendarFielder(c,d,i){
-	dialogos('<form class="FielderCalTarea" data="FielderCalTarea" title="Fielders asignados a tarea '+i+' de campaña">'+
-		'<fieldset>'+
-			'<input type="hidden" class="id_campana" value="'+c+'" />'+
-			'<input type="hidden" class="id_calenda" value="'+i+'" />'+
-		'</fieldset>'+
-	'</form>',620);
-	function meteFielders(x){
-		x=jQuery.parseJSON(x);
-		$.each(x.Dentro,function(k,v){
-			$('select.den').append('<option value='+v.idFielder+' cfr="'+v.id+'">'+v.nombre+'</option>');
-		});
-		$.each(x.Fuera,function(k,v){
-			$('select.fue').append('<option value='+v.idUsuario+' cfr="">'+v.nombre+'</option>');
-		});
-	}
-	function pasoB(x){
-		$.when(meteFielders(x)).done(function(){$("#loading").hide();});
-	}
-	$.when(promesas.GetACalFi(i,misRegiones,d)).done(function(x){
-		$('.FielderCalTarea fieldset').append(
-			'<label class="fuera">Disponibles:<select class="fue" multiple></select><a>Agregar</a></label>'+
-			'<label class="dentro">En campaña:<select class="den" multiple></select><a>Eliminar</a></label>');
-		pasoB(x);
-	});
-}
 function muestraCampanas(){
 	tablaFielders.destroy();
 	limpiaTablaG();
@@ -1081,7 +934,7 @@ function muestraCampanas(){
 		$("#loading").hide();
 	}
 	function GetCampasMias(){
-		$.when(promesas.GetCRdCam(misRegiones)).done(function(x){ //Region del lider..., falta createAt, linea 575 functions.php lj.m,-/5tD
+		$.when(promesas.GetCRdCam(misRegiones)).done(function(x){
 			x=jQuery.parseJSON(x);
 			if(x.Error!='') creanotificacion('Error 404:',x.Error,'','','error');
 			else if(x.Sin!='') creanotificacion('Sin regiones',x.Sin,'','','advertencia');
@@ -1145,16 +998,18 @@ function buscaFielders(){
 		'</tr>');
 		var li=0;
 		$.each(f,function(i,a){
-			var st_Con='';
-			if(a[9]!=false && a[9]!='false' && a[9]!=0)
-				st_Con=' data="con"';
-			var ase='<a data=\'{"x":"Mensaje","regid":"'+a[11]+'","idUser":'+a[0]+',"nombre":"'+a[2]+'"}\' title="Enviar mensaje a '+a[2]+'"><i class="fa fa-comment"></i></a>'+
-				'<a data=\'{"x":"Editar","y":2,"idUser":'+a[0]+',"GCM":"'+a[11]+'"}\' title="Editar regiones de '+a[2]+'"><i class="fa fa-pencil-square"></i></a>'+
-				'<a data=\'{"x":"Sacar","idUser":'+a[0]+'}\' title="Cerrar la sesión de '+a[2]+'"><i class="fa fa-unlock-alt"></i></a>'+
-				'<a data=\'{"x":"Eliminar","idUser":'+a[0]+',"nombre":"'+a[2]+'"}\' title="Eliminar cuenta de '+a[2]+'"><i class="fa fa-trash"></i></a>';
-			IdsFielders.push(a[0]); if(misRegiones[0]=='Todas las campañas') ase='';
-			$('#tablaFielders tbody').append('<tr><td'+st_Con+'>'+a[2]+'</td><td>'+a[5]+'</td><td>'+ase+'</td></tr>');
-			li++;
+			if(a.length>0){
+				var st_Con='';
+				if(a[9]!=false && a[9]!='false' && a[9]!=0)
+					st_Con=' data="con"';
+				var ase='<a data=\'{"x":"Mensaje","regid":"'+a[11]+'","idUser":'+a[0]+',"nombre":"'+a[2]+'"}\' title="Enviar mensaje a '+a[2]+'"><i class="fa fa-comment"></i></a>'+
+					'<a data=\'{"x":"Editar","y":2,"idUser":'+a[0]+',"GCM":"'+a[11]+'"}\' title="Editar regiones de '+a[2]+'"><i class="fa fa-pencil-square"></i></a>'+
+					'<a data=\'{"x":"Sacar","idUser":'+a[0]+'}\' title="Cerrar la sesión de '+a[2]+'"><i class="fa fa-unlock-alt"></i></a>'+
+					'<a data=\'{"x":"Eliminar","idUser":'+a[0]+',"nombre":"'+a[2]+'"}\' title="Eliminar cuenta de '+a[2]+'"><i class="fa fa-trash"></i></a>';
+				IdsFielders.push(a[0]); if(misRegiones[0]=='Todas las campañas') ase='';
+				$('#tablaFielders tbody').append('<tr><td'+st_Con+'>'+a[2]+'</td><td>'+a[5]+'</td><td>'+ase+'</td></tr>');
+				li++;
+			}
 		});
 		if(li>0)$(".broadcast").show();else $(".broadcast").hide();
 		if(misRegiones[0]=='Todas las campañas')$(".broadcast").hide();
@@ -1227,7 +1082,6 @@ function buscaFielders(){
 	}
 	if(todosdiv=='principal'){
 		var val=$('.principal .ui-autocomplete-input').val();
-//		$('#mapa').dialog('option','title',val);
 		$('#top,#generico').addClass("open");
 		if(dis_o_col=='distritos'){
 			region=nvoDivi + '-' + nvoArea + '-' + val+'-0';
@@ -1240,7 +1094,6 @@ function buscaFielders(){
 		else if(dis_o_col=='todos'){
 			region=nvoDivi + '-' + nvoArea + '-';
 			val=regisdivareas(nvoDivi + '-' + nvoArea + '-0');
-//			$('#mapa').dialog('option','title',val['area']);
 		}
 		else{
 			dis_o_col='';
@@ -1353,7 +1206,7 @@ function rePintoMapa(){
 		creanotificacion('Error:','No se recibió respuesta del servicio de para obtener los datos de los fielders buscados.',error,textStatus,'error');
 	});
 }
-function mensajeUnico(i,r,n){ //id,reggcm,nombre
+function mensajeUnico(i,r,n){
 	function conversa(){
 		$.when(promesas.Conversas(i)).done(function(x){
 			x=jQuery.parseJSON(x);
@@ -1477,7 +1330,7 @@ function nuevoUsuario(){
 			'<label>Distrito/Colonia<select class="distritos" disabled="disabled">'+
 			'<option value="0"> --- </option>'+
 			'<option value="1">Distritos</option>'+
-			'<option value="3">Colonias</option>'+
+			'<!-- option value="3">Colonias</option -->'+
 			'</select></label>'+
 			'<label class="busca">Agregar<input type="text" class="ui-autocomplete-input" value="" /></label>'+
 			'</fieldset>';
@@ -1490,7 +1343,7 @@ function nuevoUsuario(){
 			'<label style="display:none;">Distrito/Colonia<select class="distritos" disabled="disabled">'+
 			'<option value="0"> --- </option>'+
 			'<option value="1">Distritos</option>'+
-			'<option value="3">Colonias</option>'+
+			'<!-- option value="3">Colonias</option -->'+
 			'</select></label>'+
 			'<label class="busca">Agregar<input type="text" class="ui-autocomplete-input" value="" /></label>'+
 			'</fieldset>';
@@ -1503,7 +1356,7 @@ function nuevoUsuario(){
 			'<label style="display:none;">Distrito/Colonia<select class="distritos" disabled="disabled">'+
 			'<option value="0"> --- </option>'+
 			'<option value="1">Distritos</option>'+
-			'<option value="3">Colonias</option>'+
+			'<!-- option value="3">Colonias</option -->'+
 			'</select></label>'+
 			'<label class="busca">Agregar<input type="text" class="ui-autocomplete-input" value="" /></label>'+
 			'</fieldset>';
@@ -1708,7 +1561,7 @@ $(document).on("change",".edUS .ids_crs",function(){
 	$('.id_editado').val(reg[0]);
 	AddFieldersCC(reg[0],misRegiones,reg[1]);
 });
-function editarUsuario(e){ //id,reggcm,nombre
+function editarUsuario(e){
 	var regs='',r_d='',r_a='',r_l='',r_p='',r_q='',spr=' smpr',smpr='smpr',tRegs=0;
 	RegionesUser=[];
 	function meteReg(d){
@@ -1778,7 +1631,7 @@ function editarUsuario(e){ //id,reggcm,nombre
 			'<label>Distrito/Colonia<select class="distritos" disabled="disabled">'+
 			'<option value="0"> --- </option>'+
 			'<option value="1">Distritos</option>'+
-			'<option value="3">Colonias</option>'+
+			'<!-- option value="3">Colonias</option -->'+
 			'</select></label>'+
 			'<label class="busca">Buscar<input type="text" class="ui-autocomplete-input" value="'+smpr+'" /></label>'+
 			'<button class="busca">Añadir región</button>'+
@@ -1835,16 +1688,6 @@ function DeleteCam(data){
 		'"><h4>¿Estas seguro de querer eliminar esta campaña?</h4><span><a class="Y" data-h="eliminoCamp" data-id="'+data.id+
 		'">Si</a><a class="N">No</a></span></div>',340)
 	).done(function(x){$("#loading").hide();});
-}
-function DeleteCalAct(c,h){
-	$.when(
-		dialogos('<div id="quest" title="'+c+
-		'"><h4>¿Estas seguro de querer eliminar esta tarea de campaña?</h4><span><a class="Y" data-h="eliminoCalAct" data-id="'+h+
-		'">Si</a><a class="N">No</a></span></div>',340)
-	).done(function(x){
-		$("#loading").hide();
-		$('#quest').on('dialogclose',function(event){$('button.datos').removeClass('guardando');});
-	});
 }
 function inicia(){
 	if(typeof google!=='undefined'){
@@ -1974,11 +1817,12 @@ $(document).on("change",".distritos",function(){
 	}
 	dG.add(aG).removeClass("c");
 	dG.val('').autocomplete({ create:function(event,ui){} });
-	if(tc==0){ // Nada
+	if(tc==0){
 		$("#loading").hide();
 	}
-	else if(tc==1){ // Distritos
-		$.when(promesas.distritos(nvoArea)).done(function(x){
+	else if(tc==1){
+		var k={pky:'eK,.-/',P:nvoArea};
+		$.when(promesas.all(k)).done(function(x){
 			ForDistritos=x;
 			x=jQuery.parseJSON(x);
 			dis_o_col='distritos';
@@ -1987,9 +1831,10 @@ $(document).on("change",".distritos",function(){
 			$("#loading").hide();
 		});
 	}
-	else if(tc==2){ // Todos Distritos
+	else if(tc==2){
+		var k={pky:'eK,.-/',P:nvoArea};
 		$('#top,#generico').addClass("open");
-		$.when(promesas.distritos(nvoArea)).done(function(x){
+		$.when(promesas.all(k)).done(function(x){
 			ForDistritos=x;
 			x=jQuery.parseJSON(x);
 			dis_o_col='todos';
@@ -1997,8 +1842,9 @@ $(document).on("change",".distritos",function(){
 			buscaFielders();
 		});
 	}
-	else if(tc==3){ // Colonias
-		$.when(promesas.colonias(6)).done(function(x){
+	else if(tc==3){
+		var k={pky:'er43{¿3',P:6};
+		$.when(promesas.all(k)).done(function(x){
 			ForColonias=x;
 			x=jQuery.parseJSON(x);
 			dis_o_col='colonias';
@@ -2199,9 +2045,20 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 		$('#loading').show();
 		if(n!='' && u!='' && r!='' && s!='' && i!='ZZ' && p==q){
 			$.when(promesas.UpdateUse(n,i,e,u,p,r,s)).done(function(x){
-				console.log(x);
 				if(y==1)muestraUsuarios();
-				if(x==0)b.removeClass('guardando').addClass('ok');
+				if(x==0){
+					b.removeClass('guardando').addClass('ok');
+					var contenido='<p>Ha sido modificada tu cuenta para usar la aplicación de Operaciones Terrestres,'+
+						' deberás ingresar a la dirección XXX para descargar la aplicación, después de instalarla '+
+						'en tu dispositivo, podrás ingresar con los siguientes datos:</p>'+
+						'<p><b>Usuario:</b> '+u+'<br /><b>Contraseña:</b> '+p+'</p>';
+					if(r!=7 && r!='7'){
+						contenido='<p>Ha sido modificada tu cuenta para usar el Dashboard de Operaciones Terrestres,'+
+						' deberás ingresar a la dirección http://187.217.179.35/c4/ con los siguientes datos:</p>'+
+						'<p><b>Usuario:</b> '+u+'<br /><b>Contraseña:</b> '+p+'</p>';
+						sendMail('Nueva cuenta de OT',s,contenido);
+					} console.log(contenido);
+				}
 				else b.removeClass('guardando').addClass('bad');
 				setTimeout(function(){
 					b.removeClass('bad').removeClass('ok');
@@ -2267,12 +2124,22 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 				$.when(promesas.AddingUse(n,e,u,p,r,s,reg)).done(function(x){
 					x=jQuery.parseJSON(x);
 					if(x.Error!=''){
-						creanotificacion('Error en Akame',x.Error,'','','error');
+						creanotificacion('Error',x.Error,'','','error');
 						b.removeClass('guardando').addClass('bad');
 					}
 					else{
 						b.removeClass('guardando').addClass('ok');
 					}
+						var contenido='<p>Ha sido creada tu cuenta para usar la aplicación de Operaciones Terrestres,'+
+							' deberás ingresar a la dirección XXX para descargar la aplicación, después de instalarla '+
+							'en tu dispositivo, podrás ingresar con los siguientes datos:</p>'+
+							'<p><b>Usuario:</b> '+u+'<br /><b>Contraseña:</b> '+p+'</p>';
+						if(r!=7 && r!='7'){
+							contenido='<p>Ha sido creada tu cuenta para usar el Dashboard de Operaciones Terrestres,'+
+							' deberás ingresar a la dirección http://187.217.179.35/c4/ con los siguientes datos:</p>'+
+							'<p><b>Usuario:</b> '+u+'<br /><b>Contraseña:</b> '+p+'</p>';
+							sendMail('Nueva cuenta de OT',s,contenido);
+						} console.log(contenido);
 					setTimeout(function(){
 						b.removeClass('bad').removeClass('ok');
 						$(".ui-dialog-content").dialog("close");
@@ -2290,28 +2157,7 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 		}
 	}
 	else if(f=='AddRegionesCampanas'){
-		alert(b);
-	}
-	else if(f=='AddCalendarEvent'){
-		var c=$(this).parent().find('.camp').val(),
-			s=$(this).parent().find('.fromDate').val(),
-			e=$(this).parent().find('.toDate').val(),
-			m=$(this).parent().find('.meta').val(),
-			t=$(this).parent().find('.titulo').val(),
-			d=$(this).parent().find('.descripcion').val(),
-			i=$(this).parent().find('.editando').val();
-		$('#loading').show();
-		if(b.attr('class')=='datos addFieldersCalendarAct guardando'){
-			var res=c.split(',');
-/*			console.log(res[0]); // id CR or campaing como le puse
-			console.log(res[1]); // Region
-			console.log(i);		 // id calendario */
-			AddCalendarFielder(res[0],res[1],i);
-		}
-		else if(b.attr('class')=='datos delCalendarAct guardando')
-			DeleteCalAct(t,i);
-		else
-			AddCalendarEvent(b,c,s,e,m,t,d,i);
+		console.log(b);
 	}
 	else{
 		var i=$(this).parent().find('.id_editado').val(),
@@ -2360,7 +2206,8 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 					}
 					else{
 						b.removeClass('guardando').addClass('ok');
-						creanotificacion('Mensaje',x.msj,'','','');
+						if(typeof x.msj!=='undefined' && x.msj!==null)
+							creanotificacion('Mensaje',x.msj,'','','');
 					}
 					setTimeout(function(){
 						b.removeClass('bad').removeClass('ok');
@@ -2382,14 +2229,10 @@ $(document).on("click",".ui-autocomplete li",function(){
 	if(abrNu==1)
 		setTimeout(function(){abreMenu();},150);
 });
-$(document).on("click",".edUS .region",function(event){event.preventDefault();
-	alert('Agrega región');
-});
 $(document).on("change",".edUS .imagen",function(event){event.preventDefault();
 	preparaImagen(this);
 });
 $(document).on("click","#quest span a",function(event){event.preventDefault();
-	// class="Y" data-h="eliminoCamp" data-id
 	var c=$(this).attr('class'),
 		h=$(this).attr('data-h');
 	if(c=='Y'){
@@ -2411,7 +2254,6 @@ $(document).on("click","#quest span a",function(event){event.preventDefault();
 				if(x.Error!='') creanotificacion('No se eliminó el evento',x.Error,'','','error');
 				else if(x.Ok==1) creanotificacion('Evento eliminado','Evento de calendario eliminado correctamente','','','');
 				muestraCalendario();
-//				$('#quest').dialog("close");
 				$(".ui-dialog-content").dialog("close");
 			});
 		else if(h=='eliminoUsuario')
@@ -2422,6 +2264,7 @@ $(document).on("click","#quest span a",function(event){event.preventDefault();
 		else if(h=='sacoSesion')
 			$.when(promesas.CierraSec(id)).done(function(x){
 				$('#quest').dialog("close");
+				muestraUsuarios();
 			});
 		else if(h=='cierroSesionAuto'){
 			$.when(promesas.sacoAutom(id)).done(function(x){
@@ -2429,7 +2272,7 @@ $(document).on("click","#quest span a",function(event){event.preventDefault();
 			});
 		}
 		else
-			alert(h);
+			console.log(h);
 	}
 	else if(c=='N' && h=='cierroSesionAuto'){
 		$('#quest').dialog("close");
@@ -2559,8 +2402,6 @@ $(document).on("click",".edUS .asignadas a",function(event){event.preventDefault
 $(document).on("click","#ctable h2 a.bakUsers",function(event){event.preventDefault();
 	event.preventDefault();
 	$.when(mstraUsrTi={k:'',i:'',r:'',n:''}).done(function(){
-	//	$("#mapa").dialogExtend("minimize");
-//		$('#top,#generico').removeClass("open");
 		$("#loading").show();
 		muestraUsuarios();
 	});
@@ -2576,7 +2417,6 @@ $("#losUsers").click(function(event){
 	event.preventDefault();
 	$.when(mstraUsrTi={k:'',i:'',r:'',n:''}).done(function(){
 		cierraMenu();clearInterval(intervalLider);
-	//	$("#mapa").dialogExtend("minimize");
 		$('#top,#generico').removeClass("open");
 		$("#loading").show();
 		muestraUsuarios();
@@ -2586,14 +2426,12 @@ $(".gn-icon.gn-icon-home,.gn-menu-main li.titulo img").click(function(event){
 	event.preventDefault();
 	cierraMenu();clearInterval(intervalLider);
 	setTimeout(function(){muestraGraficoReal('H');},500);
-//	$("#mapa").dialogExtend("minimize");
 	$('#top,#generico').removeClass("open");
 	$('#generico').removeClass("openB");
 });
 $(".gn-icon.gn-icon-nuser").click(function(event){
 	event.preventDefault();
 	cierraMenu();clearInterval(intervalLider);
-//	$("#mapa").dialogExtend("minimize");
 	$('#top,#generico').removeClass("open");
 	$("#loading").show();
 	muestraUsuarios();
@@ -2602,7 +2440,6 @@ $(".gn-icon.gn-icon-nuser").click(function(event){
 $(".gn-icon.gn-icon-campana").click(function(event){
 	event.preventDefault();
 	cierraMenu();clearInterval(intervalLider);
-//	$("#mapa").dialogExtend("minimize");
 	$('#top,#generico').removeClass("open");
 	$("#loading").show();
 	muestraCampanas();
@@ -2618,7 +2455,6 @@ $(".gn-icon.gn-icon-ncampana").click(function(event){
 $(".gn-icon.gn-icon-calendar").click(function(event){
 	event.preventDefault();
 	cierraMenu();clearInterval(intervalLider);
-//	$("#mapa").dialogExtend("minimize");
 	$('#top,#generico').removeClass("open");
 	$("#loading").show();
 	muestraCalendario();
@@ -2626,7 +2462,6 @@ $(".gn-icon.gn-icon-calendar").click(function(event){
 $(".gn-icon.gn-icon-reportes").click(function(event){
 	event.preventDefault();
 	cierraMenu();clearInterval(intervalLider);
-//	$("#mapa").dialogExtend("minimize");
 	$('#top,#generico').removeClass("open");
 	$("#loading").show();
 	muestraReportes();
@@ -2638,22 +2473,6 @@ $(".gn-icon.gn-icon-mapa").click(function(event){
 	viendo='Distrito';
 	buscaFielders();
 });
-/*
-$("#mapa").dialog({title:"Mapa C4 Telmex",height:mh,
-	position:{my:"left-0 top-0",at:"left-0 top-0",of:$('#wraper')},
-	modal:true,resizable:false,draggable:false,
-	resize:function(event,ui){creaMapa($('.ChangeColorMapa').val(),"S");}
-}).dialogExtend({
-	closable:false,minimizable:false,maximizable:true,dblclick:'maximize',
-	maximize:function(evt,dlg){
-			$(evt.target).height($(evt.target).height()-60-38);
-			$('.ui-dialog.ui-widget.ui-widget-content.ui-corner-all.ui-front').css('top','60px').css('width','+=11px');
-			creaMapa($('.ChangeColorMapa').val(),"S");
-		},
-	restore:function(evt,dlg){creaMapa($('.ChangeColorMapa').val(),"S");},
-	minimizeLocation:"right"
-});
-*/
 var idleTime=0;
 function timerIncrement(){
 	idleTime=idleTime+1;

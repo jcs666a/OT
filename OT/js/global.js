@@ -16,7 +16,7 @@ var loadPage = $(".map-go"),
     longitude = 0,
     tope=0,
     reportObj = {},
-    imagesPlaces  = 'http://187.217.179.35/c4LOBO/imgCamps/',
+    imagesPlaces  = 'http://187.217.179.35/c4/imgCamps/',
     hostVar = 'http://187.217.179.35',
     expressPhone = 0,
     domicilio = "",
@@ -233,7 +233,7 @@ function connect() {
             type = "usario";
                 socketResponse(greeting.body, type);
         });
-       stompClient.subscribe('/topic/campaña', function(greeting){
+       stompClient.subscribe('/topic/campana', function(greeting){
             type = "campanias";
                 socketResponse(greeting.body, type);
         });
@@ -249,7 +249,7 @@ function connect() {
             type = "DNS";
             socketResponse(greeting.body, type);
         });
-        stompClient.subscribe('/topic/reporte/campaña', function(greeting){
+        stompClient.subscribe('/user/'+userId+'/topic/reporte/campana', function(greeting){
              type = "reporte";
              socketResponse(greeting.body, type);
          });
@@ -285,6 +285,8 @@ function savePosition(){
 }
 function persistencia(j){
   stompClientAA.send("/app/contrato", {}, JSON.stringify(j));
+  masterAlert("Gracias la información fue procesada");
+
 }
 function socketResponse(response, type){
   response = $.parseJSON(response);
@@ -768,7 +770,8 @@ function calendar(t){
               libres=val.length;
               desc = 'Libres';
                 agend += '<div class="holder">';
-                agend += '<h3  data-place ="'+(parseInt(i)+1)+'" data-origin="'+[data[0]]+'-'+[data[1]]+'-'+[data[2]]+'" data-asig="'+desc+'" onclick="getInfoThis(this);">Ventas Libres</h3>';
+                agend += '<h3  data-place ="'+i+'" data-origin="'+[data[0]]+'-'+[data[1]]+'-'+[data[2]]+'" data-asig="'+desc+'" onclick="getInfoThis(this);">Ventas Libres</h3>';
+                //agend += '<h3  data-place ="'+(parseInt(i)+1)+'" data-origin="'+[data[0]]+'-'+[data[1]]+'-'+[data[2]]+'" data-asig="'+desc+'" onclick="getInfoThis(this);">Ventas Libres</h3>';
                 agend += '<div id="'+desc+'" class="loadDay"></div>';
                 agend += '</div>';
             }
@@ -812,6 +815,7 @@ function getInfoThis(t){
         t.classList.remove('open');
       }
       else{
+        $('#day-content .holder h3').removeClass('open');
         t.classList.add("open");
         if(asig != 'Libres'){
         var loadThis = '<div data-origin="'+origin+'" data-asig="'+asig+'" data-todo="'+place+'" onclick="loadCont(this);" class="son">Todo</div>'+
@@ -822,11 +826,18 @@ function getInfoThis(t){
             document.getElementById(''+asig+'').innerHTML = loadThis;
         }
         else{
-          date = origin.split('-'),
+          //place =  parseInt(place)+1;
+          var loadThis = '<div data-origin="'+origin+'" data-asig="'+asig+'" data-todo="'+place+'" onclick="loadCont(this);" class="son">Todo</div>'+
+              '<div data-origin="'+origin+'" data-asig="'+asig+'" data-cam="'+place+'" onclick="loadCont(this);" class="son">Campañas</div>'+
+              '<div data-origin="'+origin+'" data-asig="'+asig+'" data-adq="'+place+'" data-type="venta" onclick="loadCont(this);" class="son">Adquisiciones</div>'+
+              '<div data-origin="'+origin+'" data-asig="'+asig+'" data-adq="'+place+'" data-type="sin venta" onclick="loadCont(this);" class="son">Sin adquisicion</div>'+
+              '<div id="load-'+asig+'"></div>';
+              document.getElementById(''+asig+'').innerHTML = loadThis;
+          /*date = origin.split('-'),
           place =  Calendar[date[2]][date[1]][date[0]].asignacion.Libres;
          loadThis = '<div id="load-'+asig+'"></div>';
           document.getElementById(''+asig+'').innerHTML = loadThis;
-            Print(place,'todo',asig,origin);
+            Print(place,'todo',asig,origin);*/
         }
       }
 }
@@ -836,17 +847,42 @@ function loadCont(t){
       asig = t.dataset.asig;
       place = Calendar[data[2]][data[1]][data[0]].asignacion;
       document.getElementById('load-'+asig).innerHTML = " ";
+      if(asig == "Libres"){
+        place = Calendar[data[2]][data[1]][data[0]].asignacion.Libres;
+      }
   if(t.dataset.cam){
     if(t.classList.contains('open')){
       t.classList.remove('open');
       document.getElementById('load-'+asig).innerHTML = " ";
     }
+    else{
+      $(".son").removeClass('open');
+      t.classList.add('open');
+      dataLoad = t.dataset.cam,
+      obj = {},
+      type = "campania";
+      if(asig == "Libres"){
+        for(var i = 0; i <= place.length-1; i++){
+          name = '';
+          for(var k = 0; k <= fielderCamp.length-1; k++){
+            console.log(place[i].campaña, fielderCamp[k].campana.id );
+            if(place[i].campaña == fielderCamp[k].campana.id){
+              name = fielderCamp[k].campana.titulo;
+            }
+            else{
+              name = place[i].campaña;
+            }
+          }
+          if(!obj[name]){
+            obj[name] = {};
+            obj[name][0] = place[i];
+          }
+          else{
+            obj[name][obj[name].length] = place[i];
+          }
+        }
+      }
       else{
-        $(".son").removeClass('open');
-        t.classList.add('open');
-        dataLoad = t.dataset.cam,
-        obj = {},
-        type = "campania";
         $.each(place, function(index, val){
           var clien=[];
           if(val.clientes[ObjectSize(val.clientes)-1]==-1){}
@@ -864,9 +900,10 @@ function loadCont(t){
               obj[val.descripcion] = clien;
             }
           }
-          Print(obj,type,asig,t.dataset.origin);
         });
-    }
+      }
+  }
+    Print(obj,type,asig,t.dataset.origin);
   }
   if(t.dataset.adq){
     if(t.classList.contains('open')){
@@ -877,47 +914,79 @@ function loadCont(t){
       obj = {},
       type = t.dataset.type,
       i = 0;
-      if(type == "venta"){
-          $(".son").removeClass('open');
-          t.classList.add('open');
-        $.each(place, function(index, val) {
-          if(val.length == 0){}
-          else{
-            if(!val.clientes){}
+      if(asig == "Libres"){
+        if(type == "venta"){
+            $(".son").removeClass('open');
+            t.classList.add('open');
+          $.each(place, function(index, val) {
+            if(val.length == 0){}
             else{
-              $.each(val.clientes, function(index2, val2) {
-                if(val2.distrito==asig){
-                  if(val2.status == "venta" || val2.status == true || val2.status == "Venta"){
-                    val2.status = "Venta";
-                    obj[i] = val2;
-                    i++;
-                  }
+                if(val.status == "venta" || val.status == true || val.status == "Venta"){
+                  val.status = "Venta";
+                  obj[i] = val;
+                  i++;
                 }
-              });
             }
-          }
-        });
+          });
+        }
+        if(type == "sin venta"){
+            $(".son").removeClass('open');
+            t.classList.add('open');
+          $.each(place, function(index, val) {
+            if(val.length == 0){}
+            else{
+                if(val.status == "sin venta" || val.status == false || val.status == "Sin Venta"){
+                  val.status = "Sin venta";
+                  obj[i] = val;
+                  i++;
+                }
+            }
+          });
+        }
       }
-      if(type == "sin venta"){
-          $(".son").removeClass('open');
-          t.classList.add('open');
-        $.each(place, function(index, val) {
-          if(val.length == 0){}
-          else{
-            if(!val.clientes){}
+      else{
+        if(type == "venta"){
+            $(".son").removeClass('open');
+            t.classList.add('open');
+          $.each(place, function(index, val) {
+            if(val.length == 0){}
             else{
-              $.each(val.clientes, function(index2, val2) {
-                if(val2.distrito==asig){
-                  if(val2.status == "sin venta" || val2.status == false || val2.status == "Sin Venta"){
-                    val2.status = "Sin Venta";
-                    obj[i] = val2;
-                    i++;
+              if(!val.clientes){}
+              else{
+                $.each(val.clientes, function(index2, val2) {
+                  if(val2.distrito==asig){
+                    if(val2.status == "venta" || val2.status == true || val2.status == "Venta"){
+                      val2.status = "Venta";
+                      obj[i] = val2;
+                      i++;
+                    }
                   }
-                }
-              });
+                });
+              }
             }
-          }
-        });
+          });
+        }
+        if(type == "sin venta"){
+            $(".son").removeClass('open');
+            t.classList.add('open');
+          $.each(place, function(index, val) {
+            if(val.length == 0){}
+            else{
+              if(!val.clientes){}
+              else{
+                $.each(val.clientes, function(index2, val2) {
+                  if(val2.distrito==asig){
+                    if(val2.status == "sin venta" || val2.status == false || val2.status == "Sin Venta"){
+                      val2.status = "Sin Venta";
+                      obj[i] = val2;
+                      i++;
+                    }
+                  }
+                });
+              }
+            }
+          });
+        }
       }
       Print(obj,type,asig);
     }
@@ -933,20 +1002,28 @@ function loadCont(t){
       obj = {},
       type = "todo",
       i = 0;
-        $.each(place, function(index, val) {
-          if(val.length == 0){}
-          else{
-            if(!val.clientes){}
-            else{
-              $.each(val.clientes, function(index2, val2){
-                if(val2.distrito==asig){
-                  obj[i] = val2;
-                  i++;
-                }
-              });
-            }
-          }
+      if(asig == "Libres"){
+        $.each(place, function(index2, val2){
+          obj[i] = val2;
+          i++;
         });
+      }
+      else{
+          $.each(place, function(index, val) {
+            if(val.length == 0){}
+            else{
+              if(!val.clientes){}
+              else{
+                $.each(val.clientes, function(index2, val2){
+                  if(val2.distrito==asig){
+                    obj[i] = val2;
+                    i++;
+                  }
+                });
+              }
+            }
+          });
+      }
       Print(obj,type,asig);
     }
   }
@@ -1089,13 +1166,11 @@ function createCal(){
       if(patt.test(monthNum)){
         var mmParse = monthNum.toString().split('');
         if(mm == mmParse[1]){
-          console.log("L: 58");
           break;
         }
       }
       else{
         if(mm == monthNum){
-          console.log("L: 54");
           break;
         }
       }
@@ -1116,7 +1191,6 @@ function createCal(){
         }
       }
       if(a == monthLength){
-        console.log('jump');
         mm++;
       }
       if(mm == 12){
@@ -1305,13 +1379,17 @@ Calendar = JSON.parse(localStorage.getItem('Calendar'));
         //se envia el formulario
         $("#shure").addClass('active');
         $("#shureContent").html('');
-        for(var i = 0; i <= fielderCamp.length-1; i++){
-          if(reportObj.campañas[0] == fielderCamp[i].campana.id){
-            $("#shureContent").append('<span>Adquisicón:</span>'+fielderCamp[i].campana.titulo+'');
-            break;
+        if(!reportObj.info){
+          for(var i = 0; i <= fielderCamp.length-1; i++){
+            if(reportObj.campañas[0] == fielderCamp[i].campana.id){
+              $("#shureContent").append('<span>Adquisicón:</span>'+fielderCamp[i].campana.titulo+'');
+              break;
+            }
           }
         }
-
+        else{
+          $("#shureContent").append('<span>Adquisicón:</span>'+reportObj.info.titulo+'');
+        }
         $("#shureContent").append('<span>Usuario:</span>'+ document.getElementsByName("nombre")[0].value+' '+document.getElementsByName("paterno")[0].value +' '+document.getElementsByName("materno")[0].value+'');
         $("#shureContent").append('<span>Direccion:</span>'+ document.getElementsByName("calle")[0].value+' '+document.getElementsByName("numExt")[0].value +' '+document.getElementsByName("numInt")[0].value+' '+document.getElementsByName("colonia")[0].value+'');
           for(var i = 0; i < formHistory.length; i++){
@@ -1369,11 +1447,10 @@ Calendar = JSON.parse(localStorage.getItem('Calendar'));
                                           '<p>la informacion sera enviada al correo</p>'+
                                           '<strong>'+data.mensaje+'</strong>'+
                                           '<div id="so">'+
-                                          '<div class="left" onclick="doneAllSet();">'+
+                                          '<div class="left" onclick="doneAllSet('+data.idPisa+');">'+
                                           '<p>OK</p>'+
                                           '</div>'+
                                           '</div>');
-                    devSave2(data.idPisa);
               })
               .fail(function(data) {
                 $("#shure .inner").html('<h3>Lo sentimos su transaccion no fue exitosa...</h3>'+
@@ -1394,11 +1471,13 @@ Calendar = JSON.parse(localStorage.getItem('Calendar'));
           return indexed_array;
       }
     }
-            function doneAllSet(){
-              reportObj["status"] = {};
+            function doneAllSet(t){
+              document.getElementById('loadingMap').style.display ="block";
+              devSave2(t);
+              /*  reportObj["status"] = {};
               reportObj.status = "venta";
               reportObj["razon"] = "venta concretada";
-              cachInfo();
+              cachInfo();*/
             }
 
 
@@ -1468,6 +1547,7 @@ Calendar = JSON.parse(localStorage.getItem('Calendar'));
       .done(function(data) {
         $("#noShit").html('');
         var response = data.apiResponse[0];
+        $("#noShit").append('<option value=" ">ELIGE UN ESTADO</option>');
         for(var i = 0; i <= response.length-1; i++){
           $("#noShit").append('<option value='+response[i].idEstado+'>'+response[i].descripcion+'</option>');
         }
@@ -1614,7 +1694,6 @@ function saveInCalendar(obj){
   location.reload();
 }
 function devSave2(idOk){
-  console.log('L: 1569');
   var geoPosition = document.getElementById('geoId').value,
       servicioTipo  = document.getElementsByName('servicioTipo')[0].value,
       servicioId = document.getElementsByName('servicioId')[0].value,
@@ -1627,7 +1706,6 @@ function devSave2(idOk){
       email = document.getElementsByName('email')[0].value,
       rfc = document.getElementsByName('rfc')[0].value,
       tipoCalle = document.getElementsByName('tipoCalle')[0].value;
-      console.log(tipoCalle);
       calle = document.getElementsByName('calle')[0].value,
       numExt = document.getElementsByName('numExt')[0].value,
       numInt = document.getElementsByName('numInt')[0].value,
@@ -1638,18 +1716,28 @@ function devSave2(idOk){
       if(document.getElementsByName('estado')[0]){
         var selIndex = document.getElementsByName('estado')[0].selectedIndex,
              estado = document.getElementsByName('estado')[0].options[selIndex].innerHTML;
-             console.log(selIndex);
-             console.log(estado);
       }
       selIndex2 = document.getElementsByName('municipio')[0].selectedIndex;
-      console.log(selIndex2);
       municipio = document.getElementsByName('municipio')[0].options[selIndex2].innerHTML,
       ine = document.getElementById('ine').value,
       comp = document.getElementById('comp').value,
       parts = geoPosition.split(',', 2),
       region = document.getElementById('region').value,
-      vivo = document.getElementById('vivo').value;
-      data = {"idContrato":""+idOk+"","latitud":""+parts[0]+"","longitud":""+parts[1]+"","servicioTipo": ""+servicioTipo+"","servicioId":""+servicioId+"","nombre":""+nombre+"","paterno":""+paterno+"","materno":""+materno+"","telefono":""+telefono+"","email":""+email+"","rfc":""+rfc+"","tipoCalle":""+tipoCalle+"","calle":""+calle+"","numExt":""+numExt+"","numInt":""+numInt+"","entreCalle1":""+entreCalle1+"","entreCalle2":""+entreCalle2+"","colonia":""+colonia+"","delMun":""+municipio+"","cp":""+cp+"","estado":""+estado+"","modemEntrega":" ","reciboSinpapel":" ","fecha":"","latitud":""+parts[0]+"", "longitud":""+parts[1]+"","idtipo":" ","identifica":" ","celular":""+celular+"","idFielder":""+userId+"","imagenIfe": ""+ine+"", "imagenComprobanteDe":""+comp+"","region":""+region+"","idCampaign":""+camp+"", "vivo":""+vivo+""};
+      vivo = reportObj.tipo;
+      data = {"idContrato":""+idOk+"","latitud":""+parts[0]+"","longitud":""+parts[1]+"","servicioTipo": ""+servicioTipo+"","servicioId":""+servicioId+"","nombre":""+materno+"","paterno":""+nombre+"","materno":""+paterno+"","telefono":""+telefono+"","email":""+email+"","rfc":""+rfc+"","tipoCalle":""+tipoCalle+"","calle":""+calle+"","numExt":""+numExt+"","numInt":""+numInt+"","entreCalle1":""+entreCalle1+"","entreCalle2":""+entreCalle2+"","colonia":""+colonia+"","delMun":""+municipio+"","cp":""+cp+"","estado":""+estado+"","modemEntrega":" ","reciboSinpapel":" ","fecha":"","latitud":""+parts[0]+"", "longitud":""+parts[1]+"","idtipo":" ","identifica":" ","celular":""+celular+"","idFielder":""+userId+"","imagenIfe": ""+ine+"", "imagenComprobanteDe":""+comp+"","region":""+region+"","idCampaign":""+camp+"", "vivo":""+vivo+""};
+      if(!fielderCalendar[camp]){
+        var d={TotalVentas:1,TotalVisitas:1};
+        fielderCalendar[camp]={TotalVentas:1,TotalVisitas:1};
+        console.log(fielderCalendar);
+        var vy=JSON.stringify(fielderCalendar);
+        localStorage.setItem('fielderCalendar',vy);
+      }
+      else{
+        fielderCalendar[camp].TotalVentas=fielderCalendar[camp].TotalVentas+1;
+        fielderCalendar[camp].TotalVisitas=fielderCalendar[camp].TotalVisitas+1;
+        var vy=JSON.stringify(fielderCalendar);
+        localStorage.setItem('fielderCalendar',vy);
+      }
       persistencia(data);
 }
 $(document).on("click","#campaniasAsignadas .row",function(){
@@ -1716,13 +1804,11 @@ function getCampDist(v){
 		}
 	}
 	else{
-		for(var i = 0; i <= fielderCamp.length-1; i++){
-			if(fielderCamp[i].campana.id == v){
-				id = fielderCamp[i].campana.id,
-				titulo = fielderCamp[i].campana.titulo,
-				descripcion = fielderCamp[i].campana.descripcion,
+				id = v.usuario[0],
+				titulo = v.info.titulo,
+				descripcion = v.info.descripcion,
 				insert = document.getElementById('mercaBox');
-        img = imagesPlaces+fielderCamp[i].campana.imagen;
+        img = imagesPlaces+v.info.img;
         if(!areIn.includes(id)){
           areIn.push(id);
           insert.innerHTML =  insert.innerHTML+"<h1>campaña dirigida</h1>";
@@ -1733,8 +1819,6 @@ function getCampDist(v){
           '<a class="buy" data-id="'+id+'" data-steep="1" onclick="reportBox(this)"> Contratar</a>'+
           '</div>';
         }
-			}
-		}
     var llave = reportObj.llave.split('-'),
       img,id,titulo,descripcion,
       insert = document.getElementById('mercaBox');
@@ -1788,6 +1872,10 @@ function mercaCrossModul(t){
 		reportObj["campañas"]=[cc[t].id],
 		reportObj["llave"] = cc[t].region;
 		reportObj["tipo"] = true;
+    reportObj['info'] = {},
+    reportObj.info["titulo"] = cc[t].titulo,
+    reportObj.info["descripcion"] = cc[t].descripcion,
+    reportObj.info['img'] = cc[t].imagen;
 		reportBox();
 	}
 	else{
@@ -1878,7 +1966,7 @@ function reportBox(t){
 				 if(!t){
 					setTimeout(function(){
               document.getElementById('content').classList.add('not');
-						getCampDist(reportObj.usuario[0]);
+						getCampDist(reportObj);
 					}, 1000);
 				 }
 				 else{
@@ -2143,6 +2231,7 @@ function repo(){
 		document.getElementById('endRepo').addEventListener('click',cachInfo);
 	}
 		function cachInfo(){
+			    document.getElementById('loadingMap').style.display ="block";
 				if(reportObj.status == "sin venta"){
 					status = 0;
 					var value = document.getElementById('reason').value;
@@ -2384,7 +2473,7 @@ function exReport(r){
         Calendar[y][m][d] = {};
       }
       size = Calendar[y][m][d];
-      if(r[0].region == "" || r[0].region == undefined || r[0].region == null){
+      if(r[0].region == "" || r[0].region == undefined || r[0].region == null || r[0].region == "undefined"){
         if(!size.asignacion["Libres"]){
           size.asignacion["Libres"] = {};
         }
@@ -2392,7 +2481,7 @@ function exReport(r){
         size[ObjectSize(size)] = {},
         size[ObjectSize(size)-1]["nombre"] = r[0].nombre,
         //size[ObjectSize(size)-1]["telefono"] = obj.usuario[2],
-        size[ObjectSize(size)-1]["geo"] = r[0].latitud,r[0].longitud,
+        //size[ObjectSize(size)-1]["geo"] = r[0].latitud,r[0].longitud,
         size[ObjectSize(size)-1]["direccion"] = r[0].direccion;
         size[ObjectSize(size)-1]["status"] = r[0].pesco;
         size[ObjectSize(size)-1]["tipo"] = r[0].vivo;
@@ -2409,7 +2498,7 @@ function exReport(r){
         size.clientes[ObjectSize(size.clientes)] = {},
         size.clientes[ObjectSize(size.clientes)-1]["nombre"] = r[0].nombre,
         //size.clientes[ObjectSize(size.clientes)-1]["telefono"] = obj.usuario[2],
-        size.clientes[ObjectSize(size.clientes)-1]["geo"] = r[0].latitud,r[0].longitud,
+        //size.clientes[ObjectSize(size.clientes)-1]["geo"] = r[0].latitud,r[0].longitud,
         size.clientes[ObjectSize(size.clientes)-1]["direccion"] = r[0].direccion;
         size.clientes[ObjectSize(size.clientes)-1]["status"] = r[0].pesco;
         size.clientes[ObjectSize(size.clientes)-1]["tipo"] = r[0].vivo;
@@ -2435,4 +2524,45 @@ function midNight(){
     setTimeout(function(){
         logout();
     }, closeApp);
+}
+
+function cachInfo(){
+    document.getElementById('loadingMap').style.display ="block";
+    if(reportObj.status == "sin venta"){
+      status = 0;
+      var value = document.getElementById('reason').value;
+      reportObj["razon"] =value;
+    }
+    if(reportObj.status == "venta"){
+      status = 1;
+    }
+    var obj = [];
+    for(var i = 0; i <= reportObj.campañas.length-1; i++){
+      var idCamp,
+        status;
+      if(jQuery.inArray(reportObj.campañas[i], reportObj.usuario) != -1){
+        idCamp = reportObj.campañas[i];
+      }
+      obj[obj.length] = {"idFielder": userId, "idCampaign": reportObj.usuario[0], "pesco": status, "region":reportObj.llave, "razon": reportObj.razon, "direccion":reportObj.usuario[3], "nombre":reportObj.usuario[1],"telefono":reportObj.usuario[2],"vivo":reportObj.tipo, "latitud":latitude,"longitud":longitude};
+    }
+    $.ajax({
+      url: ''+hostVar+':9090/telmex/add/rc',
+      type: 'POST',
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(obj),
+    })
+    .done(function() {
+    masterAlert("Gracias la información fue procesada");
+    })
+    .fail(function(a,b,c) {
+      console.log(a,b,c);
+    masterAlert("Error por favor vuelva a intentar");
+    })
+    .always(function() {
+          document.getElementById('loadingMap').style.display ="none";
+    });
+      function encode_utf8(s) {
+return unescape(encodeURIComponent(s));
+}
+
 }

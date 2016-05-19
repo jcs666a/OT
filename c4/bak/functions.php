@@ -9,11 +9,7 @@ if($_POST['pky']!='')
 else
 	header("Location: ../");
 //Vars:
-$ipServ='http://10.105.116.52:9090/';
-//$ipServ='http://localhost:9090/';
-//$ipServ='http://187.217.179.35:9090/';
-//$ipServ='http://10.105.116.187:9090/';
-//$ipServ='http://10.105.116.207:9090/';
+$ipServ='http://localhost:9090/';
 //Clases:
 class GCM{
 	function __construct(){}
@@ -217,12 +213,16 @@ else if($pky=='4g?$eRt='){ //logout
 	logout($data);
 }
 else if($pky=='b.4{d2xA'){//Enviar mails
+	$correo=trim($_POST['M']);
+	$asunto=trim($_POST['A']);
+	$cuerpo=trim($_POST['C']);
 	$templa=file_get_contents('mailer/temp.html', FILE_USE_INCLUDE_PATH);
-	$templa=str_replace("{{titulo}}","Tu cuenta de Telmex c4",$templa);
-	$templa=str_replace("{{usuario}}","lider",$templa);
-	$templa=str_replace("{{contraseña}}","kkkk",$templa);
+	$templa=str_replace("{{titulo}}",$asunto,$templa);
+	$templa=str_replace("{{cuerpo}}",$cuerpo,$templa);
 	require 'mailer/PHPMailerAutoload.php';
 	$mail = new PHPMailer;
+	$mail->CharSet = 'utf-8';
+	ini_set('default_charset', 'UTF-8');
 	$mail->isSMTP();
 	$mail->SMTPDebug=0; // 0=off, 1=client messages, 2=client and server messages
 	$mail->Debugoutput='html';
@@ -232,14 +232,14 @@ else if($pky=='b.4{d2xA'){//Enviar mails
 	$mail->SMTPAuth=true;
 	$mail->Username="jcottelmex@gmail.com";
 	$mail->Password="Blitz2016";
-	$mail->setFrom('jcottelmex@gmail.com','Julio S.');
+	$mail->setFrom('jcottelmex@gmail.com','Administrador del Dashboard');
 //	$mail->addReplyTo('jcottelmex@gmail.com','Julio S.');
-	$mail->addAddress('jcsavila@gmail.com','Julio');
-//	$mail->addAddress('EVIVANCO@telmex.com','Rafaelo');
-	$mail->Subject='Llamado a Rafaelo';
+//	$mail->addAddress($correo,'Administrador del Dashboard');
+	$mail->addAddress('jcsavila@gmail.com','Administrador del Dashboard');
+	$mail->Subject=$asunto;
 //	$mail->msgHTML(file_get_contents('mailer/temp.html'), dirname(__FILE__));
 	$mail->msgHTML($templa);
-	$mail->AltBody='Tu cuenta de Telmex c4 /r/n/r/n Usuario: lider /r/n Contraseña: kkk';
+	$mail->AltBody=$asunto.' /r/n/r/n '.$cuerpo;
 //	$mail->addAttachment('../img/estacontigo.png');
 	if (!$mail->send()){
 		echo "Mailer Error: " . $mail->ErrorInfo;
@@ -338,13 +338,35 @@ else if($pky=='Tym,pñ&'){ //Obtiene fielders por region
 }
 else if($pky==',.-76reIo5{'){ //Obtiene fielders por Area
 	$abj=file_get_contents($ipServ.'telmex/get/usuariosarea/'.$_POST['P']);
+	$obj[]=array();
 	if($abj=='')
 		$abj['errorMessage']='No hay respuesta del servidor para obtener fielders del área. NO RESPONSE';
 	else{
 		$abj=json_decode($abj);
 		$abj=$abj->apiResponse[0];
+		$i=0;
+		foreach($abj as $k=>$v){
+			if($v[1]==7){
+				$obj[$i][0]=$v[0];
+				$obj[$i][1]=$v[1];
+				$obj[$i][2]=$v[2];
+				$obj[$i][3]=$v[3];
+				$obj[$i][4]=$v[4];
+				$obj[$i][5]=$v[5];
+				$obj[$i][6]=$v[6];
+				$obj[$i][7]=$v[7];
+				$obj[$i][8]=$v[8];
+				$obj[$i][9]=$v[9];
+				$obj[$i][10]=$v[10];
+				$obj[$i][11]=$v[11];
+				$obj[$i][12]=$v[12];
+				$obj[$i][13]=$v[13];
+				$obj[$i][14]=$v[14];
+				$i++;
+			}
+		}
 	}
-	echo json_encode($abj);
+	echo json_encode($obj);
 }
 else if($pky=='lñjh(U]'){ //Pinta los distritos pedidos (Necesito mandarme el área)
 	$data[]=$_POST['P'];
@@ -663,7 +685,7 @@ else if($pky=='bH-.!sdT'){ //Guardo nuevo usuario
 	$ch = curl_init($ipServ.'telmex/add/user');
 	curl_setopt_array($ch, array(
 		CURLOPT_CONNECTTIMEOUT => 15,
-		CURLOPT_TIMEOUT => 30,
+		CURLOPT_TIMEOUT => 20,
 		CURLOPT_POST => TRUE,
 		CURLOPT_RETURNTRANSFER => TRUE,
 		CURLOPT_HTTPHEADER => array(
@@ -1001,8 +1023,8 @@ else if($pky=='g.-&3eGD'){ //Guardo edición de campaña o también campaña nue
 	$p=trim($_POST['P']);
 	$r=trim($_POST['R']);
 	$d=trim($_POST['D']);
-	$k=trim($_POST['K']);$obj['K']=$k;
-	$l=trim($_POST['L']);$obj['L']=$l;
+	$k=trim($_POST['K']);$obj['K']=$k;$k=date('Y-m-d',strtotime($k.' + 1 days'));
+	$l=trim($_POST['L']);$obj['L']=$l;$l=date('Y-m-d',strtotime($l.' + 1 days'));
 	$m=trim($_POST['M']);$obj['M']=$m;
 	$c=trim($_POST['C']);$c=ltrim($c,'#');
 	$y='';
