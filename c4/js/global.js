@@ -169,10 +169,8 @@ function regisdivareas(region){
 }
 var path=window.location.pathname,myCookie=getCookie("Cinf"),Nombre='',Usuario='',idBoss='',Rol='',idRol='',marcadores=[],ubicalosFirst=1,misRegiones=[],
 	promesas={
-		divisiones:function(p,u,x){return $.ajax({method:"POST",url:Ñ,data:{pky:'ñhj/4"1z',P:p,U:u,X:x}});},
-		areas:function(p,u){return $.ajax({method:"POST",url:Ñ,data:{pky:'5yj[.-}',P:p,U:u}});},
-		colonias:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'er43{¿3',P:p}});},
-		distritos:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'eK,.-/',P:p}});},
+		all:function(k){return $.ajax({method:"POST",url:Ñ,data:k});},
+
 		fieldersA:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:',.-76reIo5{',P:p}});},
 		fieldersR:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'Tym,pñ&',P:p}});},
 		fielderIN:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'-Iyh&4}[',P:p}});},
@@ -213,8 +211,7 @@ var path=window.location.pathname,myCookie=getCookie("Cinf"),Nombre='',Usuario='
 		AddingCpm:function(D){return $.ajax({method:"POST",url:Ñ,data:D});},
 		UbicaFiel:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'-Ñp0?2.3d',P:p}});},
 		Conversas:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:',&44jÑ{',P:p}});},
-		RegFroCam:function(p,r){return $.ajax({method:"POST",url:Ñ,data:{pky:'-:Ñ_6%fC',P:p,R:r}});},
-		Mail:function(p){return $.ajax({method:"POST",url:Ñ,data:{pky:'b.4{d2xA',P:p}});}
+		RegFroCam:function(p,r){return $.ajax({method:"POST",url:Ñ,data:{pky:'-:Ñ_6%fC',P:p,R:r}});}
 	};
 function creanotificacion(titulo,mensaje,error,textStatus,clase){
 	var op=''; if(error!='') op='<p>' + error + ' ' + textStatus + '</p>';

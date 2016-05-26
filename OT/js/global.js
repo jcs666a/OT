@@ -2499,10 +2499,10 @@ function exReport(r){
       else{
 	if(!size.asignacion){
 		size.asignacion = {};
-	}	
+	}
 	if(!size.asignacion[r[0].idCampaign]){
-		size.asignacion[r[0].idCampaign]={}, 
-		size.asignacion[r[0].idCampaign].clientes = {};	
+		size.asignacion[r[0].idCampaign]={},
+		size.asignacion[r[0].idCampaign].clientes = {};
 	}
         size = size.asignacion[r[0].idCampaign];
         size.clientes[ObjectSize(size.clientes)] = {},
