@@ -48,19 +48,23 @@
         <div id="dns">
         </div>
         <div id="iframeDisplay">
-          
+
         </div>
         <div id="iframeDisplay2">
-          
+
         </div>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-      <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-      <script src="js/sockjs-0.3.4.js"></script>
-      <script src="js/mpsi.js" charset="utf-8"></script>
-      <script src="js/stomp.js"></script>
-      <script src="http://code.highcharts.com/highcharts.js"></script>
-      <script src="js/core.js" charset="utf-8"></script>
-      <script src="js/global.js" charset="utf-8"></script>
+        <div id="loadingMap">
+            <div class="loading"></div>
+        </div>
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+      <script src="//maps.googleapis.com/maps/api/js?v=3.exp"></script>
+      <script src="//10.105.116.69/devApp/js/sockjs-0.3.4.js"></script>
+      <script src="//10.105.116.69/devApp/js/mpsi.js" charset="utf-8"></script>
+      <script src="//10.105.116.69/devApp/js/stomp.js"></script>
+      <script src="//code.highcharts.com/highcharts.js"></script>
+      <script src="//10.105.116.69/devApp/js/sjcl.js"></script>
+      <script src="//10.105.116.69/devApp/js/core.js" charset="utf-8"></script>
+      <script src="//10.105.116.69/devApp/js/global.js" charset="utf-8"></script>
       <script>
           $(window).bind("load", function(){
             if(fielderInfo == null){
@@ -70,12 +74,6 @@
           $(function(){
               global();
           });
-/*          window.onbeforeunload = function(){
-            logout();
-          }
-          window.addEventListener("beforeunload", function(e){
-            logout();
-          }, false); */
       </script>
     </body>
 </html>

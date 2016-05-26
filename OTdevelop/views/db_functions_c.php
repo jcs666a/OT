@@ -1,5 +1,5 @@
 <?php ob_start();
-$ipServ='http://10.105.116.52:9090/';
+$ipServ='http://187.217.179.35:9090/';
 if($_POST['pDf']=='ñrRp3}.'){ //Crea GCM o no
     $data=array(
         'idUsuario'=>array(
@@ -46,7 +46,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
         switch($i){
             case 1:
                 $colorLe = "5FB404";
-                break;  
+                break;
             case 2:
                 $colorLe = "FF8000";
                 break;
@@ -75,7 +75,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
         switch($i){
             case 1:
                 $colorLe = "poiATM.png";
-                break;  
+                break;
             case 2:
                 $colorLe = "poiFTTH.png";
                 break;
@@ -182,38 +182,70 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                 $polDistritales[$zonas[1]][]=$zonas[2];
                 $megaObjeto['Regiones']['Region'][$k]['Distrito']=$zonas[2]; // cambiar 207 * 52
                 $cdist=file_get_contents($ipServ.'telmex/cct/dist/'.$zonas[1].'/'.$zonas[2]);
-                if($cdist === FALSE)
+                if($cdist === FALSE){
                     $tel='Error 404';
+                }
                 else{
                     $cdist=json_decode($cdist);
                     $cdist=$cdist->apiResponse[0];
                     if(count($cdist)>0){
-                        $ix=0;
+                        $ix=0;$ixx=0;
                         foreach($cdist as $ki=>$vl){
                             if($vl->latitud!='' && $vl->longitud!=''){
-                                $tel[$ix]['id']=$vl->id;
-                                $tel[$ix]['tcode']=$vl->tcode;
-                                $tel[$ix]['campaigncode']=$vl->campaigncode;
-                                $tel[$ix]['offercode']=$vl->offercode;
-                                $tel[$ix]['titulo']=$vl->titulo;
-                                $tel[$ix]['descripcion']=$vl->descripcion;
-                                $tel[$ix]['estado']=$vl->estado;
-                                $tel[$ix]['color']=$vl->color;
-                                $tel[$ix]['telefono']=$vl->telefono;
-                                $tel[$ix]['region']=$vl->region;
-                                $tel[$ix]['direccion']=$vl->direccion;
-                                $tel[$ix]['latitud']=$vl->latitud;
-                                $tel[$ix]['longitud']=$vl->longitud;
-                                $tel[$ix]['cliente']=$vl->cliente;
-                                $tel[$ix]['vivo']=$vl->vivo;
-                                $ix++;
+                                if($vl->tcode!='' && $vl->campaigncode!='' && $vl->offercode!='' &&
+                                    $vl->tcode!=null && $vl->campaigncode!=null && $vl->offercode!=null &&
+                                    $vl->tcode!='null' && $vl->campaigncode!='null' && $vl->offercode!='null'){
+                                    $tel[$ix]['id']=$vl->id;
+                                    $tel[$ix]['tcode']=$vl->tcode;
+                                    $tel[$ix]['campaigncode']=$vl->campaigncode;
+                                    $tel[$ix]['offercode']=$vl->offercode;
+                                    $tel[$ix]['imagen']=$vl->imagen;
+                                    $tel[$ix]['titulo']=$vl->titulo;
+                                    $tel[$ix]['descripcion']=$vl->descripcion;
+                                    $tel[$ix]['estado']=$vl->estado;
+                                    $tel[$ix]['color']=$vl->color;
+                                    $tel[$ix]['telefono']=$vl->telefono;
+                                    $tel[$ix]['region']=$vl->region;
+                                    $tel[$ix]['direccion']=$vl->direccion;
+                                    $tel[$ix]['latitud']=$vl->latitud;
+                                    $tel[$ix]['longitud']=$vl->longitud;
+                                    $tel[$ix]['cliente']=$vl->cliente;
+                                    $tel[$ix]['vivo']=$vl->vivo;
+                                    $tel[$ix]['producto']=$vl->producto;
+                                    $tel[$ix]['ofertaAdicional']=$vl->ofertaAdicional;
+                                    $ix++;
+                                }
+                                else{
+                                    $telb[$ixx]['id']=$vl->id;
+                                    $telb[$ixx]['tcode']='';
+                                    $telb[$ixx]['campaigncode']='';
+                                    $telb[$ixx]['offercode']='';
+                                    $telb[$ixx]['imagen']='';
+                                    $telb[$ixx]['titulo']=$vl->titulo;
+                                    $telb[$ixx]['descripcion']=$vl->descripcion;
+                                    $telb[$ixx]['estado']=$vl->estado;
+                                    $telb[$ixx]['color']=$vl->color;
+                                    $telb[$ixx]['telefono']=$vl->telefono;
+                                    $telb[$ixx]['region']=$vl->region;
+                                    $telb[$ixx]['direccion']=$vl->direccion;
+                                    $telb[$ixx]['latitud']=$vl->latitud;
+                                    $telb[$ixx]['longitud']=$vl->longitud;
+                                    $telb[$ixx]['cliente']=$vl->cliente;
+                                    $telb[$ixx]['vivo']=$vl->vivo;
+                                    $telb[$ixx]['producto']=$vl->producto;
+                                    $telb[$ixx]['ofertaAdicional']=$vl->ofertaAdicional;
+                                    $ixx++;
+                                }
                             }
                         }
                     }
-                    else
-                    $tel=count($cdist);
+                    else{
+                        $tel=0;
+                        $telb=0;
+                    }
                 }
-                $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['Clientes']=$tel;unset($tel);
+                $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['Clientes']=$telb;unset($telb);
+                $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['clienteDirigido']=$tel;unset($tel);
                 $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['urlC']=$ipServ.'telmex/cct/dist/'.$zonas[1].'/'.$zonas[2];
                 unset($cdist);
                 $cdist=file_get_contents($ipServ.'telmex/clientes/notClientByAreaDto/'.$zonas[1].'/'.$zonas[2]);
@@ -238,7 +270,7 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                         }
                     }
                     else
-                    $tel=count($cdist);
+                        $tel=0;
                 }
                 $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['NoClientes']=$tel;unset($tel);
                 $megaObjeto['Regiones']['Areas'][$zonas[1]]['Distritos'][$zonas[2]]['urlN']=$ipServ.'telmex/clientes/notClientByAreaDto/'.$zonas[1].'/'.$zonas[2];
@@ -350,6 +382,9 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
     $jsan=file_get_contents($ipServ.'telmex/get/campaniasById/'.$_POST["idu"]);
     $jsan=json_decode($jsan);
     $megaObjeto['Campanas']=$jsan->apiResponse[0];
+/*    foreach($jsan->apiResponse[0] as $y=>$v){
+        $megaObjeto['Campanas'][$v->campana->id]=$v;
+    } */
 //Para las imagenes en un objeto aparte...
     $i=0;
     foreach($jsan->apiResponse[0] as $y=>$v){
@@ -389,46 +424,33 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
 
     $jsan=file_get_contents($ipServ.'telmex/get/rc/rcActivoByidFielder/'.$_POST["idu"]);
     $jsan=json_decode($jsan);
-    function dateDifference($date_1,$date_2,$differenceFormat='%a'){
-        $datetime1 = date_create($date_1);
-        $datetime2 = date_create($date_2);
-        $interval = date_diff($datetime1, $datetime2);
-        return $interval->format($differenceFormat);
-    }
     foreach($jsan->apiResponse[0] as $k=>$v){
-        $ini=strtotime($v->fechaInicioCampania);$ini=date('Y-m-d',$ini);
-        $fin=strtotime($v->fechaFinCampania);$fin=date('Y-m-d',$fin);
-//        $ini=strtotime('2016-01-01');$ini=date('Y-m-d',$ini);
-//        $fin=strtotime('2016-04-04');$fin=date('Y-m-d',$fin);
-        $cuantosDias=dateDifference($ini,$fin)+1;
-        $megaObjeto['Calendario']['vs'][]=$v;
-        $megaObjeto['Calendario']['ks'][]=$k;
-        if($v->idCampania!=''){
-            $megaObjeto['Calendario']['Estadisticos'][$v->idCampania]['Inicio']=$v->fechaInicioCampania;
-            $megaObjeto['Calendario']['Estadisticos'][$v->idCampania]['Fin']=$v->fechaFinCampania;
-            $megaObjeto['Calendario']['Estadisticos'][$v->idCampania]['duracionDias']=$cuantosDias;
-            $megaObjeto['Calendario']['Estadisticos'][$v->idCampania]['descripcion']=$v->descripcion;
-            $megaObjeto['Calendario']['Estadisticos'][$v->idCampania]['metaTotal']=$v->meta+$megaObjeto['Calendario']['Estadisticos'][$v->idCampania]['metaTotal'];
-            $megaObjeto['Calendario']['Estadisticos'][$v->idCampania]['metaDiaria']=ceil($megaObjeto['Calendario']['Estadisticos'][$v->idCampania]['metaTotal']/$cuantosDias);
-            $megaObjeto['Calendario']['Estadisticos'][$v->idCampania]['titulo']=$v->titulo;
-            $megaObjeto['Calendario']['Estadisticos'][$v->idCampania]['idCamp']=$v->idCampania;
-            $megaObjeto['Calendario']['Estadisticos'][$v->idCampania]['idCr']=$v->idCr;
-            $megaObjeto['Calendario']['Estadisticos'][$v->idCampania]['color']=$v->color;
-        }
-        $metaDiaria=ceil($v->meta/$cuantosDias);
-        $sta=strtotime($v->fechaInicioCampania);
-        $end=strtotime($v->fechaFinCampania);
-        $anoReporte=substr($v->createAt,6,4);
-        $mesReporte=substr($v->createAt,3,2);$mesReporte=ltrim($mesReporte,"0");$mesReporte--;
-        $diaReporte=substr($v->createAt,0,2);$diaReporte=ltrim($diaReporte,"0");
-        $fechaReporte=$anoReporte.'-'.$mesReporte.'-'.$diaReporte;
-        $region=explode("-",$v->region);
-        $objectVisitas[$fechaReporte][$region[2]]['descripcion']=$region[2];
-        $objectVisitas[$fechaReporte][$region[2]]['clientes'][]=array(
+        $createAt=strtotime($v->createAt);
+        $ano=date('Y',$createAt);$mes=date('n',$createAt);$dia=date('j',$createAt);
+        $mes--;
+        if($v->region=='' || $v->region==null || $v->region=='null')
+            $region[2]='';
+        else
+            $region=explode("-",$v->region);
+        if($v->idCampania=='' || $v->idCampania==null || $v->idCampania=='null')
+            $v->idCampania='';
+        if($v->titulo=='' || $v->titulo==null || $v->titulo=='null')
+            $v->titulo='';
+        if($v->razon=='' || $v->razon==null || $v->razon=='null')
+            $v->razon='';
+
+        if($v->idCampania!='' && $v->idCampania!=null && $v->idCampania!='null' && $v->idCampania!="''"
+            && $v->region!='' && $v->region!=null && $v->region!='null' && $v->region!="''" && $v->region!="'undefined'" && $v->region!=undefined){
+            if($megaObjeto['Calendario'][$v->idCampania]['TotalVisitas']=='' || $megaObjeto['Calendario'][$v->idCampania]['TotalVisitas']==null)
+                $megaObjeto['Calendario'][$v->idCampania]['TotalVisitas']=0;
+            if($megaObjeto['Calendario'][$v->idCampania]['TotalVentas']=='' || $megaObjeto['Calendario'][$v->idCampania]['TotalVentas']==null)
+                $megaObjeto['Calendario'][$v->idCampania]['TotalVentas']=0;
+            $megaObjeto['Calendario'][$v->idCampania]['TotalVisitas']=$megaObjeto['Calendario'][$v->idCampania]['TotalVisitas']+1;
+            $megaObjeto['Calendario'][$v->idCampania]['TotalVentas']=$megaObjeto['Calendario'][$v->idCampania]['TotalVentas']+1;
+            $megaObjeto['Calendario'][$v->idCampania]['Visitas'][$ano][$mes][$dia][]=array(
                 'nombre'=>$v->nombre,
                 'telefono'=>$v->telefono,
-                'geo'=>$v->latitud.','.$v->longitud,
-                'CP'=>'',
+                'distrito'=>$region[2],
                 'direccion'=>$v->direccion,
                 'status'=>$v->pesco,
                 'tipo'=>$v->vivo,
@@ -436,35 +458,22 @@ else if($_POST['pDf']=='4ýhHGr{'){ //Crea megaobjeto!
                 'campaña'=>$v->idCampania,
                 'titulo'=>$v->titulo
             );
-    }
-    $iCi=0;
-    foreach($megaObjeto['Calendario']['Estadisticos'] as $k=>$v){
-        $objectCampas[$iCi]['idCr']=$v['idCr'];
-        $objectCampas[$iCi]['idCamp']=$v['idCamp'];
-        $objectCampas[$iCi]['color']=$v['color'];
-        $objectCampas[$iCi]['meta']['meta']=$v['metaTotal'];
-        $objectCampas[$iCi]['meta']['visitas']=0;
-        $objectCampas[$iCi]['meta']['ventas']=0;
-        $iCi++;
-    }
-    $dias=0;
-    for($i=$sta;$i<=$end;$i=$i+86400){$dias++;}
-    for($i=$sta;$i<=$end;$i=$i+86400){
-        $visita=0;
-        $ventas=0;
-        $mes=date('m',$i);$mes=ltrim($mes,"0");$mes--;
-        $dia=date('d',$i);$dia=ltrim($dia,"0");
-        $fechaCalendar=date('Y',$i).'-'.$mes.'-'.$dia;
-        $iCi=0;
-        $megaObjeto['Calendario']['Cal'][date('Y',$i)][$mes][$dia]['campInfo']=$objectCampas;
-        if(array_key_exists($fechaCalendar,$objectVisitas)){
-            foreach($objectVisitas[$fechaCalendar] as $k=>$v){
-                $megaObjeto['Calendario']['Cal'][date('Y',$i)][$mes][$dia]['asignacion'][]=$v;
-                $megaObjeto['Calendario']['Cal'][date('Y',$i)][$mes][$dia]['campInfo'][$iCi]['meta']['visitas']=count($v['clientes']);
-                if($v['clientes']['status']==true || $v['clientes']['status']=='true' || $v['clientes']['status']==1)
-                    $megaObjeto['Calendario']['Cal'][date('Y',$i)][$mes][$dia]['campInfo'][$iCi]['meta']['ventas']=$megaObjeto['Calendario']['Cal'][date('Y',$i)][$mes][$dia]['campInfo'][$iCi]['meta']['ventas']+1;
-                $iCi++;
-            }
+        }
+        else{
+            if($megaObjeto['Calendario']['Libres']['TotalVentas']=='' || $megaObjeto['Calendario']['Libres']['TotalVentas']==null)
+                $megaObjeto['Calendario']['Libres']['TotalVentas']=0;
+            $megaObjeto['Calendario']['Libres']['TotalVentas']=$megaObjeto['Calendario']['Libres']['TotalVentas']+1;
+            $megaObjeto['Calendario']['Libres']['Visitas'][$ano][$mes][$dia][]=array(
+                'nombre'=>$v->nombre,
+                'telefono'=>$v->telefono,
+                'geo'=>$v->latitud.','.$v->longitud,
+                'distrito'=>'Sin distrito asignado',
+                'direccion'=>$v->direccion,
+                'status'=>true,
+                'tipo'=>false,
+                'razon'=>$v->razon,
+                'campaña'=>$v->titulo,
+            );
         }
     }
     unset($jsan);

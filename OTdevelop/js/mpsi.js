@@ -31,7 +31,7 @@ function startMapa(){
 	pintaClientes();
 	newPosition();
 	pintaTienda();
-    PutInMapCamp();
+  //PutInMapCamp();
 
 }
 function setColores(){
@@ -114,7 +114,7 @@ function registraCliente(t){
 		'<div class="no-cliente"></div>'+
 		'<p>No es Cliente Telmex</p>'+
 		'</div>'+
-		'</div>';	
+		'</div>';
 		var tope = fielderPols.Distritos.zds0002.geometry.coordinates[0],
 			obj = [];
 		for(var i = 0; i <= tope.length; i++){
@@ -130,7 +130,7 @@ function registraCliente(t){
  var polygon = new google.maps.Polygon({
     paths: triangleCoords
   });
-		getName(polygon);	
+		getName(polygon);
 	}
 	else{
 		var step = t.dataset.step,
@@ -141,10 +141,10 @@ function registraCliente(t){
 			constructor(step);
 		}
 		if(step == 1){
-			var nombre = document.getElementById('nameSend').value, 
+			var nombre = document.getElementById('nameSend').value,
 				telefono = document.getElementById('telefonoSend').value,
 				direccion = document.getElementById('direccion').value,
-				geo = document.getElementById('geoSend').value, 
+				geo = document.getElementById('geoSend').value,
 				obj ={'nombre':nombre, 'telefono':telefono, 'direccion': direccion, 'geo':geo};
 			report[step] = obj;
         $.ajax({
@@ -164,7 +164,7 @@ function registraCliente(t){
 			}
 		}
 		if(step == 2){
-			var size  = $("#dataFor input").length, 
+			var size  = $("#dataFor input").length,
 				type = [];
 			for(var i = 0; i <= size-1; i++){
 				var value = document.getElementById("dataFor").childNodes;
@@ -276,15 +276,48 @@ function registraCliente(t){
 $(document).on("click",".btnCliente",function(event){
 	alert($(this).attr('telefono'));
 });
-var cc = {}, 
+var cc = {},
 	nam = 0;
 function pintaClientes(){
 	var x=0,muestralo,fClientes={},puntoColor;
 	function metoElPunto(c,x,k){
-			cc[nam] = c;
-		if(c.tcode!=null){
+		cc[nam] = c;
+		if(c.tcode!='' && (c.vivo==true || c.vivo=='t')){
 			puntoColor='amarillo.png';
-			var centrob=new google.maps.LatLng(c.latitud,c.longitud);
+			var centrob=new google.maps.LatLng(c.latitud,c.longitud),oAdic='',pAdic='';
+			if(c.ofertaAdicional!=null && c.ofertaAdicional!='null' && c.ofertaAdicional!='')
+				oAdic='<p><b>Oferta</b>: '+c.ofertaAdicional+'</p>';
+			if(c.producto!=null && c.producto!='null' && c.producto!='')
+				pAdic='<p><b>Producto</b>: '+c.producto+'</p>';
+			PointsClientes[x]=new google.maps.Marker({
+				position:centrob,
+				map		: map,
+				title	: c.cliente,
+				icon	: "css/img/assets/"+puntoColor,
+				image	: c.imagen,
+				html	:
+					'<div class="title">'+
+						c.cliente+
+					'</div>'+
+					'<div style="margin:0 0 10px 0;"><b>Distrito</b>: '+k+'<br><br>'+
+					'<b>Campaña</b>: '+c.titulo+'<br><b>Descripción</b>: '+c.descripcion+'<br><br>'+
+					'<b>Domicilio</b>: '+c.direccion+'<br><b>Teléfono</b>: '+c.telefono+'</div>'+
+					oAdic+pAdic+
+					'<a class="btnCtnMap" onclick="mercaCrossModul('+nam+');">Contratación</a>'
+			});
+			PointsClientes[x].addListener('click',function(){
+				console.log(this.image);
+				infowindow.setContent(this.html);
+				infowindow.open(map,this);
+			});
+		}
+		else if(c.vivo==true || c.vivo=='t'){
+			puntoColor='verde.png';
+			var centrob=new google.maps.LatLng(c.latitud,c.longitud),oAdic='',pAdic='';
+			if(c.ofertaAdicional!=null && c.ofertaAdicional!='null' && c.ofertaAdicional!='')
+				oAdic='<p><b>Oferta</b>: '+c.ofertaAdicional+'</p>';
+			if(c.producto!=null && c.producto!='null' && c.producto!='')
+				pAdic='<p><b>Producto</b>: '+c.producto+'</p>';
 			PointsClientes[x]=new google.maps.Marker({
 				position:centrob,
 				map		: map,
@@ -296,7 +329,8 @@ function pintaClientes(){
 					'</div>'+
 					'<div style="margin:0 0 10px 0;"><b>Distrito</b>: '+k+'<br><br>'+
 					'<b>Campaña</b>: '+c.titulo+'<br><b>Descripción</b>: '+c.descripcion+'<br><br>'+
-					'<b>Domicilio</b>: '+c.direccion+'<br><b>Teléfono: </b>'+c.telefono+'</div>'+
+					'<b>Domicilio</b>: '+c.direccion+'<br><b>Teléfono</b>: '+c.telefono+'</div>'+
+					oAdic+pAdic+
 					'<a class="btnCtnMap" onclick="mercaCrossModul('+nam+');">Contratación</a>'
 			});
 			PointsClientes[x].addListener('click',function(){
@@ -304,7 +338,7 @@ function pintaClientes(){
 				infowindow.open(map,this);
 			});
 		}
-		else if(c.vivo==false){
+		else if(c.vivo==false || c.vivo=='f'){
 			puntoColor='rojo.png';
 			var centrob=new google.maps.LatLng(c.latitud,c.longitud);
 			PointsClientes[x]=new google.maps.Marker({
@@ -322,24 +356,7 @@ function pintaClientes(){
 				infowindow.open(map,this);
 			});
 		}
-		else{
-			puntoColor='rojo.png';
-			var centrob=new google.maps.LatLng(c.latitud,c.longitud);
-			PointsClientes[x]=new google.maps.Marker({
-				position:centrob,
-				map		: map,
-				title	: c.cliente,
-				icon	: "css/img/assets/"+puntoColor,
-				html	:
-					'<div style="margin:0 0 10px 0;"><b>Distrito</b>: '+k+'<br><br>'+
-					'<b>Domicilio</b>: '+c.direccion+'<br>'+
-					'<a class="btnCtnMap" data-direccion="'+c.direccion+'" onclick="salesIframe(this)">Contratación</a>'
-			});
-			PointsClientes[x].addListener('click',function(){
-				infowindow.setContent(this.html);
-				infowindow.open(map,this);
-			});
-		}
+		else console.log(c);
 		nam++;
 	}
 	$.when(
@@ -348,18 +365,15 @@ function pintaClientes(){
 			var aa=a[2],
 				ab=a[3];
 			var jn={[aa]:ab};
-			if(fClientes.hasOwnProperty(aa))
-				$.extend(fClientes,{[aa]:'All'});
-			else
+//			if(fClientes.hasOwnProperty(aa))
+//				$.extend(fClientes,{[aa]:'All'});
+//			else
 				$.extend(fClientes,{[aa]:ab});
 		})
 	).done(function(){
 		if(fielderRegs.hasOwnProperty('Areas')){
-			console.log(fielderRegs.Areas);
 			$.each(fielderRegs.Areas,function(i,a){
-				if(!a.Distritos){
-
-				}else{
+				if(!a.Distritos){}else{
 					$.each(a.Distritos,function(k,b){
 						muestralo="No";
 						if(fClientes.hasOwnProperty(k)){
@@ -369,35 +383,17 @@ function pintaClientes(){
 								cualesPinto='No Clientes';
 							else if(fClientes[k]=='All')
 								cualesPinto='Todos';
+							else if(fClientes[k] == 'D')
+								cualesPinto = 'Cliente Dirigido';
 							muestralo="Si";
 						}
 						else if(filtrosMapa.FirstTime=="SI")
 							muestralo="Si";
 						if(muestralo=="Si"){
 							if(cualesPinto == 'No Clientes' && filtrosMapa.FirstTime!="SI"){
-								if(b.NoClientes.length>0){
-									console.log('no clientes');
-									$.each(b.NoClientes,function(j,c){
-										metoElPunto(c,x,k);
-										x++;
-									});
-								}
-							}
-							if(cualesPinto == 'Clientes' && filtrosMapa.FirstTime!="SI"){
-								if(b.Clientes.length>0){
-									$.each(b.Clientes,function(j,c){
-										metoElPunto(c,x,k);
-										x++;
-									});
-								}
-							}
-							if(cualesPinto == 'Todos' || filtrosMapa.FirstTime=="SI"){
-								if(b.Clientes.length>0){
-									$.each(b.Clientes,function(j,c){
-										metoElPunto(c,x,k);
-										x++;
-									});
-								}
+								if(b.NoClientes == null || b.NoClientes == undefined){
+	 									b.NoClientes = 0;
+	 								}
 								if(b.NoClientes.length>0){
 									$.each(b.NoClientes,function(j,c){
 										metoElPunto(c,x,k);
@@ -405,7 +401,57 @@ function pintaClientes(){
 									});
 								}
 							}
-
+							else if(cualesPinto == 'Clientes' && filtrosMapa.FirstTime!="SI"){
+								if(b.Clientes == null || b.Clientes == undefined){
+										b.Clientes = 0;
+								}
+								if(b.Clientes.length>0){
+									$.each(b.Clientes,function(j,c){
+										metoElPunto(c,x,k);
+										x++;
+									});
+								}
+							}
+							else if(cualesPinto == 'Cliente Dirigido' && filtrosMapa.FirstTime!="SI"){
+								if(b.clienteDirigido == null || b.clienteDirigido == undefined){
+	 									b.clienteDirigido = 0;
+	 								}
+								if(b.clienteDirigido.length>0){
+									$.each(b.clienteDirigido,function(j,c){
+										metoElPunto(c,x,k);
+										x++;
+									});
+								}
+							}
+							else if(cualesPinto == 'Todos' || filtrosMapa.FirstTime=="SI"){
+								if(b.Clientes == null || b.Clientes == undefined){
+										b.Clientes = 0;
+								}
+								if(b.Clientes.length>0){
+									$.each(b.Clientes,function(j,c){
+										metoElPunto(c,x,k);
+										x++;
+									});
+								}
+								if(b.NoClientes == null || b.NoClientes == undefined){
+	 									b.NoClientes = 0;
+	 								}
+								if(b.NoClientes.length>0){
+									$.each(b.NoClientes,function(j,c){
+										metoElPunto(c,x,k);
+										x++;
+									});
+								}
+							if(b.clienteDirigido == null || b.clienteDirigido == undefined){
+ 									b.clienteDirigido = 0;
+ 								}
+								if(b.clienteDirigido.length>0){
+									$.each(b.clienteDirigido,function(j,c){
+										metoElPunto(c,x,k);
+										x++;
+									});
+								}
+							}
 						}
 					});
 				}
@@ -556,6 +602,7 @@ function creaFiltroTecs(){
 											'<div class="Usuarios">'+
 												'<label area="'+i+'" class="userFilter checked"><input name="D,'+i+','+l+',U" type="checkbox" class="filtroUsuarios" value="1" checked="checked" />Usuarios</label>'+
 												'<label area="'+i+'" class="userFilter checked"><input name="D,'+i+','+l+',N" type="checkbox" class="filtroNoUsuarios" value="1" checked="checked"/>No usuarios</label>'+
+												'<label area="'+i+'" class="userFilter checked"><input name="D,'+i+','+l+',D" type="checkbox" class="filtroDirigidos" value="1" checked="checked"/>Dirigidas</label>'+
 											'</div>'+
 											'<div class="Tecnologias">'+
 												'<h4>Tecnologías:</h4>';
@@ -663,6 +710,7 @@ function meteFiltro(){
 			if(this.checked){
 				if($(this).attr('class')=='filtroUsuarios'){clients='Clientes';counts++;}
 				if($(this).attr('class')=='filtroNoUsuarios'){clients='NoClientes';counts++;}
+				if($(this).attr('class')=='filtroDirigidos'){clients='clienteDirigido';counts++;}
 				filtrosMapa.UD.push($(this).attr('name'));
 			}
 		});
@@ -682,6 +730,8 @@ function meteFiltro(){
 			cualesPinto='Clientes';
 		else if(clients=='NoClientes')
 			cualesPinto='No Clientes';
+		else if(clients=='clienteDirigido')
+			cualesPinto='Cliente Dirigido';
 	});
 }
 $(document).on("change","#nameDistrict #loadInMap .row :checkbox",function(){
@@ -899,7 +949,7 @@ function doneRepo(){
 	var value = document.getElementById('reason').value;
 		reportText('¡gracias los datos estan siendo procesados!',"alert");
 		report["razon"] = value;
-		setTimeout(function(){ 
+		setTimeout(function(){
 			document.getElementById('mapReport').classList.remove('open');
 		}, 5000);
 		attachCal(report);
@@ -909,7 +959,7 @@ function reportText(text, type){
 	insert.innerHTML = "<p>"+text+"</p>";
 	insert.classList.add('open');
 	insert.classList.add(type);
-	setTimeout(function(){ 
+	setTimeout(function(){
 		insert.classList.remove('open');
 		insert.classList.remove(type);
 	}, 4000);
@@ -976,12 +1026,12 @@ function attachCal(report){
 function getName(pol,index){
 	var latlng = new google.maps.LatLng(19.538309,-99.124570);
 	if (google.maps.geometry.poly.containsLocation(latlng, pol)) {
-		alert("si esta " +index);	
+		alert("si esta " +index);
 		repotBox("<div data-steep='1'></div>");
 	}else{
 		alert("no esta " +index);
 		repotBox("<div data-steep='1' data-distrito="+index+"></div>");
-	}	
+	}
 }
 function pintaTienda(){
 	var x=0,muestralo;

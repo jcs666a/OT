@@ -34,13 +34,18 @@ $("#formulario").on("submit",function(event){
 			var respuesta=data;
 			if(respuesta.errorMessage!= null)
 				$("#formulario #error").addClass('si').html('<small>'+respuesta.errorMessage+'</small>');
-			else
-				if(respuesta.apiResponse[0].cuenta==true)
-					window.location="views/login.html?"+
-					"&iduser="+respuesta.apiResponse[0].idUsuario+
-					"&gcm_regid="+gcm_regid;
-			else
-				$("#formulario #error").addClass('si').html('<small>Cuenta desactivada</small>');
+			else{
+				if(respuesta.apiResponse[0].cuenta==true){
+					if(respuesta.apiResponse[0].role.idRole==7 || respuesta.apiResponse[0].role.idRole=='7')
+						window.location="views/login.html?"+
+						"&iduser="+respuesta.apiResponse[0].idUsuario+
+						"&gcm_regid="+gcm_regid;
+					else
+						$("#formulario #error").addClass('si').html('<small>No tienes acceso a esta aplicación</small>');
+				}
+				else
+					$("#formulario #error").addClass('si').html('<small>Cuenta desactivada</small>');
+			}
 		}).fail(function(jqXHR,textStatus,error){
 			$("#formulario #error").addClass('si').html('<small>'+respuesta.error+'</small><br />'+textStatus);
 		});
@@ -62,8 +67,8 @@ function creandoObjeto(){
 			});
 		},
 		Stor:function(x){
-			console.log(x);
 			x=jQuery.parseJSON(x);
+			console.log(x);
 			localStorage.setItem('fielderInfo','{"Persona":"'+x.Datos.Nombre+
 				'","Datos":{"Rol":{"id":'+x.Datos.Rol.id+
 								',"rol":"'+x.Datos.Rol.rol+
@@ -76,15 +81,8 @@ function creandoObjeto(){
 			localStorage.setItem('fielderGrap','{}');			vy=JSON.stringify(x.Graficos);		if(x.hasOwnProperty("Graficos"))localStorage.setItem('fielderGrap',vy);
 			localStorage.setItem('fielderCamp','{}');			vy=JSON.stringify(x.Campanas);		if(x.hasOwnProperty("Campanas"))localStorage.setItem('fielderCamp',vy);
 			localStorage.setItem('fielderTien','{}');			vy=JSON.stringify(x.Tiendas);		if(x.hasOwnProperty("Tiendas"))localStorage.setItem('fielderTien',vy);
-			//localStorage.setItem('fielderImag','{}');			vy=JSON.stringify(x.Imagenes);		if(x.hasOwnProperty("Imagenes"))localStorage.setItem('fielderImag',vy);
-			localStorage.setItem('fielderCalendar','{}');
-			if(x.hasOwnProperty("Calendario")){
-				vy=JSON.stringify(x.Calendario.Cal);
-				if(x.Calendario.Cal.hasOwnProperty([1970]))
-					localStorage.setItem('fielderCalendar','{}');
-				else
-					localStorage.setItem('fielderCalendar',vy);
-			}
+			localStorage.setItem('fielderCalendar','{}');		vy=JSON.stringify(x.Calendario);	if(x.hasOwnProperty("Calendario")){localStorage.setItem('fielderCalendar',vy);}
+			createCal();
 			return 'Listo';
 		}
 	};
@@ -133,3 +131,150 @@ $(window, document, undefined).ready(function(){
 		$(this).removeClass('is-active');
 	});
 });
+function createCal(){
+  Calendar = {};
+	fielderCamp = JSON.parse(localStorage.getItem('fielderCamp'));
+  for(var i = 0; i <= fielderCamp.length-1; i++){
+    c = fielderCamp[i].campana.fechaInicio;
+    b = fielderCamp[i].campana.fechaFin;
+    splitInicio = c.split('-'),
+    splitFinal = b.split('-'),
+    oneDay = 24*60*60*1000,
+    firstDate = new Date(splitInicio[0],splitInicio[1]-1,splitInicio[2]);
+    console.log(firstDate);
+    secondDate = new Date(splitFinal[0],splitFinal[1]-1,splitFinal[2]);
+    console.log(secondDate);
+    diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
+    diffDays = diffDays+parseInt(splitInicio[2]);
+    console.log(diffDays);
+    console.log('/////');
+    mm = splitInicio[1]-1,
+    yy = splitInicio[0],
+    changeMonth = 0;
+    mmdif = parseInt( splitFinal[1]) -  parseInt(splitInicio[1]);
+    for(var f = 0; f <= diffDays;){
+      monthLength = new Date(yy, mm+1, 0).getDate();
+    for (a = 1; a <= monthLength; a++){
+    if(mm == parseInt(splitFinal[1])+1){
+      patt = /^0[0-9].*$/,
+      monthNum = parseInt(splitFinal[1])-1;
+      if(patt.test(monthNum)){
+        var mmParse = monthNum.toString().split('');
+        if(mm == mmParse[1]){
+          break;
+        }
+      }
+      else{
+        if(mm == monthNum){
+          break;
+        }
+      }
+    }
+    if(!Calendar[yy]){
+      Calendar[yy] ={};
+    }
+    if(!Calendar[yy][mm]){
+      Calendar[yy][mm] = {};
+    }
+      if(!Calendar[yy][mm][a]){
+        Calendar[yy][mm][a] = {};
+      }
+    if(Calendar[yy][mm][a]){
+      newObj = Calendar[yy][mm][a];
+        if(a >= splitInicio[2] || mm >= splitInicio[1]){
+          printDates();
+        }
+      }
+      if(a == monthLength){
+        mm++;
+      }
+      if(mm == 12){
+        yy++;
+        mm = 0;
+      }
+      function printDates(){
+        if(f <= (diffDays + mmdif)){
+          if(!newObj.campInfo){
+            newObj.campInfo = [];
+            newObj.campInfo[newObj.campInfo.length] = {},
+            newObj.campInfo[newObj.campInfo.length-1]['id'] = fielderCamp[i].campana.id,
+            newObj.campInfo[newObj.campInfo.length-1]['color'] = fielderCamp[i].campana.color;
+          }
+          else{
+            var found =  newObj.campInfo.some(function (el) {
+              return el.id === fielderCamp[i].campana.id;
+            });
+            if(!found){
+              newObj.campInfo[newObj.campInfo.length] = {},
+              newObj.campInfo[newObj.campInfo.length-1]['id'] = fielderCamp[i].campana.id,
+              newObj.campInfo[newObj.campInfo.length-1]['color'] = fielderCamp[i].campana.color;
+            }
+          }
+        }
+          hasSomeThing(newObj,yy,mm,a);
+      }
+      f++;
+       if(f == diffDays){
+          break;
+        }
+    }
+  }
+}
+}
+function ObjectSize(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+}
+function hasSomeThing(o,y,m,a){
+	fielderCalendar = JSON.parse(localStorage.getItem('fielderCalendar'));
+  if(!o.campInfo){
+  }
+  else{
+    for(var i = 0; i <= o.campInfo.length-1; i++){
+      if(!o.asignacion){
+        o.asignacion = {};
+      }
+      if(!fielderCalendar.Libres){}
+      else{
+        if(fielderCalendar.Libres.Visitas[y]){
+          if(fielderCalendar.Libres.Visitas[y][m]){
+            if(fielderCalendar.Libres.Visitas[y][m][a]){
+              o.asignacion["Libres"] = fielderCalendar.Libres.Visitas[y][m][a];
+            }
+          }
+        }
+      }
+
+        if(!fielderCalendar[o.campInfo[i].id]){
+          fielderCalendar[o.campInfo[i].id] = {};
+          fielderCalendar[o.campInfo[i].id].Visitas = {};
+        }
+        if(!fielderCalendar[o.campInfo[i].id].Visitas[y]){
+          fielderCalendar[o.campInfo[i].id].Visitas[y] = {};
+        }if(!fielderCalendar[o.campInfo[i].id].Visitas[y][m]){
+         fielderCalendar[o.campInfo[i].id].Visitas[y][m] ={};
+        }
+        if(!fielderCalendar[o.campInfo[i].id].Visitas[y][m][a]){
+          fielderCalendar[o.campInfo[i].id].Visitas[y][m][a] = {};
+        }
+        if(!o.asignacion[o.campInfo[i].id]){
+          o.asignacion[o.campInfo[i].id] = {};
+        }
+        o.asignacion[o.campInfo[i].id] = {};
+        o.asignacion[o.campInfo[i].id]["clientes"] = [],
+        o.asignacion[o.campInfo[i].id]["clientes"] = fielderCalendar[o.campInfo[i].id].Visitas[y][m][a];
+        for(var y = 0; y <= fielderCamp.length-1; y++){
+          if(fielderCamp[y].campana.id == o.campInfo[i].id){
+            o.asignacion[o.campInfo[i].id]["descripcion"] = fielderCamp[y].campana.titulo;
+          }
+        }
+    }
+  }
+//localStorage.setItem('Calendar',{});
+Calendar = JSON.stringify(Calendar);
+localStorage.setItem('Calendar',Calendar);
+Calendar = JSON.parse(localStorage.getItem('Calendar'));
+}
