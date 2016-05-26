@@ -1,0 +1,147 @@
+<div id="xpress"   data-page="1" >
+<h3>Registro nueva contratación</h3>
+<div id="block-1" class="page">
+	<div class="ventaType" data-path="2" onclick="path(this);">
+		<p>Telmex</p>
+	</div>
+	<div class="ventaType" data-path="8" onclick="path(this);">
+		<p>Claro vídeo</p>
+	</div>
+	<div class="ventaType" data-path="7" onclick="path(this);">
+		<p>Claro Música</p>
+	</div>
+	<div class="ventaType" data-path="6" onclick="path(this);">
+		<p>Dropbox</p>
+	</div>
+	<div class="ventaType" data-path="5" onclick="path(this);">
+		<p>McAfee</p>
+	</div>
+</div>
+<div id="block-2" class="page" style="display:none;">
+	<div class="ventaType" data-path="3" onclick="path(this);">
+		<p>Internet Puro</p>
+	</div>
+	<div class="ventaType" data-end="A0" data-page="2" data-serviceid="186.05" onclick="path(this);">
+		<p>Voz</p>
+	</div>
+	<div class="ventaType" data-path="4" onclick="path(this);">
+		<p>Voz paquete</p>
+	</div>
+</div>
+<div id="block-3" class="page"  style="display:none;">
+	<div class="ventaType" data-end="349" data-page="3" data-serviceid="ML" onclick="path(this);">
+		<p>10Mbps</p>
+	</div>
+	<div class="ventaType" data-end="499" data-page="3" data-serviceid="ML" onclick="path(this);">
+		<p>20Mbps</p>
+	</div>
+	<div class="ventaType" data-end="649" data-page="3" data-serviceid="ML" onclick="path(this);">
+		<p>50Mbps</p>
+	</div>
+	<div class="ventaType" data-end="899" data-page="3" data-serviceid="ML" onclick="path(this);">
+		<p>100Mbps</p>
+	</div>
+</div>
+<div id="block-4"  class="page" style="display:none;">
+	<div class="ventaType" data-end="389"  data-page="4" data-serviceid="A9" onclick="path(this);">
+		<p>10Mbps</p>
+	</div>
+	<div class="ventaType" data-end="499"  data-page="4" data-serviceid="A9" onclick="path(this);">
+		<p>20Mbps</p>
+	</div>
+	<div class="ventaType" data-end="599"  data-page="4" data-serviceid="A9" onclick="path(this);">
+		<p>50Mbps</p>
+	</div>
+	<div class="ventaType" data-end="999"  data-page="4" data-serviceid="A9" onclick="path(this);">
+		<p>100Mbps</p>
+	</div>
+</div>
+<div id="block-5"  class="page" style="display:none;">
+	<form action="" id="mcAfree">
+		<!--telefono-->
+		<input type="text"class="mandatory numeric">
+		<!--producto-->
+		<input type="text" class="mandatory text">
+		<!--canal-->
+		<input type="text" class="mandatory text">
+		<!--clioid-->
+		<input type="text">
+		<!--tipoOrden contratacion 1-->
+		<input type="hidden" value="1">
+		<!--nombre--> 
+		<input type="text" class="mandatory text">
+		<!--apPaterno-->
+		<input type="text" class="mandatory text">
+		<!--apMaterno--> 
+		<input type="text" class="mandatory text">
+		<!--correo--> 
+		<input type="text" class="mandatory email">
+		<!--edoValidacion 1 exito 0 pendiente-->
+		<input type="text">
+		<!--datos-->
+		<input type="text" class="mandatory">
+		<!--valordato-->
+		<input type="text" class="mandatory">
+		<input type="submit" onclick="validation()"; value="validar">
+	</form>
+</div>
+<div id="block-6"  class="page" data-end="Dropbox" style="display:none;">
+	<div class="error2">
+		<p>modulo no disponible</p>
+	</div>
+</div>
+<div id="block-7"  class="page" data-end="claroVideo" style="display:none;">
+	<form action="https://10.105.116.77:8243/claroMusica/1.0.0" id="claroMusica">
+		<!--nombre-->
+		<input type="text" class="mandatory text">
+		<!--telefono-->
+		<input type="text" class="mandatory numeric">
+		<!--correo-->
+		<input type="email" class="mandatory email">
+		<!--promocion-->
+		<input type="text" class="mandatory text">
+		<input type="submit" onclick="validation()"; value="validar">
+	</form>
+</div>
+<div id="block-8"  class="page" data-end="claroMusica" style="display:none;">
+	<form action="https://10.105.116.77:8243/claroVideo/1.0.0" id="claroVideo">
+		<!--nombre -->
+		<input type="text" class="mandatory text">
+		<!--apellidos -->
+		<input type="text" class="mandatory text">
+		<!--telefono -->
+		<input type="text" class="mandatory numeric">
+		<!--email -->
+		<input type="email" class="mandatory email">
+		<input type="submit" onclick="validation()"; value="validar">
+	</form>
+</div>
+<div id="end" class="page" style="display:none;">
+	<form id="checkOut">
+	<!--contendio dinamico-->
+	<!--fin del contenido dinamico-->
+	</form>
+</div>
+<div id="cancelBuy">
+	<p onclick="repo()">Cancelar</p>
+</div>
+<div id="historyNav">
+	<div id="backNav" onclick="backNav();">
+		<i class="fa fa-chevron-left"></i>
+	</div>
+</div>
+</div>
+<div id="shure">
+	<div class="inner">
+		<h1>¿Esto es correcto?</h1>
+		<div id="shureContent"></div>	
+		<div id="so">
+			<div class="left" onclick="closeCheckOut();">
+				<p><i class="fa fa-times"></i> no</p>
+			</div>
+			<div class="right" onclick="checkOut();">
+				<p><i class="fa fa-check"></i> si</p>
+			</div>
+		</div>
+	</div>
+</div>

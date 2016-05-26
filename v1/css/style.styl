@@ -1,0 +1,2246 @@
+@import 'nib'
+@import 'nib/gradients'
+@import 'normalize.css'
+@import 'font-awesome.min.css'
+@import 'mapa.css'
+blueTelmex = #2196F3
+DarkPrimary = #0288d1
+PrimaryColor = #03a9f4
+LightPrimary = #b3e5fc
+TextIcons = #fff
+Accent =  #9e9e9e
+PrimaryText = #212121
+SecondaryText = #727272
+Divider = #B6B6B6
+.loading
+	position absolute
+	top 50%
+	left 50%
+	width 80px
+	height 40px
+	background transparent url('img/logoT.svg') 0 0 no-repeat
+	background-size cover
+	margin -20px 0 0 -40px
+	animation cargando 1.2s infinite ease-in-out
+	transform translate(-50%,-50%)
+@keyframes cargando
+	0%
+		transform perspective(120px) rotateY(0deg)
+	50%
+		transform perspective(120px) rotateY(-180deg)
+	100%
+		transform perspective(120px) rotateY(-369.9deg)
+body.login
+	background blueTelmex
+	#content
+		overflow hidden
+		position absolute
+		top 50%
+		transform translateY(-50%)
+		width 100%
+		.logo
+			width 100%
+			height 34px
+			background url('img/appLogo.png') center center no-repeat
+			margin-bottom 25px
+			background-size contain
+		#formulario
+			width 300px
+			margin 0 auto
+			padding 3em 2em 4em 2em
+			background #fafafa url('img/telmex-400.png') no-repeat
+			background-size 150px
+			background-position bottom 2em right 2em
+			border 1px solid #ebebeb
+			box-shadow rgba(0,0,0,0.14902) 0px 1px 1px 0px,rgba(0,0,0,0.09804) 0px 1px 2px 0px
+
+form,.holderSelect
+	.group
+		margin-bottom 45px
+		input
+			font-size 18px
+			padding 10px 0
+			-webkit-appearance none
+			display block
+			background #fafafa
+			color #636363
+			width 100%
+			border none
+			border-radius 0
+			border-bottom 1px solid #757575
+		input:focus
+			outline none
+		label
+			color #999
+			font-size 18px
+			font-weight normal
+			position absolute
+			pointer-events none
+			left 5px
+			top 10px
+			transition all 0.2s ease
+		input:focus ~ label,input.used ~ label
+			top -20px
+			transform scale(.75); left: -2px
+			color #4a89dc
+		.bar
+			position relative
+			display block
+			width 100%
+		.bar:before,.bar:after
+			content ''
+			height 2px
+			width 0
+			bottom 1px
+			position absolute
+			background #4a89dc
+			transition all 0.2s ease
+		.bar:before
+			left 50%
+		.bar:after
+			right 50%
+		input:focus ~ .bar:before,input:focus ~ .bar:after
+			width 50%
+		.highlight
+			position absolute
+			height 60%
+			width 100px
+			top 25%
+			left 0
+			pointer-events none
+			opacity 0.5
+		input:focus ~ .highlight
+			animation inputHighlighter 0.3s ease
+	.button
+		&:after
+			font-size 2.5em
+			display block
+			content "\f105"
+			float right
+			font-family 'FontAwesome'
+	.button
+		position relative
+		display inline-block
+		padding 12px 24px
+		margin .3em 0 1em 0
+		width 100%
+		vertical-align middle
+		color #fff
+		font-size 16px
+		line-height 20px
+		-webkit-font-smoothing antialiased
+		text-align left
+		letter-spacing 1px
+		background transparent
+		border 0
+		border-bottom 2px solid #3160B6
+		cursor pointer
+		transition all 0.15s ease
+		.ripples
+			position absolute
+			top 0
+			left 0
+			width 100%
+			height 100%
+			overflow hidden
+			background transparent
+			.ripplesCircle
+				position absolute
+				top 50%
+				left 50%
+				transform translate(-50%, -50%)
+				opacity 0
+				width 0
+				height 0
+				border-radius 50%
+				background rgba(255, 255, 255, 0.25)
+		.ripples.is-active .ripplesCircle
+			animation ripples .4s ease-in
+	.button:focus
+		outline 0
+	.buttonBlue
+		background #4a89dc
+		text-shadow 1px 1px 0 rgba(39,110,204,.5)
+	.buttonBlue:hover,.buttonBlue:focus
+		background #357bd8
+	#error
+		transition all 0.15s ease
+		display block
+		overflow hidden
+		height 0
+		color #2196F3
+	#error.si
+		height 54px
+.riple
+	.riples
+		position absolute
+		top 0
+		left 0
+		width 100%
+		height 100%
+		overflow hidden
+		background transparent
+		.ripplesCircle
+			position absolute
+			top 50%
+			left 50%
+			transform translate(-50%, -50%)
+			opacity 0
+			width 0
+			height 0
+			border-radius 50%
+			background rgba(255, 255, 255, 0.25)
+	.riples.is-active .ripplesCircle
+		animation ripples .4s ease-in
+@keyframes inputHighlighter
+	from
+		background #4a89dc
+	to
+		width 0
+		background transparent
+@keyframes ripples
+	0%
+		opacity 0
+	25%
+		opacity 1
+	100%
+		width 200%
+		padding-bottom 200%
+		opacity 0
+body *
+	position relative
+	box-sizing border-box
+	-moz-box-sizing border-box
+	-webkit-box-sizing border-box
+#wrapper.mensajeria
+	#nav
+		background-color #00b4cc
+		#merca
+			display block
+			//top 70px
+			right 10px
+#wrapper.campanias
+	#nav
+		background-color #008c9e
+		#merca
+			display block
+			//top 70px
+			right 10px
+#wrapper.mapa
+	#nav
+		background-color #00dffc
+		box-shadow 0 10px 10px rgba(0,0,0,0.4)
+		#merca
+			display block
+			top 4px
+			right 6px
+	#content
+		height 100%
+		margin 0
+		padding 0
+#wrapper.home
+	#nav
+		#merca
+			display block
+			//top 70px
+			right 10px
+#wrapper.merca
+	#nav
+		#merca
+			display block
+			top 4px
+			right 6px
+	#content
+		height 100%
+		margin 0
+		padding 0
+#wrapper.express
+	#nav
+		#merca
+			display block
+			top 4px
+			right 6px
+	#content
+		margin-top 0
+		padding-top 50px
+		height 100%
+		#loadIframe
+			z-index 1
+			width 100%
+			height 100%
+			display block
+			margin 0
+			padding 0
+			background none
+			iframe
+				margin 0
+				background none
+				padding 0
+				width 100%
+				height 100%
+				display block
+				border none
+				left 0
+#wrapper.guia
+	#nav
+		background-color #343838
+		box-shadow 0 10px 10px rgba(0,0,0,0.4)
+		#merca
+			display block
+			top 4px
+			right 6px
+	#content
+		height 100%
+		position fixed
+		width 100%
+		overflow hidden
+		iframe
+			width 100% !important
+			height 100% !important
+#wrapper.calendario
+	#nav
+		background-color #005f6b
+		box-shadow 0 10px 10px rgba(0,0,0,0.4)
+		#merca
+			display block
+			top 4px
+			right 6px
+	#content
+		.colorType
+			display none
+#wrapper
+	width 100%
+	height 100%
+	position fixed
+	overflow auto
+	#nav.sombra
+		box-shadow 0 0 10px #222
+	#nav
+		width 100%
+		height 50px
+		background-color blueTelmex
+		background-image url(img/appLogo.png)
+		background-repeat no-repeat
+		background-position center center
+		background-size 140px auto
+		position fixed
+		z-index 9
+		#appMenu
+			width 40px
+			height 40px
+			position absolute
+			left 5px
+			top 5px
+			text-align center
+			cursor pointer
+			i
+				color #fff
+				font-size 35px
+				margin 0 auto
+				position relative
+				top 50%
+				transform translateY(-50%)
+		#closeMenuIndex
+			width 100%
+			top 0
+			height 100%
+			position fixed
+			background rgba(0,0,0,.6)
+			z-index -1
+			display none
+		#closeMenuIndex.open
+			display block
+			z-index 9
+		#merca
+			display block
+			position absolute
+			top 4px
+			right 6px
+			background #EC407A
+			border-radius 50%
+			height 40px
+			width 40px
+			text-align center
+			box-shadow inset -1px -1px 1px #777
+			&:after
+				font-family 'FontAwesome'
+				content '\f0f2'
+				font-size 20px
+				line-height 40px
+				color #fff
+	#content
+		width 100%
+		margin-top 50px
+		overflow hidden
+		.homeInner
+			width 100%
+			height 80px
+			background blueTelmex
+			box-shadow 0 10px 10px rgba(0,0,0,.4)
+			z-index 8
+			position fixed
+			.inner
+				width 100%
+				height auto
+				position absolute
+				top 50%
+				transform translateY(-50%)
+				p
+					padding 0 10px
+					margin  0
+					font-size 18px
+					color #fff
+		.activity
+			width 100%
+			padding 0
+			margin-top 80px
+			.boxSlide
+				width 100%
+				height 120px
+				background #00DFFC
+				margin 0
+				text-align center
+				box-shadow inset 0 3px 5px 0 rgba(0,0,0,0.3)
+				a
+					text-decoration none
+					position absolute
+					width 100%
+					height 100%
+					left 0
+					top 0
+					z-index 3
+				.inner
+					position absolute
+					width 100%
+					height 100%
+					left 0
+					top 0
+					z-index 0
+					i
+						color #fff
+						font-size 35px
+						display block
+						height 100%
+						width 30%
+						line-height 120px
+						float left
+						span
+							text-align center
+							display block
+							position absolute
+							font-size 11px
+							width 25px
+							height 25px
+							line-height 25px
+							background #EC407A
+							border-radius 50%
+							font-family sans-serif
+							top 28px
+							z-index 10
+							right 24px
+					p
+						text-align left
+						text-transform uppercase
+						height 100%
+						width 70%
+						float right
+						color #fff
+						margin 0 auto
+						display block
+						font-size 18px
+						line-height 120px
+			.boxSlide:nth-child(2)
+				background #00B4CC
+			.boxSlide:nth-child(3)
+				background #008C9E
+			.boxSlide:nth-child(4)
+				background #005F6B
+			.boxSlide:nth-child(5)
+				background #343838
+			.boxSlide:nth-child(6)
+				background #EC407A
+		.mensageInner
+			width 100%
+			text-align left
+			h1
+				margin 50% auto 0px
+				font-size 20px
+				text-align center
+				color black
+				padding 15px 0px
+				font-weight 100
+			h3
+				width 100%
+				height 83px
+				margin -83px 0 0 0
+				position fixed
+				padding 30px 0 30px 15px
+				font-size 20px
+				color #fff
+				text-transform uppercase
+				font-weight 100
+				background #00b4cc
+				z-index 2
+				box-shadow 0 10px 10px rgba(0,0,0,0.4)
+			.inner
+				width 100%
+				margin-top 83px
+				overflow auto
+				.MensageHolder
+					padding 10px 0
+					background #fff
+					width 100%
+					height 98px
+					border-top 1px solid #e0e0e0
+					overflow hidden
+					display block
+					float none
+					clear both
+					position relative
+					text-align left
+					.text
+						text-align left
+						margin-left 86px
+						p
+							font-size 16px
+							margin 20px 0
+							width 94%
+							height 18px
+							overflow hidden
+							white-space nowrap
+							text-overflow ellipsis
+							color PrimaryText
+							font-weight 100
+						#readit
+							position absolute
+							width 30px
+							height 20px
+							right 0px
+							top 0px
+							i
+								color #DC0000
+								font-size 15px
+								&:nth-child(2)
+									margin-left -8px
+									display none
+						.center
+							width 100%
+							display block
+							text-align left
+							span
+								color SecondaryText
+								font-size 11px
+					span.mailbox
+						display block
+						margin 13px 0 0 19px
+						width 40px
+						height 40px
+						position absolute
+						border-radius 100%
+						box-shadow 0 2px 2px #666
+						background #EC407A url('img/assets/mail.svg') no-repeat center 7px
+						background-size 50%
+					&:last-child
+						border-bottom 1px solid #ccc
+				.MensageHolder.open
+					background #90BABF
+					min-height 98px
+					height auto
+					box-shadow inset 4px 3px 3px 0 rgba(0,0,0,0.3)
+					span.mailbox
+						background #EC407A url("img/assets/mailb.svg") no-repeat center 9px
+						background-size 50%
+						box-shadow 4px 4px 8px #666
+						margin 11px 0 0 17px
+					.text
+						.center
+							span
+								color #e1e1e1
+						#readit
+							i
+								color #e1e1e1 !important
+						p
+							margin 12px 0
+							color #fff
+							white-space normal
+							height auto
+							line-height 1.4
+				.MensageHolder.done
+					.text
+						#readit
+							i
+								color #4CE44C
+							i:nth-child(2)
+								display inline-block
+			#readMore
+				position fixed
+				bottom 0
+				width 100%
+				height auto
+				text-align center
+				background blueTelmex
+				cursor pointer
+				p
+					color #fff
+					padding 5px 0
+					margin 0
+		.campaniasInner
+			width 100%
+			text-align left
+			h3
+				width 100%
+				height 83px
+				margin -83px 0 0 0
+				position fixed
+				padding 30px 0 30px 15px
+				font-size 20px
+				color #fff
+				text-transform uppercase
+				font-weight 100
+				background #008c9e
+				z-index 2
+				box-shadow 0 10px 10px rgba(0,0,0,0.4)
+			.inner
+				width 100%
+				margin-top 83px
+				overflow auto
+				h1
+					margin 50% auto 0px
+					font-size 20px
+					text-align center
+					color black
+					padding 15px 0px
+					font-weight 100
+				.MensageHolder
+					padding 20px 0
+					background #fff
+					width 100%
+					height auto
+					border-top 1px solid #e0e0e0
+					overflow hidden
+					display block
+					float none
+					clear both
+					position relative
+					text-align left
+					img
+						width 90%
+						height auto
+						margin 0 auto 10px auto
+						display block
+					.text
+						margin 0 auto
+						width 90%
+						p
+							font-size 14px
+							margin 0
+							color PrimaryText
+							clear both
+							color #333
+						a
+							text-decoration none
+							margin 10px 0 0 0
+							color #fff
+							background #ec407a
+							display block
+							float right
+							padding 3px 10px
+							box-shadow 0 2px 2px #666
+					span
+						padding 5px
+						background #008c9e
+						display block
+						color #fff
+						font-size 20px
+						text-align center
+						border-radius 5px 5px 0 0
+						width 90%
+						margin 0 auto
+		#xpress
+			position absolute
+			width 100%
+			height 100%
+			overflow auto
+			.error
+				background red
+				color black
+				text-align center
+				padding  5px 0px
+				width 90%
+				margin-top 10px
+				position relative
+				p
+					margin 0px
+				&:after
+					content ('▲')
+					color red
+					position absolute
+					top  -15px
+					left 5px
+			h3
+				text-align center
+				color #fff
+				margin 40px 0
+				font-size 22px
+			.ventaType
+				width 90%
+				padding 10px 0px
+				background #eee
+				border-bottom 1px solid #ccc
+				cursor pointer
+				text-align center
+				margin 0 auto
+				p
+					padding 0px
+					color #000
+
+			input
+				border none
+				border-bottom 1px solid #fff
+				background transparent
+				padding 10px 5px
+				margin  5px
+				color black
+				&:focus
+					border 1px solid green
+					color green
+			span
+				display block
+				margin 10px auto 0px
+				color rgb(255, 255, 255)
+				background green none repeat scroll 0% 0%
+				border 1px solid rgb(255, 255, 255)
+				padding 10px 25px
+				margin-top 10px
+				border-radius 10px
+				border 1px solid #fff
+				width 30%
+			select
+				border none
+				border-bottom 1px solid #fff
+				background transparent
+				padding 10px 5px
+				margin  5px
+				color black
+				width 65%
+			#historyNav
+				position fixed
+				bottom -40px
+				width 100%
+				background blueTelmex
+				text-align center
+				i
+					color #fff
+					padding 5px
+					font-size 25px
+			#historyNav.open
+				bottom 0px
+			#end
+				display block
+				height 90%
+				overflow scroll
+			#cancelBuy
+				position absolute
+				bottom -50px
+				width 100%
+				background red
+		#shure
+			width 100%
+			height 100%
+			background rgba(0,0,0,.4)
+			position fixed
+			z-index 99
+			top -100%
+			.inner
+				width 90%
+				height auto
+				text-align center
+				top 50%
+				left 5%
+				transform translateY(-50%)
+				position relative
+				background #fff
+				overflow hidden
+				padding 10px
+				h1,h3
+					color #fff
+					background #2196F3
+					margin 0 0 20px 0
+					font-size 18px
+					padding 5px
+				#so
+					width 100%
+					margin-top 20px
+					.left,.right
+						display block
+						padding 5px 16px
+						margin 0
+						width 50%
+						float left
+						p
+							text-align center
+							padding 0px
+							margin 0
+							color #fff
+					.left
+						background #bdbdbd
+						border-right 1px solid #fff
+					.right
+						background #4a89dc
+				#shureContent
+					text-align left
+					padding 0 10px
+					span
+						display block
+						color #aaa
+						margin-top 12px
+		#shure.active
+			top 0px
+	#content.not
+		#typeCliente
+			display none !important
+	.reDirect
+		width 100%
+		height 100%
+		    background: url("img/appLogo.png") no-repeat center 90%/50% auto blueTelmex
+		.center
+			margin 0 auto
+			text-align center
+			padding 0px
+			top 50%
+			transform translateY(-50%)
+			position absolute
+			width 100%
+			h1
+				margin 0
+				color #fff
+				font-weight 100
+			small
+				margin 5px 0
+				color #fff
+		a
+			color #fff
+			font-size 40px
+			position absolute
+			right 20px
+			top 20px
+#wrapper.active
+	#nav
+		background-image none
+#menuDisplay
+	width 80%
+	height 100%
+	position fixed
+	background #fff
+	top 0
+	z-index 9
+	left -82%
+	overflow auto
+	transition all .3s ease
+	#userInfoMenu
+		width 80%
+		height 130px
+		background url("img/bg.png") center center/cover
+		position fixed
+		.inner
+			left -100%
+			width 100%
+			height 50px
+			background rgba(255,255,255,.5) url(img/assets/infinitum.png) no-repeat center center/60%
+			position absolute
+			top 50%
+			transform translateY(-50%)
+			transition all .8s ease
+	a
+		width 100%
+		display block
+		padding 20px 0
+		border-bottom 1px solid #DEDEDE
+		font-size 18px
+		text-decoration none
+		color #333
+		font-weight normal
+		&:before
+			float left
+			font-size 20px
+			font-family 'FontAwesome'
+			display inline-block
+			text-align center
+			content '\f015'
+			background #6EE5F5
+			width 38px
+			height 38px
+			margin -9px 20px 0 10px
+			border-radius 50%
+			color #fff
+			line-height 38px
+	a:nth-child(2)
+		margin-top 140px
+	a:nth-child(3):before
+		content '\f041'
+		background #00dffc
+	a:nth-child(4):before
+		content '\f003'
+		background #00b4cc
+	a:nth-child(5):before
+		content '\f0c0'
+		background #008c9e
+	a:nth-child(6):before
+		content '\f073'
+		background #005f6b
+	a:nth-child(7):before
+		content '\f016'
+		background #343838
+	a:nth-child(8):before
+		content '\f023'
+		background #EC407A
+	a.active
+		background #ececec
+		box-shadow inset 2px 1px 3px #bbb
+#menuDisplay.active
+	left 0%
+	#userInfoMenu
+		.inner
+			left 0
+			transition all .8s ease
+/*
+animation ripples .4s ease-in
+@keyframes inputHighlighter
+	from
+		background #4a89dc
+	to
+		width 0
+		background transparent
+@keyframes ripples
+	0%
+		opacity 0
+	25%
+		opacity 1
+	100%
+		width 200%
+		padding-bottom 200%
+		opacity 0
+*/
+#newUser, #userInfo
+	width 100%
+	height 50px
+	text-align right
+	i
+		color #fff
+		font-size 30px
+		padding 5px
+		cursor pointer
+
+#newUser.left
+	text-align left
+.content
+	width 100%
+	height auto
+	position absolute
+	top 50%
+	text-align center
+	transform translateY(-50%)
+	.logo
+		width 100%
+		height 70px
+		background url(img/appLogo.png) no-repeat center center/ 50% auto
+	p
+		font-size 20px
+		color #fff
+		font-weight 100
+	i
+		font-size 20px
+		color #fff
+	input[type="text"], input[type="password"]
+		background transparent
+		border none
+		border-bottom 1px solid #fff
+		outline none
+		color #fff
+		font-size 20px
+		padding 10px
+		margin-top 10px
+		width 70%
+		font-family sans-serif
+	button
+		background green
+		color #fff
+		padding 10px 30px
+		outline none
+		border 1px solid green
+		border-radius 5px
+		margin-top 40px
+		border 1px groove green
+		font-family sans-serif
+		box-shadow 3px 5px 10px black
+
+#overlay
+	display none
+	width 100%
+	height 100%
+	position fixed
+	background blueTelmex
+	top 0
+	left 0
+	.inner
+		width 100%
+		height auto
+#masterLogin,.masterLoginEx
+	z-index 9
+	top 50%
+	left 50%
+	width 100%
+	height 100%
+	position fixed
+	background blueTelmex url(img/appLogo.png) no-repeat center 40% / 50% auto
+	transition all 0.5s ease
+	transform translate(-50%,-50%)
+.masterLoginEx
+	z-index 0
+.login #masterLogin
+	top 0
+	left 0
+	transform none
+#masterLogin.small
+	width 1px
+	height 1px
+	border-radius 100%
+#masterLogin.ani
+	animation creceload .3s forwards ease-in
+@keyframes creceload
+	0%
+		width 1px
+		height 1px
+	40%
+		width 300px
+		height 300px
+	87%
+		width 1000px
+		height 1000px
+		border-radius 100%
+	96%
+		width 1500px
+		height 1500px
+		border-radius 100%
+	98%
+		width 100%
+		height 100%
+		border-radius none !important
+.newUserContent
+	background blueTelmex
+#mapa-canvas
+	min-width 400px !important
+	min-height 600px !important
+#menuPuller
+	text-align center
+	border-radius 5px
+	background blueTelmex
+	i
+		color #fff
+		position relative
+		top 50%
+		transform translateY(-50%)
+		font-size 20px
+.under
+	background url(img/construction.png) no-repeat center center/ 80% auto
+*{
+	tap-highlight-color: transparent !important;
+	-webkit-tap-highlight-color: transparent !important;
+	-moz-tap-highlight-color: transparent !important;
+	-o-tap-highlight-color: transparent !important;
+	user-select: none !important;
+	-webkit-user-select: none !important;
+	-moz-user-select: none !important;
+	-o-user-select: none !important;
+}
+
+.error
+	p
+		margin 0
+		color #EC407A
+.error-tip
+	bakcground green
+	.tooltip
+		display none
+.error-tip.show
+	.tooltip
+		display block
+		width 50%
+		margin 0 auto
+		height auto
+		color #fff
+		font-size 10px
+		background red
+		padding 10px
+		position relative
+		margin-top 10px
+		&:after
+			content ('▲')
+			position absolute
+			color #f00
+			font-size 20px
+			position absolute
+			top -20px
+			left 10px
+#brodcast
+	width 100%
+	height 100%
+	background rgba(255,255,255, .5)
+	position fixed
+	display none
+	.inner
+		position relative
+		top 50%
+		transform translateY(-50%)
+		background blueTelmex
+		color #fff
+		text-align center
+		height auto
+		width 90%
+		margin 0 auto
+		p
+			padding 20px 0
+#holderCalendar
+	margin 0 0 40px 0
+	&:before
+		font-size 14px
+		font-weight bold
+		content 'Estadísticos del día seleccionado'
+		color #A4D0E8
+		display block
+		text-align center
+		background #0288D1
+		text-transform uppercase
+		padding-top 20px
+	#timer
+		display block
+		padding-top 10px
+		height 56px
+		background DarkPrimary
+		&:before
+			top 15px
+			left 10px
+			font-size 10px
+			color #A1D9F7
+			z-index 8
+			display block
+			position absolute
+			content 'En campañas'
+		.timerGols
+			overflow hidden
+			text-align center
+			line-height 56px
+			width 33.3%
+			height 46px
+			float right
+			color #fff
+			font-size 14px
+			&:nth-child(1)
+				&:before
+					content 'Ventas libres: '
+			&:nth-child(2)
+				background #1A91D2
+				&:before
+					content 'Visitas: '
+			&:nth-child(3)
+				background #1A91D2
+				&:before
+					content 'Ventas: '
+			small
+				font-size 16px
+				font-weight 800
+	#calendar-content
+		width 100%
+		margin 0 auto
+		height auto
+		.nav
+			text-align center
+			background DarkPrimary
+			width 100%
+			p
+				display inline-block
+				width 35px
+				cursor pointer
+				color #fff
+				padding 8px 0
+				margin 10px
+				top 0
+				position absolute
+				z-index 9
+			h3
+				display block
+				padding 16px 0px
+				margin 0 auto
+				font-weight 100
+				color #fff
+		#headerCalendar,#bodyCalendar
+			width 100%
+			height auto
+			.row
+				display inline-block
+				margin 0 0 0 2px
+				text-align center
+				position relative
+				transform translateY(-50%)
+				top 50%
+				width 13%
+			.header
+				padding-left 10px
+				height 30px
+				background PrimaryColor
+				.row
+					border none
+					color #fff
+					padding 1px
+		#headerCalendar
+			height 85px
+		#bodyCalendar
+			.inner
+				padding 20px 0px 0px 10px
+				background blueTelmex
+				.row
+					margin-top 9px
+					padding 15px 0px
+					color #fff
+					.eventCamp
+						width 105%
+						height 3px
+						position absolute
+						top 0px
+						&:nth-child(2)
+							top 3px
+						&:nth-child(3)
+							top 6px
+						&:nth-child(4)
+							top 9px
+						&:nth-child(5)
+							top 12px
+				.activeDay
+					background #0288D1
+					font-weight 800
+					border-radius 5px
+				.activeDay2
+					background #EC407A
+					font-weight 800
+					border-radius 5px
+		.errorCal
+			padding 0 10px
+			text-align left
+			color #333
+			text-align center
+		#day-content
+			margin 0
+			text-align center
+			.holder
+				border-bottom 1px solid #e1e1e1
+				h3
+					background #EFEFEF
+					padding 10px
+					text-align left
+					color #03A9F4
+					font-weight 100
+					margin 0
+					&:before
+						font-family 'FontAwesome'
+						display inline-block
+						content '\f055'
+						margin-right 10px
+				h3.open
+					background #0288D1
+					color #fff
+					&:before
+						content '\f056'
+				.loadDay
+					display none
+				h3.open + .loadDay
+					display block
+					overflow hidden
+					background #efefef
+					padding 10px
+					.son
+						width 50%
+						float left
+						border-top 1px solid #EFEFEF
+						background #ddd
+						color #666
+						padding 5px 0
+						&:nth-of-type(odd)
+							border-right 1px solid #EFEFEF
+						&:last-child
+							display none
+					.son.open
+						background #EC407A
+					.loadResult
+						float none
+						clear both
+						height auto
+						border 1px solid #e6e6e6
+						.row:first-child
+							.name
+								h3
+									padding-top 20px
+						.row,.row2
+							display block
+							float none
+							width 100%
+							clear both
+							padding 0
+							margin 0
+							.name
+								h3
+									color #666
+									background none
+									border-top 1px solid #e6e6e6
+									margin 0
+									padding 5px
+									font-size 14px
+								h3.open
+									color #03a9f4
+							.campLoad
+								float none
+								display none
+								margin-bottom 50px
+								.innerRow:nth-child(3)
+									display none
+							.innerRow
+								width 100%
+								display block
+								float none
+								clear both
+								div
+									color #666
+									font-size 13px
+									float left
+									width 70%
+									padding 5px
+									text-align left
+									&:nth-of-type(odd)
+										text-align right
+										width 30%
+										color #444
+								&:first-child
+									border-top none
+						.row2
+							div
+								h3
+									color #666
+									background none
+									border-top 1px solid #e6e6e6
+									margin 0
+									padding 5px
+									font-size 14px
+								h3.open
+									color #03a9f4
+#mercaBox
+	width 100%
+	height 100%
+	position absolute
+	padding 60px 10px
+	top 0
+	left 0
+	z-index 2
+	overflow auto
+	h1
+		font-size 10px
+		text-align right
+		font-weight 600
+		margin 5px 0 0 0
+		padding 10px 10px 0 10px
+		background #00dffc
+		border-left 1px solid #e0e0e0
+		border-right 1px solid #e0e0e0
+		text-transform uppercase
+		color #5380A7
+		border none
+		text-decoration none
+		outline none
+	.descripcion
+		margin 10px
+		color #888
+	.row
+		width 100%
+		height auto
+		.more
+			width 40px
+			height 40px
+			background DarkPrimary
+			border-radius 100%
+			position absolute
+			top 30px
+			left 17px
+			text-align center
+			cursor pointer
+			box-shadow 2px 3px 6px black
+			i
+				position relative
+				top 50%
+				color #fff
+				font-size 19px
+				transform translateY(-50%)
+		.buy
+			width 40px
+			height 40px
+			font-weight 800
+			color #fff
+			border-radius 100%
+			background green
+			position absolute
+			top 80px
+			left 17px
+			cursor pointer
+			box-shadow 2px 3px 6px black
+			i
+				position absolute
+				width 100%
+				text-align center
+				top 50%
+				font-size 19px
+				transform translateY(-50%)
+		.left1
+			width 100%
+			height 100%
+			animation: rightIn .5s ease-in
+			position absolute
+			background url(img/assets/promo1/001.png) no-repeat center center
+		.left2
+			width 100%
+			height 100%
+			animation: leftIn 1s ease-in
+			position absolute
+			background url(img/assets/promo1/002.png) no-repeat center center
+		.left3
+			width 100%
+			height 100%
+			animation: leftIn 1.5s ease-in
+			position absolute
+			background url(img/assets/promo1/003.png) no-repeat center center
+		.left4
+			width 100%
+			height 100%
+			animation: topBottom 1s ease-in
+			position absolute
+			background url(img/assets/promo1/004.png) no-repeat center center
+	.cont
+		margin 0 0 20px 0
+		overflow hidden
+		border-bottom 1px solid #e0e0e0
+		border-left 1px solid #e0e0e0
+		border-right 1px solid #e0e0e0
+		.t
+			background #00DFFC
+			color #fff
+			padding 0 10px 10px 10px
+		.d
+			padding 0 10px 5px 10px
+			color #666
+			clear both
+		.buy
+			font-size 13px
+			text-transform uppercase
+			display block
+			float right
+			margin 0 10px 20px 0
+			padding 5px 12px
+			background #ec407a
+			color #fff
+			box-shadow 1px 1px 2px #777
+			&:before
+				display inline-block
+				margin-right 10px
+				font-size 15px
+				font-family 'FontAwesome'
+				content '\f07a'
+		iframe
+			width calc(100% + 20px)
+			height 700px
+			overflow hidden
+			border none
+			outline none
+#loadIframe
+	width 100%
+	height 100%
+	position absolute
+	display block
+	iframe
+		position fixed
+		width 100%
+		height 100%
+		display block
+		z-index 99999
+		top 50px
+		border none
+		left 0
+#showStuff
+	width 100%
+	height 100%
+	z-index 999
+	position absolute
+	top 0
+	left 0px
+	background #000
+	display none
+	#closeShow,#buy
+		width 50px
+		height 50px
+		font-weight 800
+		color #fff
+		border-radius 50%
+		position absolute
+		top 10px
+		z-index 2
+		box-shadow -1px 1px 3px #333
+	#closeShow
+		background red
+		right 10px
+		span
+			position absolute
+			width 100%
+			text-align center
+			top 50%
+			font-size 30px
+			transform translateY(-50%) rotate(45deg)
+	#buy
+		background green
+		right 80px
+		i
+			position absolute
+			width 100%
+			text-align center
+			top 50%
+			font-size 30px
+			transform translateY(-50%) rotate(90deg)
+	.inner
+		width 100%
+		height 100%
+		iframe
+			transform rotate(90deg)
+			margin 0 auto
+			width 180% !important
+			height 40% !important
+			left -40%
+			position absolute
+			top 30%
+		img
+			position absolute
+			width 154%
+			height 52%
+			-webkit-transform rotate(90deg)
+			-moz-transform rotate(90deg)
+			-o-transform rotate(90deg)
+			-ms-transform rotate(90deg)
+			transform rotate(90deg)
+			left -27%
+			top 24%
+#showStuff.open
+	display block
+#typeCliente
+	display none
+	width 100%
+	background #2196f3
+	height 100%
+	padding 0
+	margin 0
+	position fixed
+	z-index 9999
+	top 0px
+	left 0px
+	overflow auto
+	.inner
+		width 90%
+		height auto
+		position absolute
+		top 50%
+		left 5%
+		transform translateY(-50%)
+		border-radius 5px
+		border 1px solid #eee
+		box-shadow 2px 2px 10px #444
+		.cliente:first-child
+			border-bottom 1px solid #eee
+		.cliente
+			height 135px
+			display block
+			margin 0
+			background #fff
+			text-align center
+			overflow hidden
+			.image
+				margin 20px auto 0 auto
+				width 70px
+				height 70px
+				background url(img/assets/001.png) no-repeat center center
+				background-size cover
+			p
+				color blueTelmex
+				font-weight 100
+			&:nth-child(2)
+				.image
+					background url(img/assets/002.png) no-repeat center center
+				p
+					color #7AB8F2
+	#notInHome
+		width 100%
+		color #fff
+		text-align center
+		position fixed
+		bottom 0px
+		p
+			padding 15px 0px
+			color #fff
+			font-weight 100
+			background #EC407A
+			margin 0px
+	#closeMerca
+		width 50px
+		height 50px
+		background red
+		border-radius 100%
+		position absolute
+		top 20px
+		right 10px
+		box-shadow 3px 5px 9px black
+		span
+			width 100%
+			text-align center
+			position absolute
+			top 50%
+			transform translateY(-50%) rotate(45deg)
+			font-size 30px
+			color #fff
+	#phoneDialog
+		width 100%
+		height 100%
+		position fixed
+		background #2196f3
+		display none
+		.inner
+			background #fff
+			width 90%
+			height auto
+			position absolute
+			top 50%
+			left 5%
+			transform translateY(-50%)
+			text-align center
+			p
+				color #888
+			.errorHolder
+				width 100%
+				height auto
+				.error
+					width 200px
+					margin 10px auto
+					height auto
+					background red
+					padding 5px
+					position relative
+					display none
+					small
+						color #fff
+					&:before
+						content ('▲')
+						position absolute
+						top -15px
+						color red
+						left 0px
+				.error.open
+					display block
+				i
+					display inline
+					color #666
+				input[type="tel"]
+					display inline
+					border none
+					outline none
+					border-bottom 1px solid #666
+					padding 5px
+					margin 0 auto
+			button,a
+				border none
+				outline none
+				color #fff
+				padding 10px
+				margin 10px 5px
+				text-decoration none
+			button
+				background #2196F3
+			a
+				background #888
+	#phoneDialog.open
+		display block
+	#xpress
+		margin-top 0px !important
+		.error
+			background red
+			color black
+			text-align center
+			padding  5px 0px
+			width 90%
+			margin-top 10px
+			position relative
+			p
+				margin 0px
+			&:after
+				content ('▲')
+				color red
+				position absolute
+				top  -15px
+				left 5px
+#clientPosition
+	position fixed
+	display none
+	overflow auto
+	top 0px
+	left 0px
+	width 100%
+	height 100%
+	background #fff
+	.holderSelect
+		width 100%
+		height auto
+		width 90%
+		margin 0 auto
+		overflow hidden
+		.getData
+			margin 20px 0
+			border 1px solid #ddd
+			box-shadow 5px 5px 18px #ccc
+			overflow hidden
+			h3
+				margin 20px 0 60px 0
+				padding 8px 10px
+				line-height 1
+				color #fff
+				font-size 22px
+				font-weight normal
+				background #4A89DC
+			.group
+				margin-left 10px
+				margin-right 10px
+				input
+					font-size 15px
+			.textcontent
+				overflow hidden
+				margin-bottom 30px
+				textarea
+					display block
+					width 94%
+					margin 0 auto
+					outline none
+					height 120px
+					resize none
+					border 1px solid #ccc
+					padding 10px
+					color #666
+					bakcground #e0e0e0
+				textarea.edit
+					color #222
+					background #fff
+					border 2px solid #4A89DC
+				button
+					display block
+					color #fff
+					background #4A89DC
+					border none
+					margin 0
+					font-size 15px
+					outline none
+					padding 10px 12px
+					float right
+					&:nth-child(2)
+						margin-right 10px
+			.camp
+				width 90%
+				background blueTelmex
+				border 1px solid #fff
+				border-radius 5px
+				padding 10px 0px
+				text-align center
+				margin 10px auto
+				h3,p
+					margin 0
+					background transparent
+					width auto
+			.camp.active
+				background red
+			p
+				background #4A89DC
+				width 50%
+				margin 0
+				padding 10px
+				display inline-block
+				color #fff
+				box-shadow none
+				float left
+				border 0
+				i
+					display inline-block
+					margin-left 5px
+			p.end
+				background #BDBDBD
+				color #fff
+				border-right 1px solid #fff
+			select
+				width 100%
+				color #333
+				background #ddd url(../../css/img/assets/arrowBottom.png) no-repeat 98% center /10px
+				border 0
+				margin-bottom 40px
+		.porFinal
+			overflow hidden
+			padding 0 10px
+			margin-top 150px
+			box-shadow 2px 2px 8px #444
+			background #fff
+			border-radius 10px
+			h3
+				color #bbb
+			.getData
+				box-shadow none
+				border 0
+				select
+					margin-bottom 30px
+				p#endRepo
+					float right
+	.holderSelect.fin
+		position fixed
+		width 100%
+		height 100%
+		top 0
+		left 0
+		padding 0
+		margin 0
+		background #4A89DC
+		.porFinal
+			margin 0
+			background #fff
+			width 90%
+			height auto
+			position absolute
+			top 50%
+			left 5%
+			transform translateY(-50%)
+			text-align center
+#clientPosition.open
+	display block
+	z-index 99
+#masterAlert
+	position fixed
+	bottom -48px
+	left 0
+	height 48px
+	width 100%
+	background #4a89dc
+	transition all .3s linear
+	z-index 99999
+	p
+		margin 10px
+		color #fff
+#masterAlert.open
+	bottom 0px
+	transition all .3s linear
+#footer
+	width 100px
+	height 100px
+	position fixed
+	bottom -50px
+	background DarkPrimary
+	right -50px
+	border-radius 50%
+	text-align left
+	box-shadow inset 5px 5px 15px #111
+	z-index 3
+	padding-left 28px
+	line-height 78px
+	color #fff
+	font-weight 800
+	font-size 23px
+	z-index 9
+	&:before
+		font-family 'FontAwesome'
+		content '\f067'
+#footer.open
+	background #557692
+	&:before
+		content '\f00d'
+#holderFooter
+	width 100%
+	height 50px
+	position fixed
+	bottom -90px
+	right -50px
+	z-index 3
+	transition all .2s ease
+	#express,#finalizarVisita
+		position absolute
+		right -50px
+		bottom -136px
+		width 200px
+		height 200px
+		background #356690
+		border-radius 100% 0 0 0
+		transform rotate(-90deg)
+		z-index 0
+		p
+			color #fff
+			font-size 15px
+			width 40%
+			float right
+			margin 40px 10px 0
+			text-transform uppercase
+			text-align right
+			a
+				color #fff
+				text-decoration none
+	#finalizarVisita
+		background #4D7AA0
+		border-radius 0 100% 0 0
+		bottom -55px
+		right -130px
+		p
+			text-align center
+			float left
+			margin 61px 0 0 63px
+			transform rotate(45deg)
+#holderFooter.open
+	bottom 10px
+	right 70px
+
+@keyframes rightIn
+	0%
+		right -100%
+	95%
+		right 5%
+	100%
+		right 0%
+@keyframes leftIn
+	0%
+		left -100%
+	95%
+		left 5%
+	100%
+		left 0%
+@keyframes topBottom
+	0%
+		top -100%
+	100%
+		top 0%
+@css{
+@-webkit-keyframes zoomOutRight {
+  40% {
+    opacity: 1;
+    -webkit-transform: scale3d(.475, .475, .475) translate3d(-42px, 0, 0);
+    transform: scale3d(.475, .475, .475) translate3d(-42px, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    -webkit-transform: scale(.1) translate3d(2000px, 0, 0);
+    transform: scale(.1) translate3d(2000px, 0, 0);
+    -webkit-transform-origin: right center;
+    transform-origin: right center;
+  }
+}
+
+@keyframes zoomOutRight {
+  40% {
+    opacity: 1;
+    -webkit-transform: scale3d(.475, .475, .475) translate3d(-42px, 0, 0);
+    transform: scale3d(.475, .475, .475) translate3d(-42px, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    -webkit-transform: scale(.1) translate3d(2000px, 0, 0);
+    transform: scale(.1) translate3d(2000px, 0, 0);
+    -webkit-transform-origin: right center;
+    transform-origin: right center;
+  }
+}
+
+.zoomOutRight {
+  animation: zoomOutRight 1s ease;
+  animation: zoomOutRight 1s ease;
+}
+
+@-webkit-keyframes zoomInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: scale3d(.1, .1, .1) translate3d(1000px, 0, 0);
+    transform: scale3d(.1, .1, .1) translate3d(1000px, 0, 0);
+    -webkit-animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+    animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: scale3d(.475, .475, .475) translate3d(-10px, 0, 0);
+    transform: scale3d(.475, .475, .475) translate3d(-10px, 0, 0);
+    -webkit-animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+    animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+  }
+}
+
+@keyframes zoomInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: scale3d(.1, .1, .1) translate3d(1000px, 0, 0);
+    transform: scale3d(.1, .1, .1) translate3d(1000px, 0, 0);
+    -webkit-animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+    animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+  }
+
+  60% {
+    opacity: 1;
+    -webkit-transform: scale3d(.475, .475, .475) translate3d(-10px, 0, 0);
+    transform: scale3d(.475, .475, .475) translate3d(-10px, 0, 0);
+    -webkit-animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+    animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+  }
+}
+
+.zoomInRight {
+  -webkit-animation-name: zoomInRight;
+  animation-name: zoomInRight;
+}
+}
+#regid
+	display none
+#mapaPush
+	height 100%
+	width 100%
+	position absolute
+	margin 0
+	display none
+	z-index 999
+	#mapaPush
+		display block
+		width 100%
+		height 100%
+	#closeMap
+		height 50px
+		width 50px
+		border-radius 100%
+		right 10px
+		top 10px
+		z-index 9
+		position fixed
+		background green
+		cursor pointer
+		i
+			width 100%
+			color #fff
+			font-size 22px
+			text-align center
+			top 50%
+			position absolute
+			transform translateY(-50%)
+#mapaPush.open
+	display block
+#expressTelmex
+	.inner
+		width 100%
+		margin 20px auto
+		text-align center
+		background #fff
+		padding 10px
+		.logo
+			width 100%
+			height 50px
+			background url(img/assets/logo_infinitum2.jpg) no-repeat center center
+		p:nth-child(2)
+			padding 10px
+			background #0288D1
+			color #fff
+		form
+			background #f3f3f3
+			display block
+			overflow hidden
+			padding 8px
+			border 1px solid #e6e6e6
+			select
+				font-size 15px
+				border none
+				padding 10px 0
+				border-bottom 1px solid #A9A9A9
+				outline none
+				display block
+				background none
+				margin 5px 0
+				width 100%
+				color #666
+			.group
+				margin-bottom 5px
+				input
+					background none
+					color #666
+					font-size 15px
+					border-bottom 1px solid #A9A9A9
+			span:not(.bar,.highlight)
+				text-transform uppercase
+				background #0288D1
+				color #fff
+				padding 10px
+				width 100%
+				display block
+				margin 40px 0 0 0
+			label
+				display block
+				background #ccc
+				text-align left
+				margin 10px
+				padding 5px
+				color #fff
+				&:before
+					display block
+					float left
+					margin-right 10px
+					content '\f030'
+					font-family 'FontAwesome'
+			label[for=compPic]
+				&:before
+					content '\f0f6'
+			input[type="image" i],input[type="file" i]
+				display none
+			input[type="button"]
+				background none
+			span.con
+				text-transform uppercase
+				display block
+				margin 40px 0 0 0
+				background #0288D1
+				padding 5px
+				color #fff
+#dns
+	width 100%
+	height 140px
+	position fixed
+	bottom -140px
+	left 0px
+	transition all .3s linear
+	background none
+	text-align left
+	.inner
+		width 95%
+		height 140px
+		margin 0 0 0 2.5%
+		background rgba(255,255,255,.9)
+		padding 10px
+		border-radius 15px
+		box-shadow 2px 2px 12px black
+		h3
+			text-align center
+			margin 0 0 14px 0
+			color #005F6B
+		div
+			margin 10px 0
+			color #000
+			white-space nowrap
+			overflow hidden
+			text-overflow ellipsis
+			color #008C9E
+			span
+				color #666
+				margin-right 10px
+				display inline-block
+#dns.open
+	bottom 10px
+	transition all .3s linear
+#colorCode
+	width 100%
+	height auto
+	h3
+		color #fff
+		padding 20px 0
+		margin 0
+		font-weight 100
+		background #71859a
+		text-transform uppercase
+		text-align center
+	.row
+		border-left 1px solid #e0e0e0
+		border-right 1px solid #e0e0e0
+		border-bottom 1px solid #e0e0e0
+		.color
+			width 30px
+			height 30px
+			display block
+			position absolute
+			left 10px
+			top 1px
+			-webkit-border-radius 50%
+			border-radius 50%
+			-webkit-box-shadow inset -1px -1px 1px #777
+			box-shadow inset -1px -1px 1px #777
+		p
+			color #727272
+			font-size 13px
+			text-overflow ellipsis
+			overflow hidden
+			white-space nowrap
+			margin 0 5px 0 55px
+		.titulo
+			font-weight 600
+			font-size 16px
+			margin 15px 5px 1px 55px
+			text-overflow ellipsis
+		.mets
+			margin-bottom 10px
+			span:nth-child(2)
+				color #03A9F4
+				&:before
+					content 'Ventas: '
+			span
+				font-size 11px
+				font-weight bold
+				padding 0
+				margin-right 10px
+				color #EC407A
+				&:before
+					font-weight normal
+					content 'Meta: '
+#campaniasAsignadas
+	h3
+		color #fff
+		padding 20px 0
+		margin 0
+		font-weight 100
+		background #71859a
+		text-transform uppercase
+		text-align center
+#loadingMap
+	position fixed
+	width 100%
+	height 100%
+	background rgba(0,0,0,.5)
+	top 0
+	left 0
+	z-index 99
+	display none
+	.loading
+		position absolute
+		top 50%
+		left 50%
+		width 80px
+		height 40px
+		background transparent url('img/logoT.svg') 0 0 no-repeat
+		background-size cover
+		margin -20px 0 0 -40px
+		animation cargando 1.2s infinite ease-in-out
+		transform translate(-50%,-50%)
+#loadingMap.open
+	display block
+#iframeDisplay,#iframeDisplay2
+	width 100%
+	height calc(100% - 50px)
+	position fixed
+	bottom -100%
+	transition all .3s linear
+	background #fff
+	iframe
+		width 100%
+		height 100%
+		border none
+#iframeDisplay.open,#iframeDisplay2.open
+	bottom 0px
+	transition all .3s linear
