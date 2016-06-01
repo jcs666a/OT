@@ -636,6 +636,12 @@ table.dataTable thead th,table.dataTable thead td,
 table.dataTable tfoot th,table.dataTable tfoot td{padding:15px 18px;vertical-align:top;}
 table.dataTable tbody tr.even{background:#E4E4E4;}
 table.dataTable tbody tr.odd{background:#eee;}
+table.dataTable tbody tr.caduca{background:#ffe5e5;color:#adadad;}
+table.dataTable tbody tr.caduca td:first-child:before{display:block;z-index:99;content:'Vencida';position:absolute;color:#f00;
+	border:2px solid #f00;text-transform:uppercase;padding:5px;font-weight:700;
+	-ms-transform:rotate(-15deg);-webkit-transform:rotate(-15deg);transform:rotate(-15deg);
+	border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;}
+table.dataTable tbody tr.caduca td:first-child span{display:none;}
 table.dataTable thead tr th:hover,table.dataTable thead tr td:hover{color:#00bbfa;}
 table.dataTable tbody tr:hover th,table.dataTable tbody tr:hover td,
 table.dataTable tfoot tr:hover th,table.dataTable tfoot tr:hover td{color:#00AEE8;}

@@ -9,7 +9,13 @@ if($_POST['pky']!='')
 else
 	header("Location: ../");
 //Vars:
-$ipServ='http://localhost:9090/';
+//$ipServ='http://10.105.116.52:9090/';
+//$ipServ='http://localhost:9090/';
+$ipServ='https://187.217.179.35:9090/';
+//$ipServ='https://10.105.116.187:9090/';
+$ipWso2='://187.217.179.35:';
+//$ipWso2='://10.105.116.187:';
+//$ipServ='http://10.105.116.207:9090/';
 //Clases:
 class GCM{
 	function __construct(){}
@@ -39,21 +45,45 @@ class GCM{
 		return $result;
 	}
 }
+function curl($tipo,$url,$data=''){
+	global $ipServ;
+	$ch=curl_init($ipServ.$url);
+	if($tipo=="GET"){
+
+	}
+	else if($tipo=="PUT" && $data!=''){
+		curl_setopt_array($ch, array(
+			CURLOPT_CUSTOMREQUEST => $tipo,
+			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_SSL_VERIFYPEER => FALSE,
+			CURLOPT_SSL_VERIFYHOST => FALSE,
+			CURLOPT_HTTPHEADER => array(
+				'Content-Type: application/json'
+			),
+			CURLOPT_POSTFIELDS=>json_encode($data)
+		));
+	}
+	else if($tipo=="POST" && $data!=''){
+		curl_setopt_array($ch, array(
+			CURLOPT_POST => TRUE,
+			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_SSL_VERIFYPEER => FALSE,
+			CURLOPT_SSL_VERIFYHOST => FALSE,
+			CURLOPT_HTTPHEADER => array(
+				'Content-Type: application/json'
+			),
+			CURLOPT_POSTFIELDS=>json_encode($data)
+		));
+	}
+	return curl_exec($ch);
+}
 //Funciones:
 function logout($data){
 	global $ipServ;
-	$ch = curl_init($ipServ."telmex/usuario/desconectado");
-	curl_setopt_array($ch, array(
-		CURLOPT_CUSTOMREQUEST => "PUT",
-		CURLOPT_RETURNTRANSFER => TRUE,
-		CURLOPT_HTTPHEADER => array(
-			'Content-Type: application/json'
-		),
-		CURLOPT_POSTFIELDS=>json_encode($data)
-	));
-	$response = curl_exec($ch);
+	$response=curl("PUT","telmex/usuario/desconectado",$data);
 	if($response===FALSE){
-		print_r(curl_error($ch));
+		$obj['Error']=='Error al conectarse al servicio para cerrar sesión.';
+		echo json_encode($obj);
 	}
 	else{
 		if(isset($_SERVER['HTTP_COOKIE'])){
@@ -83,32 +113,26 @@ function mensajes($Ids,$mas,$emisor,$receptor){
 		'mensaje'=>$mas
 	);
 //	$obj['dataServicio']=$data;
-	$ch = curl_init($ipServ.'telmex/add/mensaje');
-	curl_setopt_array($ch, array(
-		CURLOPT_POST => TRUE,
-		CURLOPT_RETURNTRANSFER => TRUE,
-		CURLOPT_HTTPHEADER => array(
-			'Content-Type: application/json'
-		),
-		CURLOPT_POSTFIELDS=>json_encode($data)
-	));
-	$response=curl_exec($ch);
-	if($response===FALSE) die(curl_error($ch));
-//	else $obj['response']=$response;
-	if($res->failure==0){
-		$obj['success']=$res->success;
-		$obj['multicast_id']=$res->multicast_id;
-		$obj['failure']=$res->failure;
-		$obj['canonical_ids']=$res->canonical_ids;
-		$obj['message_id']=$res->results[0]->message_id;
-	}
-	else if($res->failure==1){
-		$obj['errorMessage']='La API de Google devolvió un error';
-		$obj['success']=$res->success;
-		$obj['multicast_id']=$res->multicast_id;
-		$obj['failure']=$res->failure;
-		$obj['canonical_ids']=$res->canonical_ids;
-		$obj['error']=$res->results[0]->error;
+	$response=curl("POST",'telmex/add/mensaje',$data);
+	if($response===FALSE)
+		$obj['Error']=='Error al conectarse al servicio para agregar mensaje';
+	else{
+//		$obj['response']=$response;
+		if($res->failure==0){
+			$obj['success']=$res->success;
+			$obj['multicast_id']=$res->multicast_id;
+			$obj['failure']=$res->failure;
+			$obj['canonical_ids']=$res->canonical_ids;
+			$obj['message_id']=$res->results[0]->message_id;
+		}
+		else if($res->failure==1){
+			$obj['errorMessage']='La API de Google devolvió un error';
+			$obj['success']=$res->success;
+			$obj['multicast_id']=$res->multicast_id;
+			$obj['failure']=$res->failure;
+			$obj['canonical_ids']=$res->canonical_ids;
+			$obj['error']=$res->results[0]->error;
+		}
 	}
 	return $obj;
 }
@@ -153,8 +177,17 @@ function serialize_cookieReg($nombre_cookie='',$arreglo='',$time='mas'){
 	return $array;
 }
 if($pky=='}54ñj?='){ //Login
-	$abj=file_get_contents($ipServ.'telmex/get/user/'.$_POST['U'].'/'.$_POST['P']);
-	if($abj=='')
+//	$abj=file_get_contents($ipServ.'telmex/get/user/'.$_POST['U'].'/'.$_POST['P']);
+	$chi=curl_init($ipServ.'telmex/get/user/'.$_POST['U'].'/'.$_POST['P']);
+	curl_setopt_array($chi,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$abj = curl_exec($chi);
+	if($abj === FALSE)
 		$object['errorMessage']='No hay respuesta del servidor de login. NO RESPONSE';
 	else{
 		$abj=json_decode($abj);
@@ -173,8 +206,17 @@ if($pky=='}54ñj?='){ //Login
 				$abj->apiResponse[0]->cuenta==1){
 				$object['dentrMessage']=1;
 				$object['z']='dashboard/#34fTRc';
-				$ibj=file_get_contents($ipServ.'telmex/get/userandregiones/'.$abj->apiResponse[0]->idUsuario);
-				if($ibj=='')
+//				$ibj=file_get_contents($ipServ.'telmex/get/userandregiones/'.$abj->apiResponse[0]->idUsuario);
+				$cha=curl_init($ipServ.'telmex/get/userandregiones/'.$abj->apiResponse[0]->idUsuario);
+				curl_setopt_array($cha,array(
+					CURLOPT_CONNECTTIMEOUT => 15,
+					CURLOPT_TIMEOUT => 20,
+					CURLOPT_RETURNTRANSFER => TRUE,
+					CURLOPT_SSL_VERIFYPEER => FALSE,
+					CURLOPT_SSL_VERIFYHOST => FALSE
+				));
+				$ibj = curl_exec($cha);
+				if($ibj === FALSE)
 					$object['errorMessage']='No hay respuesta del servidor de login. NO RESPONSE';
 				else{
 					$ibj=json_decode($ibj);
@@ -232,10 +274,10 @@ else if($pky=='b.4{d2xA'){//Enviar mails
 	$mail->SMTPAuth=true;
 	$mail->Username="jcottelmex@gmail.com";
 	$mail->Password="Blitz2016";
-	$mail->setFrom('jcottelmex@gmail.com','Administrador del Dashboard');
+	$mail->setFrom('jcottelmex@gmail.com','Administración de Dashboard');
 //	$mail->addReplyTo('jcottelmex@gmail.com','Julio S.');
-//	$mail->addAddress($correo,'Administrador del Dashboard');
-	$mail->addAddress('jcsavila@gmail.com','Administrador del Dashboard');
+	$mail->addAddress($correo,'Administración de Dashboard');
+//	$mail->addAddress('jcsavila@gmail.com','Administrador del Dashboard');
 	$mail->Subject=$asunto;
 //	$mail->msgHTML(file_get_contents('mailer/temp.html'), dirname(__FILE__));
 	$mail->msgHTML($templa);
@@ -248,11 +290,18 @@ else if($pky=='b.4{d2xA'){//Enviar mails
 	}
 }
 else if($pky=='46%6&fyR'){ //Obtiene divisiones para menu
-	$ctx=stream_context_create(array('http'=>array('timeout'=>5,)));
-	$abj=file_get_contents($ipServ.'getCatalog/CatalogoDivisiones',false,$ctx);
-//	$abj=file_get_contents($ipServ.'getCatalog/CatalogoDivisiones');
-	$obj['errorMessage']='';
-	if($abj=='')
+//	$ctx=stream_context_create(array('http'=>array('timeout'=>5,)));
+//	$abj=file_get_contents($ipServ.'getCatalog/CatalogoDivisiones',false,$ctx);
+	$cha=curl_init($ipServ.'getCatalog/CatalogoDivisiones');
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$abj=curl_exec($cha);
+	if($abj === FALSE)
 		$obj['errorMessage']='No hay respuesta del servidor para obtener catalogo de divisiones. NO RESPONSE';
 	else{
 		$abj=json_decode($abj);
@@ -265,7 +314,6 @@ else if($pky=='46%6&fyR'){ //Obtiene divisiones para menu
 	echo json_encode($obj);
 }
 else if($pky=='ñhj/4"1z'){ //Pinta poligonos de divisiones
-	$abj=file_get_contents($ipServ.'getDivisionByName/geoJson/'.rawurlencode($_POST['P']));
 	if($_POST['X'][0]=='Todas las regiones' || $_POST['X'][0]=='Todas las campañas'){}
 	else{
 		foreach($_POST['X'] as $k=>$v){
@@ -277,29 +325,62 @@ else if($pky=='ñhj/4"1z'){ //Pinta poligonos de divisiones
 				$derecho[]=$q;
 		}
 	}
-	if($abj=='')
+//	$abj=file_get_contents($ipServ.'getDivisionByName/geoJson/'.rawurlencode($_POST['P']));
+	$cha=curl_init($ipServ.'getDivisionByName/geoJson/'.rawurlencode($_POST['P']));
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$abj=curl_exec($cha);
+	if($abj === FALSE)
 		$obj['errorMessage']='No hay respuesta del servidor para obtener polígonos de divisiones. NO RESPONSE';
 	else{
 		$abj=str_replace('"color":"blue"','"color":"#E0E4CC"',$abj);
 		$abj=json_decode($abj);
 		$obj['mapa']=$abj->apiResponse[0];
-		$abj=file_get_contents($ipServ.'getAreaCatalog/'.$_POST['U']);
-		$abj=json_decode($abj);
-		$abj=$abj->apiResponse;
-		$opciones='<option value="0" disabled selected>Áreas</option>';
-		foreach($abj as $k=>$vl){
-			if(($_POST['X'][0]=='Todas las regiones' || $_POST['X'][0]=='Todas las campañas' || $derecho[0]=='Todas') ||
-				in_array($vl->id,$derecho))
-					$opciones.='<option value="'.$vl->id.'">'.$vl->descripcion.'</option>';
+		unset($abj);unset($cha);
+//		$abj=file_get_contents($ipServ.'getAreaCatalog/'.$_POST['U']);
+		$cha=curl_init($ipServ.'getAreaCatalog/'.$_POST['U']);
+		curl_setopt_array($cha,array(
+			CURLOPT_CONNECTTIMEOUT => 15,
+			CURLOPT_TIMEOUT => 20,
+			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_SSL_VERIFYPEER => FALSE,
+			CURLOPT_SSL_VERIFYHOST => FALSE
+		));
+		$abj=curl_exec($cha);
+		if($abj === FALSE)
+			$obj['errorMessage']='No hay respuesta del servidor para obtener catalogo (getAreaCatalog/'.$_POST['U'].'). NO RESPONSE';
+		else{
+			$abj=json_decode($abj);
+			$abj=$abj->apiResponse;
+			$opciones='<option value="0" disabled selected>Áreas</option>';
+			foreach($abj as $k=>$vl){
+				if(($_POST['X'][0]=='Todas las regiones' || $_POST['X'][0]=='Todas las campañas' || $derecho[0]=='Todas') ||
+					in_array($vl->id,$derecho))
+						$opciones.='<option value="'.$vl->id.'">'.$vl->descripcion.'</option>';
+			}
+			$obj['areas']=$opciones;
 		}
-		$obj['areas']=$opciones;
 	}
 	echo json_encode($obj);
 
 }
 else if($pky=='5yj[.-}'){ //Pinta poligonos de areas
-	$jsan=file_get_contents($ipServ.'getAreaByName/geoJson/'.rawurlencode($_POST['P']));
-	if($jsan=='')
+//	$jsan=file_get_contents($ipServ.'getAreaByName/geoJson/'.rawurlencode($_POST['P']));
+	$cha=curl_init($ipServ.'getAreaByName/geoJson/'.rawurlencode($_POST['P']));
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$jsan=curl_exec($cha);
+	if($jsan === FALSE)
 		$abj['errorMessage']='No hay respuesta del servidor para obtener polígonos de áreas. NO RESPONSE<br />'.urlencode($ipServ.'getAreaByName/geoJson/');
 	else{
 		$jsan=str_replace('"color":"blue"','"color":"#E0E4CC"',$jsan);
@@ -309,8 +390,17 @@ else if($pky=='5yj[.-}'){ //Pinta poligonos de areas
 	echo json_encode($abj);
 }
 else if($pky=='er43{¿3'){ //Obtiene nombre de colonias
-	$abj=file_get_contents($ipServ.'telmex/necropsia/getNecropsiaColoniaByArea/'.$_POST['P']);
-	if($abj=='')
+//	$abj=file_get_contents($ipServ.'telmex/necropsia/getNecropsiaColoniaByArea/'.$_POST['P']);
+	$cha=curl_init($ipServ.'telmex/necropsia/getNecropsiaColoniaByArea/'.$_POST['P']);
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$abj=curl_exec($cha);
+	if($abj === FALSE)
 		$abj['errorMessage']='No hay respuesta del servidor para obtener nombres de colonias. NO RESPONSE';
 	else{
 		$abj=json_decode($abj);
@@ -319,16 +409,34 @@ else if($pky=='er43{¿3'){ //Obtiene nombre de colonias
 	echo json_encode($abj);
 }
 else if($pky=='eK,.-/'){ //Obtiene nombre de distritos
-	$abj=file_get_contents($ipServ.'getDistritosBySearch/'.$_POST['P'].'/0');
-	if($abj==''){
+//	$abj=file_get_contents($ipServ.'getDistritosBySearch/'.$_POST['P'].'/0');
+	$cha=curl_init($ipServ.'getDistritosBySearch/'.$_POST['P'].'/0');
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$abj=curl_exec($cha);
+	if($abj === FALSE){
 		$abj['errorMessage']='No hay respuesta del servidor para obtener nombres de distritos. NO RESPONSE';
 		$abj=json_encode($abj);
 	}
 	echo $abj;
 }
 else if($pky=='Tym,pñ&'){ //Obtiene fielders por region
-	$abj=file_get_contents($ipServ.'telmex/get/usuariosregion/'.$_POST['P']);
-	if($abj=='')
+//	$abj=file_get_contents($ipServ.'telmex/get/usuariosregion/'.$_POST['P']);
+	$cha=curl_init($ipServ.'telmex/get/usuariosregion/'.$_POST['P']);
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$abj=curl_exec($cha);
+	if($abj === FALSE)
 		$abj['errorMessage']='No hay respuesta del servidor para obtener fielders de la región. NO RESPONSE';
 	else{
 		$abj=json_decode($abj);
@@ -337,10 +445,19 @@ else if($pky=='Tym,pñ&'){ //Obtiene fielders por region
 	echo json_encode($abj);
 }
 else if($pky==',.-76reIo5{'){ //Obtiene fielders por Area
-	$abj=file_get_contents($ipServ.'telmex/get/usuariosarea/'.$_POST['P']);
+//	$abj=file_get_contents($ipServ.'telmex/get/usuariosarea/'.$_POST['P']);
+	$cha=curl_init($ipServ.'telmex/get/usuariosarea/'.$_POST['P']);
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$abj=curl_exec($cha);
 	$obj[]=array();
-	if($abj=='')
-		$abj['errorMessage']='No hay respuesta del servidor para obtener fielders del área. NO RESPONSE';
+	if($abj === FALSE)
+		$obj['errorMessage']='No hay respuesta del servidor para obtener fielders del área. NO RESPONSE';
 	else{
 		$abj=json_decode($abj);
 		$abj=$abj->apiResponse[0];
@@ -380,6 +497,8 @@ else if($pky=='lñjh(U]'){ //Pinta los distritos pedidos (Necesito mandarme el �
 	curl_setopt_array($ch, array(
 		CURLOPT_POST => TRUE,
 		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER => array(
 			'Content-Type: application/json'
 		),
@@ -452,8 +571,17 @@ else if($pky=='-*6+¿dyF'){ //Traigo todos los usuarios
 			$ra[]=$v;
 		}
 	}
-	$abj=file_get_contents($ipServ.'telmex/get/userAllRegs');
-	if($abj=='')
+//	$abj=file_get_contents($ipServ.'telmex/get/userAllRegs');
+	$cha=curl_init($ipServ.'telmex/get/userAllRegs');
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$abj=curl_exec($cha);
+	if($abj === FALSE)
 		$obj['errorMessage']='No hay respuesta del servidor para obtener usuarios. NO RESPONSE';
 	else{
 		$abj=json_decode($abj);
@@ -470,65 +598,93 @@ else if($pky=='-*6+¿dyF'){ //Traigo todos los usuarios
 					$obj['u'][$i]['expediente']=$v->expediente;
 					$obj['u'][$i]['conectado']=$v->conectado;
 					$obj['u'][$i]['gcm']=$v->gcm;
-					$ibj=file_get_contents($ipServ.'telmex/get/region/'.$v->idUsuario);
-					$ibj=json_decode($ibj);
-					$ibj=$ibj->apiResponse[0];
-					$o=0;
-					foreach($ibj as $ky=>$vy){
-						$obj['u'][$i]['regiones'][$o]=$vy->regionTrabajo;
-						$o++;
+//					$ibj=file_get_contents($ipServ.'telmex/get/region/'.$v->idUsuario);
+					unset($cha);
+					$cha=curl_init($ipServ.'telmex/get/region/'.$v->idUsuario);
+					curl_setopt_array($cha,array(
+						CURLOPT_CONNECTTIMEOUT => 15,
+						CURLOPT_TIMEOUT => 20,
+						CURLOPT_RETURNTRANSFER => TRUE,
+						CURLOPT_SSL_VERIFYPEER => FALSE,
+						CURLOPT_SSL_VERIFYHOST => FALSE
+					));
+					$ibj=curl_exec($cha);
+					if($ibj === FALSE)
+						$obj['errorMessage']='No hay respuesta del servidor para obtener regiones. NO RESPONSE';
+					else{
+						$ibj=json_decode($ibj);
+						$ibj=$ibj->apiResponse[0];
+						$o=0;
+						foreach($ibj as $ky=>$vy){
+							$obj['u'][$i]['regiones'][$o]=$vy->regionTrabajo;
+							$o++;
+						}
+						$i++;
 					}
-					$i++;
 				}
 				else{
-					$ibj=file_get_contents($ipServ.'telmex/get/region/'.$v->idUsuario);
-					$ibj=json_decode($ibj);
-					$ibj=$ibj->apiResponse[0];
-					$o=0;$no_tengo='No';
-					foreach($ibj as $kx=>$vx){
-						if($p=='Director'){
-							foreach($ra as $kix=>$vix){
-								if(substr($vx->regionTrabajo,0,2)===$vix)
-									$no_tengo='Si';
+//					$ibj=file_get_contents($ipServ.'telmex/get/region/'.$v->idUsuario);
+					unset($cha);
+					$cha=curl_init($ipServ.'telmex/get/region/'.$v->idUsuario);
+					curl_setopt_array($cha,array(
+						CURLOPT_CONNECTTIMEOUT => 15,
+						CURLOPT_TIMEOUT => 20,
+						CURLOPT_RETURNTRANSFER => TRUE,
+						CURLOPT_SSL_VERIFYPEER => FALSE,
+						CURLOPT_SSL_VERIFYHOST => FALSE
+					));
+					$ibj=curl_exec($cha);
+					if($ibj === FALSE)
+						$obj['errorMessage']='No hay respuesta del servidor para obtener regiones. NO RESPONSE';
+					else{
+						$ibj=json_decode($ibj);
+						$ibj=$ibj->apiResponse[0];
+						$o=0;$no_tengo='No';
+						foreach($ibj as $kx=>$vx){
+							if($p=='Director'){
+								foreach($ra as $kix=>$vix){
+									if(substr($vx->regionTrabajo,0,2)===$vix)
+										$no_tengo='Si';
+								}
+							}
+							else{
+								foreach($rb as $kix=>$vix){
+									if(strpos($vx->regionTrabajo,$vix)!==false)
+										$no_tengo='Si';
+								}
 							}
 						}
-						else{
-							foreach($rb as $kix=>$vix){
-								if(strpos($vx->regionTrabajo,$vix)!==false)
-									$no_tengo='Si';
+						if($no_tengo=='Si'){
+							if($p=='Director' && $v->role=='6'){
+								foreach($ibj as $ky=>$vy){
+									$obj['u'][$i]['regiones'][$o]=$vy->regionTrabajo;
+									$o++;
+								}
+								$obj['u'][$i]['idUsuario']=$v->idUsuario;
+								$obj['u'][$i]['role']=$v->role;
+								$obj['u'][$i]['idRole']=$v->role;
+								$obj['u'][$i]['nombre']=$v->nombre;
+								$obj['u'][$i]['usuario']=$v->usuario;
+								$obj['u'][$i]['expediente']=$v->expediente;
+								$obj['u'][$i]['conectado']=$v->conectado;
+								$obj['u'][$i]['gcm']=$v->gcm;
+								$i++;
 							}
-						}
-					}
-					if($no_tengo=='Si'){
-						if($p=='Director' && $v->role=='6'){
-							foreach($ibj as $ky=>$vy){
-								$obj['u'][$i]['regiones'][$o]=$vy->regionTrabajo;
-								$o++;
+							else if($p=='Lider Promotor' && $v->role=='7'){
+								foreach($ibj as $ky=>$vy){
+									$obj['u'][$i]['regiones'][$o]=$vy->regionTrabajo;
+									$o++;
+								}
+								$obj['u'][$i]['idUsuario']=$v->idUsuario;
+								$obj['u'][$i]['role']=$v->role;
+								$obj['u'][$i]['idRole']=$v->role;
+								$obj['u'][$i]['nombre']=$v->nombre;
+								$obj['u'][$i]['usuario']=$v->usuario;
+								$obj['u'][$i]['expediente']=$v->expediente;
+								$obj['u'][$i]['conectado']=$v->conectado;
+								$obj['u'][$i]['gcm']=$v->gcm;
+								$i++;
 							}
-							$obj['u'][$i]['idUsuario']=$v->idUsuario;
-							$obj['u'][$i]['role']=$v->role;
-							$obj['u'][$i]['idRole']=$v->role;
-							$obj['u'][$i]['nombre']=$v->nombre;
-							$obj['u'][$i]['usuario']=$v->usuario;
-							$obj['u'][$i]['expediente']=$v->expediente;
-							$obj['u'][$i]['conectado']=$v->conectado;
-							$obj['u'][$i]['gcm']=$v->gcm;
-							$i++;
-						}
-						else if($p=='Lider Promotor' && $v->role=='7'){
-							foreach($ibj as $ky=>$vy){
-								$obj['u'][$i]['regiones'][$o]=$vy->regionTrabajo;
-								$o++;
-							}
-							$obj['u'][$i]['idUsuario']=$v->idUsuario;
-							$obj['u'][$i]['role']=$v->role;
-							$obj['u'][$i]['idRole']=$v->role;
-							$obj['u'][$i]['nombre']=$v->nombre;
-							$obj['u'][$i]['usuario']=$v->usuario;
-							$obj['u'][$i]['expediente']=$v->expediente;
-							$obj['u'][$i]['conectado']=$v->conectado;
-							$obj['u'][$i]['gcm']=$v->gcm;
-							$i++;
 						}
 					}
 				}
@@ -542,16 +698,33 @@ else if($pky=='ñ%3fN.-'){ //Traigo los usuarios lideres o los fielders de un li
 	$p=$_POST['P'];
 	$q=$_POST['Q'];
 	if($q=='1'){
-		$abj=file_get_contents($ipServ.'telmex/get/usuariosLiderByDiv/'.$p);
+//		$abj=file_get_contents($ipServ.'telmex/get/usuariosLiderByDiv/'.$p);
+		$cha=curl_init($ipServ.'telmex/get/usuariosLiderByDiv/'.$p);
+		curl_setopt_array($cha,array(
+			CURLOPT_CONNECTTIMEOUT => 15,
+			CURLOPT_TIMEOUT => 20,
+			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_SSL_VERIFYPEER => FALSE,
+			CURLOPT_SSL_VERIFYHOST => FALSE
+		));
+		$abj=curl_exec($cha);
 		$obj['url']=$ipServ.'telmex/get/usuariosLiderByDiv/'.$p;
 	}
 	else{
-		$abj=file_get_contents($ipServ.'telmex/get/usuariosPromotorByDivArea/'.$p);
+//		$abj=file_get_contents($ipServ.'telmex/get/usuariosPromotorByDivArea/'.$p);
+		$cha=curl_init($ipServ.'telmex/get/usuariosPromotorByDivArea/'.$p);
+		curl_setopt_array($cha,array(
+			CURLOPT_CONNECTTIMEOUT => 15,
+			CURLOPT_TIMEOUT => 20,
+			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_SSL_VERIFYPEER => FALSE,
+			CURLOPT_SSL_VERIFYHOST => FALSE
+		));
+		$abj=curl_exec($cha);
 		$obj['url']=$ipServ.'telmex/get/usuariosPromotorByDivArea/'.$p;
 	}
-	if($abj=='' || $abj==null){
+	if($abj === FALSE)
 		$obj['errorMessage']='No hay respuesta del servidor para obtener usuarios. (NO RESPONSE)';
-	}
 	else{
 		$abj=json_decode($abj);
 		$abj=$abj->apiResponse[0];$i=0;
@@ -564,29 +737,53 @@ else if($pky=='ñ%3fN.-'){ //Traigo los usuarios lideres o los fielders de un li
 			$obj['u'][$i]['expediente']=$v->expediente;
 			$obj['u'][$i]['conectado']=$v->conectado;
 			$obj['u'][$i]['gcm']='';
-			$ibj=file_get_contents($ipServ.'telmex/get/region/'.$v->idUsuario);
-			$ibj=json_decode($ibj);
-			$ibj=$ibj->apiResponse[0];
-			$o=0;
-			foreach($ibj as $ky=>$vy){
-				$obj['u'][$i]['regiones'][$o]=$vy->regionTrabajo;
-				$o++;
+//			$ibj=file_get_contents($ipServ.'telmex/get/region/'.$v->idUsuario);
+			unset($cha);
+			$cha=curl_init($ipServ.'telmex/get/region/'.$v->idUsuario);
+			curl_setopt_array($cha,array(
+				CURLOPT_CONNECTTIMEOUT => 15,
+				CURLOPT_TIMEOUT => 20,
+				CURLOPT_RETURNTRANSFER => TRUE,
+				CURLOPT_SSL_VERIFYPEER => FALSE,
+				CURLOPT_SSL_VERIFYHOST => FALSE
+			));
+			$ibj=curl_exec($cha);
+			if($ibj === FALSE)
+				$obj['errorMessage']='No hay respuesta del servidor para obtener usuarios. (NO RESPONSE)';
+			else{
+				$ibj=json_decode($ibj);
+				$ibj=$ibj->apiResponse[0];
+				$o=0;
+				foreach($ibj as $ky=>$vy){
+					$obj['u'][$i]['regiones'][$o]=$vy->regionTrabajo;
+					$o++;
+				}
+				$i++;
 			}
-			$i++;
 		}
 	}
 	echo json_encode($obj);
 }
 else if($pky=='ñ*}{Lokj'){ //Traigo todas las campañas
-	$abj=file_get_contents($ipServ.'telmex/get/camp');
-	if($abj=='')
+//	$abj=file_get_contents($ipServ.'telmex/get/camp');
+	$cha=curl_init($ipServ.'telmex/get/camp');
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$abj=curl_exec($cha);
+	if($abj === FALSE)
 		$obj['errorMessage']='No hay respuesta del servidor para obtener usuarios. NO RESPONSE';
 	else{
 		$abj=json_decode($abj);
 		$abj=$abj->apiResponse[0];
-		$i=0;
+		$i=0;$hoy=date("Y-m-d");$terminada='Vigente';
 		foreach ($abj as $k=>$v){
 			if($v->estado==true){
+				if($hoy>$v->fechaFin)	$terminada='Caduca';
 				$obj[$i]['id']=$v->id;
 				$obj[$i]['titulo']=htmlspecialchars($v->titulo,ENT_QUOTES);
 				$obj[$i]['tcode']=$v->tcode;
@@ -598,6 +795,8 @@ else if($pky=='ñ*}{Lokj'){ //Traigo todas las campañas
 				$obj[$i]['fecha_inicio']=$v->fechaInicio;
 				$obj[$i]['fecha_fin']=$v->fechaFin;
 				$obj[$i]['descripcion']=htmlspecialchars($v->descripcion,ENT_QUOTES);
+				$obj[$i]['caducidad']=$terminada;
+				$obj[$i]['Hoy']=$hoy;
 				$i++;
 			}
 		}
@@ -605,8 +804,17 @@ else if($pky=='ñ*}{Lokj'){ //Traigo todas las campañas
 	echo json_encode($obj);
 }
 else if($pky=='-Iyh&4}['){ //Traigo info del usuario por id
-	$abj=file_get_contents($ipServ.'telmex/get/userandregiones/'.$_POST['P']);
-	if($abj=='')
+//	$abj=file_get_contents($ipServ.'telmex/get/userandregiones/'.$_POST['P']);
+	$cha=curl_init($ipServ.'telmex/get/userandregiones/'.$_POST['P']);
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$abj=curl_exec($cha);
+	if($abj === FALSE)
 		$obj['errorMessage']='No hay respuesta del servidor para obtener usuarios. NO RESPONSE';
 	else{
 		$abj=json_decode($abj);
@@ -651,6 +859,8 @@ else if($pky=='.3Lñ-_,U'){ //Guardo información de usuario
 		CURLOPT_CUSTOMREQUEST => "PUT",
 		CURLOPT_RETURNTRANSFER => TRUE,
 		CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_POSTFIELDS=>json_encode($data)
 	));
 	$response=curl_exec($ch);
@@ -688,6 +898,8 @@ else if($pky=='bH-.!sdT'){ //Guardo nuevo usuario
 		CURLOPT_TIMEOUT => 20,
 		CURLOPT_POST => TRUE,
 		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER => array(
 			'Content-Type: application/json'
 		),
@@ -701,33 +913,93 @@ else if($pky=='bH-.!sdT'){ //Guardo nuevo usuario
 		if($response->errorCode<0)
 			$obj['Error']=$response->errorMessage;
 		else{
-			if($z=='')$obj['Respo']=$response->apiResponse[0];
+			if($response->errorMessage!=''){
+				$obj['Error']=$response->errorMessage;
+			}
 			else{
-				$nU=$response->apiResponse[0];
-				$postData[]=array(
-					'idUsuario'=>$nU->idUsuario,
-					'regionTrabajo'=>$z
-				);
-				$ch=curl_init($ipServ.'telmex/add/regiones');
-				curl_setopt_array($ch, array(
-					CURLOPT_CONNECTTIMEOUT => 15,
-					CURLOPT_TIMEOUT => 20,
-					CURLOPT_POST => TRUE,
-					CURLOPT_RETURNTRANSFER => TRUE,
-					CURLOPT_HTTPHEADER => array(
-						'Content-Type: application/json'
-					),
-					CURLOPT_POSTFIELDS=>json_encode($postData)
-				));
-				$response = curl_exec($ch);
-				if($response === FALSE)
-					$obj['Error']=curl_error($ch);
+				$obj['RespoAddUser']=$response;
+				if($z=='')$obj['Respo']=$response->apiResponse[0];
 				else{
-					$response=json_decode($response);
-					if($response->errorCode<0)
-						$obj['Error']=$response->errorMessage;
+					$nU=$response->apiResponse[0];
+					$postData[]=array(
+						'idUsuario'=>$nU->idUsuario,
+						'regionTrabajo'=>$z
+					);
+					$ch=curl_init($ipServ.'telmex/add/regiones');
+					curl_setopt_array($ch, array(
+						CURLOPT_CONNECTTIMEOUT => 15,
+						CURLOPT_TIMEOUT => 20,
+						CURLOPT_POST => TRUE,
+						CURLOPT_RETURNTRANSFER => TRUE,
+						CURLOPT_SSL_VERIFYPEER => FALSE,
+						CURLOPT_SSL_VERIFYHOST => FALSE,
+						CURLOPT_HTTPHEADER => array(
+							'Content-Type: application/json'
+						),
+						CURLOPT_POSTFIELDS=>json_encode($postData)
+					));
+					$response = curl_exec($ch);
+					if($response === FALSE)
+						$obj['Error']=curl_error($ch);
+					else{
+						$response=json_decode($response);
+						if($response->errorCode<0)
+							$obj['Error']=$response->errorMessage;
+						else
+							$obj['Respo']=$response->apiResponse[0];
+					}
+				}
+				if($r==7){
+					$token=file_get_contents('http'.$ipWso2.'8283/services/TokenService');
+					if($token!='' && $token!=null && $token!='null'){
+						$token=json_decode($token);
+						$token=$token->access_token;
+						if($token!=''){
+							$dat=array(
+								'username'=>'PRIMARY/'.$u,
+								'firstname'=>$n,
+								'lastname'=>$n,
+								'emailAddress'=>$s,
+								'roles'=>array('Fielder'));
+							$chi=curl_init('https'.$ipWso2.'9443/mdm-admin/users');
+							$heads=array(
+									'authorization: Bearer '.$token,
+									'cache-control: no-cache',
+									'content-type: application/json'
+								);
+							curl_setopt_array($chi,array(
+								CURLOPT_CONNECTTIMEOUT => 15,
+								CURLOPT_FOLLOWLOCATION => TRUE,
+								CURLOPT_TIMEOUT => 20,
+								CURLOPT_ENCODING => "",
+								CURLOPT_AUTOREFERER => true,
+								CURLOPT_USERAGENT => "Julio",
+								CURLOPT_CUSTOMREQUEST => "POST",
+								CURLOPT_VERBOSE => TRUE,
+								CURLOPT_RETURNTRANSFER => TRUE,
+								CURLOPT_SSL_VERIFYPEER => FALSE,
+								CURLOPT_SSL_VERIFYHOST => FALSE,
+								CURLOPT_HTTPHEADER => array(
+									'authorization: Bearer '.$token,
+									'cache-control: no-cache',
+									'content-type: application/json'
+								),
+								CURLOPT_POSTFIELDS=>json_encode($dat)
+							));
+							$response=curl_exec($chi);
+							if($response===FALSE)
+								$obj['Error']=curl_error($chi);
+							else if($response==null || $response=='null')
+								$obj['Error']='La respuesta de crear usuario en WSO2 fue nula';
+							else{
+								unset($chi);unset($dat);unset($token);
+							}
+						}
+						else
+							$obj['Error']='El token de acceso para WSO2 no fue recibido correctamente.<br />'.'https'.$ipWso2.'9443/mdm-admin/users';
+					}
 					else
-						$obj['Respo']=$response->apiResponse[0];
+						$obj['Error']="No se recibió respuesta del servicio de WSO2 /services/TokenService".'http'.$ipWso2.'8283/services/TokenService';
 				}
 			}
 		}
@@ -751,6 +1023,8 @@ else if($pky=='Nb%423d'){ //Guardo y envío información de nueva región asigna
 		CURLOPT_TIMEOUT => 20,
 		CURLOPT_POST => TRUE,
 		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER => array(
 			'Content-Type: application/json'
 		),
@@ -783,6 +1057,8 @@ else if($pky=='0"#rGf4sxV'){ //Elimino región del usuario
 	curl_setopt_array($ch, array(
 		CURLOPT_CUSTOMREQUEST => "DELETE",
 		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER => array(
 			'Content-Type: application/json'
 		)
@@ -808,6 +1084,8 @@ else if($pky=='Fg3$°1|'){ //Guardo nueva CFR campaña fielder region
 	curl_setopt_array($ch, array(
 		CURLOPT_POST => TRUE,
 		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER => array(
 			'Content-Type: application/json'
 		),
@@ -829,19 +1107,10 @@ else if($pky=='Fg3$°1|'){ //Guardo nueva CFR campaña fielder region
 else if($pky==']}ñByr4F'){ //Elimino CFR campaña fielder region
 	$p=trim($_POST['P']); //Empleado
 	$y=trim($_POST['Y']); //CFR
-	$ch = curl_init($ipServ."telmex/del/cfr");
 	$data[]=array('id'=>$y,'idFielder'=>$p);
 //	print_r(json_encode($data));
 	$obj='';
-	curl_setopt_array($ch, array(
-		CURLOPT_CUSTOMREQUEST => "DELETE",
-		CURLOPT_RETURNTRANSFER => TRUE,
-		CURLOPT_HTTPHEADER => array(
-			'Content-Type: application/json'
-		),
-		CURLOPT_POSTFIELDS=>json_encode($data)
-	));
-	$response=curl_exec($ch);
+	$response=curl("POST","telmex/del/cfr",$data);
 	if($response===FALSE){
 		print_r(curl_error($ch));
 	}
@@ -857,9 +1126,18 @@ else if($pky=='l/55G4rp´'){ //Guardo tarea a un fielder
 	$y=trim($_POST['Y']);
 	$q=trim($_POST['Q']);
 
-	$abj=file_get_contents($ipServ.'telmex/validaFielderCFR/'.$q.'/'.$y);
+//	$abj=file_get_contents($ipServ.'telmex/validaFielderCFR/'.$q.'/'.$y);
 	$obj['url']=$ipServ.'telmex/validaFielderCFR/'.$q.'/'.$y;
-	if($abj=='')
+	$cha=curl_init($ipServ.'telmex/validaFielderCFR/'.$q.'/'.$y);
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$abj=curl_exec($cha);
+	if($abj === FALSE)
 		$obj['errorMessage']='No hay respuesta del servidor para saber si el Fielder tiene asignada la campaña. NO RESPONSE';
 	else{
 		$abj=json_decode($abj);
@@ -874,6 +1152,8 @@ else if($pky=='l/55G4rp´'){ //Guardo tarea a un fielder
 			curl_setopt_array($ch, array(
 				CURLOPT_POST => TRUE,
 				CURLOPT_RETURNTRANSFER => TRUE,
+				CURLOPT_SSL_VERIFYPEER => FALSE,
+				CURLOPT_SSL_VERIFYHOST => FALSE,
 				CURLOPT_HTTPHEADER => array(
 					'Content-Type: application/json'
 				),
@@ -904,6 +1184,8 @@ else if($pky=='l/55G4rp´'){ //Guardo tarea a un fielder
 	curl_setopt_array($ch, array(
 		CURLOPT_POST => TRUE,
 		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER => array(
 			'Content-Type: application/json'
 		),
@@ -926,21 +1208,12 @@ else if($pky=='l/4t{{+}'){ //Elimino tarea de un fielder
 	$p=trim($_POST['P']);
 	$q=trim($_POST['Q']);
 	$r=trim($_POST['R']);
-	$ch = curl_init($ipServ."telmex/del/calf/");
 	$data[]=array(
 		'idCalendar'=>$q,
 		'idFielder'=>$r
 	);
 	$obj='';
-	curl_setopt_array($ch, array(
-		CURLOPT_CUSTOMREQUEST => "DELETE",
-		CURLOPT_RETURNTRANSFER => TRUE,
-		CURLOPT_HTTPHEADER => array(
-			'Content-Type: application/json'
-		),
-		CURLOPT_POSTFIELDS=>json_encode($data)
-	));
-	$response=curl_exec($ch);
+	$response=curl("POST","telmex/del/calf/",$data);
 	if($response===FALSE){
 		print_r(curl_error($ch));
 	}
@@ -953,11 +1226,14 @@ else if($pky=='l/4t{{+}'){ //Elimino tarea de un fielder
 }
 else if($pky=='Ñpf[0o'){ //Elimino un usuario
 	$p=trim($_POST['P']);
+	$r=trim($_POST['R']);
 	$data=array('idUsuario'=>$p);
 	$ch=curl_init($ipServ."telmex/userDel");
 	curl_setopt_array($ch, array(
 		CURLOPT_CUSTOMREQUEST => "PUT",
 		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER => array(
 			'Content-Type: application/json'
 		),
@@ -970,6 +1246,59 @@ else if($pky=='Ñpf[0o'){ //Elimino un usuario
 	else{
 		$response=json_decode($response);
 		$obj['resp']=$response;
+		/* Eliminar del WSO2: */
+		if($r==7){
+			$token=file_get_contents('http'.$ipWso2.'8283/services/TokenService');
+			if($token!='' && $token!=null && $token!='null'){
+				$token=json_decode($token);
+				$token=$token->access_token;
+				if($token!=''){
+					$dat=array(
+						'username'=>'PRIMARY/'.$u,
+						'firstname'=>$n,
+						'lastname'=>$n,
+						'emailAddress'=>$s,
+						'roles'=>array('Fielder'));
+					$chi=curl_init('https'.$ipWso2.'9443/mdm-admin/users?username=kim');
+					$heads=array(
+							'authorization: Bearer '.$token,
+							'cache-control: no-cache',
+							'content-type: application/json'
+						);
+					curl_setopt_array($chi,array(
+						CURLOPT_CONNECTTIMEOUT => 15,
+						CURLOPT_FOLLOWLOCATION => TRUE,
+						CURLOPT_TIMEOUT => 20,
+						CURLOPT_ENCODING => "",
+						CURLOPT_AUTOREFERER => true,
+						CURLOPT_USERAGENT => "Julio",
+						CURLOPT_CUSTOMREQUEST => "DELETE",
+						CURLOPT_VERBOSE => TRUE,
+						CURLOPT_RETURNTRANSFER => TRUE,
+						CURLOPT_SSL_VERIFYPEER => FALSE,
+						CURLOPT_SSL_VERIFYHOST => FALSE,
+						CURLOPT_HTTPHEADER => array(
+							'authorization: Bearer '.$token,
+							'cache-control: no-cache',
+							'content-type: application/json'
+						),
+						CURLOPT_POSTFIELDS=>json_encode($dat)
+					));
+					$response=curl_exec($chi);
+					if($response===FALSE)
+						$obj['Error']=curl_error($chi);
+					else if($response==null || $response=='null')
+						$obj['Error']='La respuesta de eliminar usuario en WSO2 fue nula, token: '.$token;
+					else{
+						unset($chi);unset($dat);unset($token);
+					}
+				}
+				else
+					$obj['Error']='El token de acceso para WSO2 no fue recibido correctamente.<br />'.'https'.$ipWso2.'9443/mdm-admin/users';
+			}
+			else
+				$obj['Error']="No se recibió respuesta del servicio de WSO2 /services/TokenService".'http'.$ipWso2.'8283/services/TokenService';
+		}
 		echo json_encode($obj);
 	}
 }
@@ -979,6 +1308,8 @@ else if($pky=='0Ṕ[RGdf'){ //Cerrar sesión de un usuario
 	curl_setopt_array($ch, array(
 		CURLOPT_CUSTOMREQUEST => "PUT",
 		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER => array(
 			'Content-Type: application/json'
 		)
@@ -999,6 +1330,8 @@ else if($pky=='h-&7/f5D'){ //Elimino campaña
 	curl_setopt_array($ch, array(
 		CURLOPT_CUSTOMREQUEST => "DELETE",
 		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER => array(
 			'Content-Type: application/json'
 		)
@@ -1061,6 +1394,8 @@ else if($pky=='g.-&3eGD'){ //Guardo edición de campaña o también campaña nue
 		curl_setopt_array($ch, array(
 			CURLOPT_POST => TRUE,
 			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_SSL_VERIFYPEER => FALSE,
+			CURLOPT_SSL_VERIFYHOST => FALSE,
 			CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/json'
 			),
@@ -1085,6 +1420,8 @@ else if($pky=='g.-&3eGD'){ //Guardo edición de campaña o también campaña nue
 		curl_setopt_array($ch, array(
 			CURLOPT_CUSTOMREQUEST => "PUT",
 			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_SSL_VERIFYPEER => FALSE,
+			CURLOPT_SSL_VERIFYHOST => FALSE,
 			CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/json'
 			),
@@ -1105,8 +1442,19 @@ else if($pky=='g.-&3eGD'){ //Guardo edición de campaña o también campaña nue
 else if($pky=='-:Ñ_6%fC'){ // Mostrando regiones asignadas a campaña en select cuando asigno fielders a campaña
 	$p=$_POST['P'];
 	$r=$_POST['R'];
-	$res=file_get_contents($ipServ.'telmex/get/campAllRegs');
-	if($res!=''){
+//	$res=file_get_contents($ipServ.'telmex/get/campAllRegs');
+	$cha=curl_init($ipServ.'telmex/get/campAllRegs');
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$res=curl_exec($cha);
+	if($res === FALSE)
+		$obj['Error']='No se encontró el servicio para obtener las regiones asignadas a esta campaña.';
+	else{
 		$res=json_decode($res);$i=0;
 		foreach($res->apiResponse[0] as $k=>$v){
 			if($v->estado==true && $v->idCampaña==$p && in_array($v->region,$r)){
@@ -1114,8 +1462,19 @@ else if($pky=='-:Ñ_6%fC'){ // Mostrando regiones asignadas a campaña en select
 				$obj['Regiones'][$i]['id_C']=$v->idCampaña;
 				$obj['Regiones'][$i]['Region']=$v->region;
 				$obj['Regiones'][$i]['createAt']=$v->createAt;
-				$ras=file_get_contents($ipServ.'telmex/get/campInformacion/'.$v->id);
-				if($ras!=''){
+//				$ras=file_get_contents($ipServ.'telmex/get/campInformacion/'.$v->id);
+				unset($cha);
+				$cha=curl_init($ipServ.'telmex/get/campInformacion/'.$v->id);
+				curl_setopt_array($cha,array(
+					CURLOPT_CONNECTTIMEOUT => 15,
+					CURLOPT_TIMEOUT => 20,
+					CURLOPT_RETURNTRANSFER => TRUE,
+					CURLOPT_SSL_VERIFYPEER => FALSE,
+					CURLOPT_SSL_VERIFYHOST => FALSE
+				));
+				$ras=curl_exec($cha);
+				if($ras === FALSE){}
+				else{
 					$ras=json_decode($ras);
 					$obj['Regiones'][$i]['titulo']=$ras->apiResponse[0][0]->titulo;
 					$obj['Regiones'][$i]['offercode']=$ras->apiResponse[0][0]->offer_code;
@@ -1131,18 +1490,27 @@ else if($pky=='-:Ñ_6%fC'){ // Mostrando regiones asignadas a campaña en select
 		if($i==0)
 			$obj['Sin']='No hay regiones asignadas a la campaña.';
 	}
-	else{
-		$obj['Error']='No se encontró el servicio para obtener las regiones asignadas a esta campaña.';
-	}
 	echo json_encode($obj,JSON_UNESCAPED_UNICODE);
 }
 else if($pky=='lj.m,-/5tD'){ // Mostrando regiones asignadas a campaña, DIRECTOR
 	$p=$_POST['P'];
-	$res=file_get_contents($ipServ.'telmex/get/campAllRegs');
 	$obj['Error']='';
 	$obj['Sin']='';
-	if($res!=''){
+//	$res=file_get_contents($ipServ.'telmex/get/campAllRegs');
+	$cha=curl_init($ipServ.'telmex/get/campAllRegs');
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$res=curl_exec($cha);
+	if($res === FALSE)
+		$obj['Error']='No se encontró el servicio para obtener los CR.';
+	else{
 		$res=json_decode($res);$i=0;
+		$hoy=date('Y-m-d');$terminada='Vigente';
 		foreach ($res->apiResponse[0] as $k=>$v){
 			if($v->estado==true)
 				if($v->idCampaña==$p || in_array($v->region,$p) || $p[0]=='Todas las regiones' || $p[0]=='Todas las campañas'){
@@ -1153,8 +1521,20 @@ else if($pky=='lj.m,-/5tD'){ // Mostrando regiones asignadas a campaña, DIRECTO
 					$obj['Regiones'][$i]['id_C']=$v->idCampaña;
 					$obj['Regiones'][$i]['Region']=$v->region;
 					$obj['Regiones'][$i]['createAt']=$v->createAt;
-					$ras=file_get_contents($ipServ.'telmex/get/campById/'.$v->idCampaña);
-					if($ras!=''){
+//					$ras=file_get_contents($ipServ.'telmex/get/campById/'.$v->idCampaña);
+					unset($cha);
+					$cha=curl_init($ipServ.'telmex/get/campById/'.$v->idCampaña);
+					curl_setopt_array($cha,array(
+						CURLOPT_CONNECTTIMEOUT => 15,
+						CURLOPT_TIMEOUT => 20,
+						CURLOPT_RETURNTRANSFER => TRUE,
+						CURLOPT_SSL_VERIFYPEER => FALSE,
+						CURLOPT_SSL_VERIFYHOST => FALSE
+					));
+					$ras=curl_exec($cha);
+					if($ras === FALSE){}
+					else{
+						if($hoy>$ras->apiResponse[0]->fechaFin) $terminada='Caduca';
 						$ras=json_decode($ras);
 						$obj['Regiones'][$i]['titulo']=$ras->apiResponse[0]->titulo;
 						$obj['Regiones'][$i]['offercode']=$ras->apiResponse[0]->offercode;
@@ -1165,6 +1545,7 @@ else if($pky=='lj.m,-/5tD'){ // Mostrando regiones asignadas a campaña, DIRECTO
 						$obj['Regiones'][$i]['fecha_inicio']=$ras->apiResponse[0]->fechaInicio;
 						$obj['Regiones'][$i]['fecha_fin']=$ras->apiResponse[0]->fechaFin;
 						$obj['Regiones'][$i]['region']=$v->region;
+						$obj['Regiones'][$i]['caducidad']=$terminada;
 					}
 					$i++;
 				}
@@ -1172,17 +1553,25 @@ else if($pky=='lj.m,-/5tD'){ // Mostrando regiones asignadas a campaña, DIRECTO
 		if($i==0)
 			$obj['Sin']='No hay regiones asignadas a la campaña.';
 	}
-	else{
-		$obj['Error']='No se encontró el servicio para obtener los CR.';
-	}
 	echo json_encode($obj,JSON_UNESCAPED_UNICODE);
 }
 else if($pky=='lj.m,[0]tD'){ // Mostrando regiones asignadas a campaña, Lider en calendarios
 	$p=$_POST['P'];
-	$res=file_get_contents($ipServ.'telmex/get/campAllRegs');
 	$obj['Error']='';
 	$obj['Sin']='';
-	if($res!=''){
+//	$res=file_get_contents($ipServ.'telmex/get/campAllRegs');
+	$cha=curl_init($ipServ.'telmex/get/campAllRegs');
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$res=curl_exec($cha);
+	if($res === FALSE)
+		$obj['Error']='No se encontró el servicio para obtener los CR.';
+	else{
 		$res=json_decode($res);$i=0;
 		foreach ($res->apiResponse[0] as $k=>$v){
 			if($v->estado==true)
@@ -1190,8 +1579,19 @@ else if($pky=='lj.m,[0]tD'){ // Mostrando regiones asignadas a campaña, Lider e
 					$obj['Regiones'][$i]['id_CR']=$v->id;
 					$obj['Regiones'][$i]['id_C']=$v->idCampaña;
 					$obj['Regiones'][$i]['Region']=$v->region;
-					$ras=file_get_contents($ipServ.'telmex/get/campInformacion/'.$v->id);
-					if($ras!=''){
+//					$ras=file_get_contents($ipServ.'telmex/get/campInformacion/'.$v->id);
+					unset($cha);
+					$cha=curl_init($ipServ.'telmex/get/campInformacion/'.$v->id);
+					curl_setopt_array($cha,array(
+						CURLOPT_CONNECTTIMEOUT => 15,
+						CURLOPT_TIMEOUT => 20,
+						CURLOPT_RETURNTRANSFER => TRUE,
+						CURLOPT_SSL_VERIFYPEER => FALSE,
+						CURLOPT_SSL_VERIFYHOST => FALSE
+					));
+					$ras=curl_exec($cha);
+					if($ras === FALSE){}
+					else{
 						$ras=json_decode($ras);
 						$obj['Regiones'][$i]['titulo']=$ras->apiResponse[0][0]->titulo;
 						$obj['Regiones'][$i]['offercode']=$ras->apiResponse[0][0]->offer_code;
@@ -1207,24 +1607,12 @@ else if($pky=='lj.m,[0]tD'){ // Mostrando regiones asignadas a campaña, Lider e
 		if($i==0)
 			$obj['Sin']='No hay regiones asignadas a la campaña.';
 	}
-	else{
-		$obj['Error']='No se encontró el servicio para obtener los CR.';
-	}
 	echo json_encode($obj,JSON_UNESCAPED_UNICODE);
 }
-else if($pky=='{-po9kD3$'){ // para eliminar reguin CR
+else if($pky=='{-po9kD3$'){ // para eliminar region CR
 	$p=trim($_POST['P']);
 	$data[]=array('id'=>$p);
-	$ch = curl_init($ipServ."telmex/del/cr");
-	curl_setopt_array($ch, array(
-		CURLOPT_CUSTOMREQUEST => "DELETE",
-		CURLOPT_RETURNTRANSFER => TRUE,
-		CURLOPT_HTTPHEADER => array(
-			'Content-Type: application/json'
-		),
-		CURLOPT_POSTFIELDS=>json_encode($data)
-	));
-	$response=curl_exec($ch);
+	$response=curl("POST","telmex/del/cr",$data);
 	print_r($response);
 	if($response===FALSE){
 		print_r(curl_error($ch));
@@ -1245,14 +1633,18 @@ else if($pky=='}-.Ygf#44'){ //Guardo nueva relacion CR
 	curl_setopt_array($ch, array(
 		CURLOPT_POST => TRUE,
 		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER => array(
 			'Content-Type: application/json'
 		),
 		CURLOPT_POSTFIELDS=>json_encode($data)
 	));
 	$response=curl_exec($ch);
+	$obj['URL']=$ipServ.'telmex/add/cr';
+	$obj['DATA']=$data;
 	if($response===FALSE)
-		die(curl_error($ch));
+		$obj['ERROR']=curl_error($ch);
 	$response=json_decode($response);
 	$obj=$response->apiResponse[0];
 	echo json_encode($obj,JSON_UNESCAPED_UNICODE);
@@ -1262,6 +1654,10 @@ else if($pky=='/*ÑÑ%4dG'){ // Obtengo los fielders que ya estan en un calendar
 	$y=trim($_POST['Y']); // GetAllCFR=N - GetACalFi=Y
 	$z=$_POST['Z'];	// Mis regiones
 	$r=$_POST['R'];	// Region a comparar o bien NA
+	$obj['errorMessageA']='';
+	$obj['errorMessageB']='';
+	$obj['Dentro']=array();
+	$obj['Fuera']=array();
 	foreach($z as $k=>$v){
 		$w=substr($v,0,1);
 		if(is_numeric($w))
@@ -1269,12 +1665,17 @@ else if($pky=='/*ÑÑ%4dG'){ // Obtengo los fielders que ya estan en un calendar
 		else
 			$zz[]=$v;
 	}
-	$abj=file_get_contents($ipServ.'telmex/get/calf/byIdCal/'.$p);
-	$obj['errorMessageA']='';
-	$obj['errorMessageB']='';
-	$obj['Dentro']=array();
-	$obj['Fuera']=array();
-	if($abj=='')
+//	$abj=file_get_contents($ipServ.'telmex/get/calf/byIdCal/'.$p);
+	$cha=curl_init($ipServ.'telmex/get/calf/byIdCal/'.$p);
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$abj=curl_exec($cha);
+	if($abj === FALSE)
 		$obj['errorMessageA']='No hay respuesta del servidor para obtener usuarios registrados al CFR. NO RESPONSE';
 	else{
 		$abj=json_decode($abj);
@@ -1282,27 +1683,50 @@ else if($pky=='/*ÑÑ%4dG'){ // Obtengo los fielders que ya estan en un calendar
 		$i=0;
 		foreach($abj as $k=>$v){
 			$com[]=$v->idFielder;$paso=0;
-			$subj=file_get_contents($ipServ.'telmex/get/userandregiones/'.$v->idFielder);
-			$subj=json_decode($subj);
-			$subj=$subj->apiResponse[0];
-			foreach($subj as $j=>$w){
-				if(in_array(substr($w->regionTrabajo,0,4),$zz) && $w->role==7)
-					$paso=1;
-			}
-			if($paso==1){
-					$obj['Dentro'][$i]['id']=$v->id;
-					$obj['Dentro'][$i]['idCalendar']=$v->idCalendar;
-					$obj['Dentro'][$i]['idFielder']=$v->idFielder;
-					$obj['Dentro'][$i]['createAt']=$v->createAt;
-					$obj['Dentro'][$i]['nombre']=$v->nombre;
-				$i++;
+//			$subj=file_get_contents($ipServ.'telmex/get/userandregiones/'.$v->idFielder);
+			unset($cha);
+			$cha=curl_init($ipServ.'telmex/get/userandregiones/'.$v->idFielder);
+			curl_setopt_array($cha,array(
+				CURLOPT_CONNECTTIMEOUT => 15,
+				CURLOPT_TIMEOUT => 20,
+				CURLOPT_RETURNTRANSFER => TRUE,
+				CURLOPT_SSL_VERIFYPEER => FALSE,
+				CURLOPT_SSL_VERIFYHOST => FALSE
+			));
+			$subj=curl_exec($cha);
+			if($subj === FALSE)
+				$obj['errorMessageA']='No hay respuesta del servidor para obtener regiones de usuario. NO RESPONSE';
+			else{
+				$subj=json_decode($subj);
+				$subj=$subj->apiResponse[0];
+				foreach($subj as $j=>$w){
+					if(in_array(substr($w->regionTrabajo,0,4),$zz) && $w->role==7)
+						$paso=1;
+				}
+				if($paso==1){
+						$obj['Dentro'][$i]['id']=$v->id;
+						$obj['Dentro'][$i]['idCalendar']=$v->idCalendar;
+						$obj['Dentro'][$i]['idFielder']=$v->idFielder;
+						$obj['Dentro'][$i]['createAt']=$v->createAt;
+						$obj['Dentro'][$i]['nombre']=$v->nombre;
+					$i++;
+				}
 			}
 		}
 	}
 	$r=explode('-',$r);
 	$r=$r[0].'-'.$r[1];
-	$abj=file_get_contents($ipServ.'telmex/get/userAllByRegiones/'.$r);
-	if($abj=='')
+//	$abj=file_get_contents($ipServ.'telmex/get/userAllByRegiones/'.$r);
+	$cha=curl_init($ipServ.'telmex/get/userAllByRegiones/'.$r);
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$abj=curl_exec($cha);
+	if($abj === FALSE)
 		$obj['errorMessageB']='No hay respuesta del servidor para obtener usuarios. NO RESPONSE';
 	else{
 		$abj=json_decode($abj);
@@ -1334,16 +1758,25 @@ else if($pky=='/*-+%4dG'){ // Obtengo los fielders mas los fielders que ya estan
 			$zz[]=$v;
 	}
 	if($y=='N')
-		$abj=file_get_contents($ipServ.'telmex/get/cfr/'.$p);
+		$abj_url=$ipServ.'telmex/get/cfr/'.$p;
 	else
-		$abj=file_get_contents($ipServ.'telmex/get/calf/byIdCal/'.$p);
+		$abj_url=$ipServ.'telmex/get/calf/byIdCal/'.$p;
 	$obj['errorMessageA']='';
 	$obj['errorMessageB']='';
 	$obj['MisReg']=$z;
 	$obj['MisRegZ']=$zz;
 	$obj['Dentro']=array();
 	$obj['Fuera']=array();
-	if($abj=='')
+	$cha=curl_init($abj_url);
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$abj=curl_exec($cha);
+	if($abj === FALSE)
 		$obj['errorMessageA']='No hay respuesta del servidor para obtener usuarios registrados al CFR. NO RESPONSE';
 	else{
 		$abj=json_decode($abj);
@@ -1351,39 +1784,60 @@ else if($pky=='/*-+%4dG'){ // Obtengo los fielders mas los fielders que ya estan
 		$i=0;
 		foreach($abj as $k=>$v){
 			$com[]=$v->idFielder;$paso=0;
-			$subj=file_get_contents($ipServ.'telmex/get/userandregiones/'.$v->idFielder);
-			$subj=json_decode($subj);
-			$subj=$subj->apiResponse[0];
-			foreach($subj as $j=>$w){
-				if($zz[0]!='Todas las regiones'){
-					if(in_array(substr($w->regionTrabajo,0,4),$zz) && $w->role==7)
+//			$subj=file_get_contents($ipServ.'telmex/get/userandregiones/'.$v->idFielder);
+			$cha=curl_init($ipServ.'telmex/get/userandregiones/'.$v->idFielder);
+			curl_setopt_array($cha,array(
+				CURLOPT_CONNECTTIMEOUT => 15,
+				CURLOPT_TIMEOUT => 20,
+				CURLOPT_RETURNTRANSFER => TRUE,
+				CURLOPT_SSL_VERIFYPEER => FALSE,
+				CURLOPT_SSL_VERIFYHOST => FALSE
+			));
+			$subj=curl_exec($cha);
+			if($subj === FALSE){}
+			else{
+				$subj=json_decode($subj);
+				$subj=$subj->apiResponse[0];
+				foreach($subj as $j=>$w){
+					if($zz[0]!='Todas las regiones'){
+						if(in_array(substr($w->regionTrabajo,0,4),$zz) && $w->role==7)
+							$paso=1;
+					}
+					else if($w->role==7)
 						$paso=1;
 				}
-				else if($w->role==7)
-					$paso=1;
-			}
-			if($paso==1){
-				if($y=='N'){
-					$obj['Dentro'][$i]['idUsuario']=$v->idFielder;
-					$obj['Dentro'][$i]['nombre']=$v->nombre;
-					$obj['Dentro'][$i]['idCFR']=$v->idCFR;
-					$obj['Dentro'][$i]['idCR']=$v->idCR;
+				if($paso==1){
+					if($y=='N'){
+						$obj['Dentro'][$i]['idUsuario']=$v->idFielder;
+						$obj['Dentro'][$i]['nombre']=$v->nombre;
+						$obj['Dentro'][$i]['idCFR']=$v->idCFR;
+						$obj['Dentro'][$i]['idCR']=$v->idCR;
+					}
+					else{
+						$obj['Dentro'][$i]['id']=$v->id;
+						$obj['Dentro'][$i]['idCalendar']=$v->idCalendar;
+						$obj['Dentro'][$i]['idFielder']=$v->idFielder;
+						$obj['Dentro'][$i]['createAt']=$v->createAt;
+						$obj['Dentro'][$i]['nombre']=$v->nombre;
+					}
+					$i++;
 				}
-				else{
-					$obj['Dentro'][$i]['id']=$v->id;
-					$obj['Dentro'][$i]['idCalendar']=$v->idCalendar;
-					$obj['Dentro'][$i]['idFielder']=$v->idFielder;
-					$obj['Dentro'][$i]['createAt']=$v->createAt;
-					$obj['Dentro'][$i]['nombre']=$v->nombre;
-				}
-				$i++;
 			}
 		}
 	}
 	$obj['com']=$com;
 	if($zz[0]=='Todas las regiones'){
-		$abj=file_get_contents($ipServ.'telmex/get/userAllRegs');
-		if($abj=='')
+//		$abj=file_get_contents($ipServ.'telmex/get/userAllRegs');
+		$cha=curl_init($ipServ.'telmex/get/userAllRegs');
+		curl_setopt_array($cha,array(
+			CURLOPT_CONNECTTIMEOUT => 15,
+			CURLOPT_TIMEOUT => 20,
+			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_SSL_VERIFYPEER => FALSE,
+			CURLOPT_SSL_VERIFYHOST => FALSE
+		));
+		$abj=curl_exec($cha);
+		if($abj === FALSE)
 			$obj['errorMessageB']='No hay respuesta del servidor para obtener usuarios. NO RESPONSE';
 		else{
 			$abj=json_decode($abj);
@@ -1408,8 +1862,17 @@ else if($pky=='/*-+%4dG'){ // Obtengo los fielders mas los fielders que ya estan
 			$iy[]=$iz[0].'-'.$iz[1];
 		}
 		$ix=implode(',',$iy);
-		$abj=file_get_contents($ipServ.'telmex/get/userAllByRegiones/'.$ix);
-		if($abj=='')
+//		$abj=file_get_contents($ipServ.'telmex/get/userAllByRegiones/'.$ix);
+		$cha=curl_init($ipServ.'telmex/get/userAllByRegiones/'.$ix);
+		curl_setopt_array($cha,array(
+			CURLOPT_CONNECTTIMEOUT => 15,
+			CURLOPT_TIMEOUT => 20,
+			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_SSL_VERIFYPEER => FALSE,
+			CURLOPT_SSL_VERIFYHOST => FALSE
+		));
+		$abj=curl_exec($cha);
+		if($abj === FALSE)
 			$obj['errorMessageB']='No hay respuesta del servidor para obtener usuarios. NO RESPONSE';
 		else{
 			$abj=json_decode($abj);
@@ -1432,7 +1895,16 @@ else if($pky=='/*-+%4dG'){ // Obtengo los fielders mas los fielders que ya estan
 else if($pky=='hUUrf[,.()'){ // Mostrando calendarios que me asignaron o todos si soy director!
 	$p=$_POST['P'];
 	$q=$_POST['Q'];
-	$res=file_get_contents($ipServ.'telmex/get/campAllRegs');
+//	$res=file_get_contents($ipServ.'telmex/get/campAllRegs');
+	$cha=curl_init($ipServ.'telmex/get/campAllRegs');
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$abj=curl_exec($cha);
 	$obj['Error']='';
 	if($q==5){
 		foreach($p as $k=>$v){
@@ -1441,7 +1913,9 @@ else if($pky=='hUUrf[,.()'){ // Mostrando calendarios que me asignaron o todos s
 		}
 	}
 	if($p[0]!='Todas las regiones'){
-		if($res!=''){
+		if($res === FALSE)
+			$obj['Error']='No se logro obtener respuesta del servicio que devuelve las regiones que tienes asignadas como líder.';
+		else{
 			$res=json_decode($res);
 			foreach($res->apiResponse[0] as $k=>$v){
 				if($q==6){
@@ -1455,12 +1929,22 @@ else if($pky=='hUUrf[,.()'){ // Mostrando calendarios que me asignaron o todos s
 				}
 			}
 		}
-		else $obj['Error']='No se logro obtener respuesta del servicio que devuelve las regiones que tienes asignadas como líder.';
 	}
 	else $p='NA';
 	if($p=='NA' || !empty($ibs)){
-		$res=file_get_contents($ipServ.'telmex/get/calendarAll');
-		if($res!=''){
+//		$res=file_get_contents($ipServ.'telmex/get/calendarAll');
+		$cha=curl_init($ipServ.'telmex/get/calendarAll');
+		curl_setopt_array($cha,array(
+			CURLOPT_CONNECTTIMEOUT => 15,
+			CURLOPT_TIMEOUT => 20,
+			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_SSL_VERIFYPEER => FALSE,
+			CURLOPT_SSL_VERIFYHOST => FALSE
+		));
+		$res=curl_exec($cha);
+		if($res === FALSE)
+			$obj['Error']='No se pudo conectar al servicio para obtener las actividadesd de calendario.';
+		else{
 			$res=json_decode($res);$i=0;
 			foreach($res->apiResponse[0] as $k=>$v){
 				$fe_ini=strtotime($v->fechaInit);
@@ -1492,7 +1976,6 @@ else if($pky=='hUUrf[,.()'){ // Mostrando calendarios que me asignaron o todos s
 				$i++;
 			}
 		}
-		else $obj['Error']='No se pudo conectar al servicio para obtener las actividadesd de calendario.';
 	}
 	echo json_encode($obj,JSON_UNESCAPED_UNICODE);
 }
@@ -1517,6 +2000,8 @@ else if($pky=='°1sLp9]+'){ //Actualizo evento de calendario....
 	curl_setopt_array($ch,array(
 		CURLOPT_CUSTOMREQUEST=>"PUT",
 		CURLOPT_RETURNTRANSFER=>TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER=>array(
 			'Content-Type: application/json'
 		),
@@ -1552,6 +2037,8 @@ else if($pky=='y_m,/5fGd'){ //Crea un evento de calendario....
 	curl_setopt_array($ch,array(
 		CURLOPT_POST=>TRUE,
 		CURLOPT_RETURNTRANSFER =>TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER =>array(
 			'Content-Type: application/json'
 		),
@@ -1589,6 +2076,8 @@ else if($pky=='p_.9886fF+'){ //Agrega fielder a tarea de calendario
 	curl_setopt_array($ch,array(
 		CURLOPT_POST=>TRUE,
 		CURLOPT_RETURNTRANSFER =>TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER =>array(
 			'Content-Type: application/json'
 		),
@@ -1617,6 +2106,8 @@ else if($pky=='-Ñp0?2.3d'){
 	curl_setopt_array($ch,array(
 		CURLOPT_POST=>TRUE,
 		CURLOPT_RETURNTRANSFER =>TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER =>array(
 			'Content-Type: application/json'
 		),
@@ -1646,6 +2137,8 @@ else if($pky=='""#fGm0""'){ //Elimino actividad del calendario
 	curl_setopt_array($ch, array(
 		CURLOPT_CUSTOMREQUEST => "DELETE",
 		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER => array(
 			'Content-Type: application/json'
 		)
@@ -1668,8 +2161,19 @@ else if($pky=='k;624/6'){ // Graficos, obtener RC / INT de rango de fechas
 	$ca=$_POST['C'];
 	$obj['Error']='';
 	$obj['camps']=$ca;
-	$res=file_get_contents($ipServ.'telmex/get/rc/int/'.$fa.'/'.$fb);
-	if($res!=''){
+//	$res=file_get_contents($ipServ.'telmex/get/rc/int/'.$fa.'/'.$fb);
+	$cha=curl_init($ipServ.'telmex/get/rc/int/'.$fa.'/'.$fb);
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$res=curl_exec($cha);
+	if($res === FALSE)
+		$obj['Error']='No se logro obtener respuesta del servicio que devuelve la información para graficar [1]';
+	else{
 		$res=json_decode($res);
 		$ven=0;$nov=0;
 		$venb=0;$novb=0;
@@ -1698,21 +2202,42 @@ else if($pky=='k;624/6'){ // Graficos, obtener RC / INT de rango de fechas
 			}
 		}
 		foreach($yui as $k=>$v){
-			$res=file_get_contents($ipServ.'telmex/get/userById/'.$k);
-			if($res!=''){
+//			$res=file_get_contents($ipServ.'telmex/get/userById/'.$k);
+			unset($cha);
+			$cha=curl_init($ipServ.'telmex/get/userById/'.$k);
+			curl_setopt_array($cha,array(
+				CURLOPT_CONNECTTIMEOUT => 15,
+				CURLOPT_TIMEOUT => 20,
+				CURLOPT_RETURNTRANSFER => TRUE,
+				CURLOPT_SSL_VERIFYPEER => FALSE,
+				CURLOPT_SSL_VERIFYHOST => FALSE
+			));
+			$res=curl_exec($cha);
+			if($res === FALSE){}
+			else{
 				$res=json_decode($res);
 				$obj['fielders'][$res->apiResponse[0]->nombre]=$yui[$k];
 			}
 		}
 	}
-	else $obj['Error']='No se logro obtener respuesta del servicio que devuelve la información para graficar [1]';
 	echo json_encode($obj);
 }
 else if($pky=='.tr/(ydF'){ // Obtener informacion de campaña por ID
 	$p=$_POST['P'];
-	$res=file_get_contents($ipServ.'telmex/get/campById/'.$p);
 	$obj['Error']='';
-	if($res!=''){
+//	$res=file_get_contents($ipServ.'telmex/get/campById/'.$p);
+	$cha=curl_init($ipServ.'telmex/get/campById/'.$p);
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$res=curl_exec($cha);
+	if($res === FALSE)
+		$obj['Error']='No se logro obtener respuesta del servicio que devuelve la información de la campaña solicitada.';
+	else{
 		$res=json_decode($res);
 		$obj['img']=$res->apiResponse[0]->imagen;
 		$obj['color']=$res->apiResponse[0]->color;
@@ -1725,7 +2250,6 @@ else if($pky=='.tr/(ydF'){ // Obtener informacion de campaña por ID
 		$obj['fecha_inicio']=$res->apiResponse[0]->fechaInicio;//traian dia mes año entonces: date('Y-m-d',strtotime($res->apiResponse[0]->fechaInicio))
 		$obj['fecha_fin']=$res->apiResponse[0]->fechaFin;
 	}
-	else $obj['Error']='No se logro obtener respuesta del servicio que devuelve la información de la campaña solicitada.';
 	echo json_encode($obj);
 }
 else if($pky=='oP{ñ_,m$"'){ // Graficos, obtener RC / INT en tiempo real, por día...
@@ -1745,8 +2269,19 @@ else if($pky=='oP{ñ_,m$"'){ // Graficos, obtener RC / INT en tiempo real, por d
 			array_push($aryRange,date('d-m-Y',$iDateFr));
 		}
 	}
-	$res=file_get_contents($ipServ.'telmex/get/rc/int/'.$fa.'/'.$fb);
-	if($res!=''){
+//	$res=file_get_contents($ipServ.'telmex/get/rc/int/'.$fa.'/'.$fb);
+	$cha=curl_init($ipServ.'telmex/get/rc/int/'.$fa.'/'.$fb);
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$res=curl_exec($cha);
+	if($res === FALSE)
+		$obj['Error']='No se logro obtener respuesta del servicio que devuelve la información para graficar en tiempo real.';
+	else{
 		$res=json_decode($res);
 		foreach($res->apiResponse[0] as $k=>$v){
 			$dia=substr($v->createAt,0,2);       $dia=str_pad($dia,2,"0",STR_PAD_LEFT);
@@ -1784,15 +2319,28 @@ else if($pky=='oP{ñ_,m$"'){ // Graficos, obtener RC / INT en tiempo real, por d
 		$obj['p']=$p;
 		$obj['r']=$r;
 	}
-	else $obj['Error']='No se logro obtener respuesta del servicio que devuelve la información para graficar en tiempo real.';
 	echo json_encode($obj);
 }
 else if($pky==',&44jÑ{'){
 	$p=$_POST['P'];
-	$nmsgs=file_get_contents($ipServ.'telmex/get/msgAll/'.$p);
-	$nmsgs=json_decode($nmsgs);
-	$nmsgs=$nmsgs->apiResponse[0];
-	echo json_encode($nmsgs);
+//	$nmsgs=file_get_contents($ipServ.'telmex/get/msgAll/'.$p);
+	$obj['Error']='No Response, de el servicio para regresar mensajes';
+	$cha=curl_init($ipServ.'telmex/get/msgAll/'.$p);
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$res=curl_exec($cha);
+	if($res === FALSE)
+		echo json_encode($obj);
+	else{
+		$res=json_decode($res);
+		$res=$res->apiResponse[0];
+		echo json_encode($res);
+	}
 }
 else if($pky=='7%&7fBh{'){ // Graficos, contratos mapa calor tiempo real....
 	$p=$_POST['P'];
@@ -1810,8 +2358,19 @@ else if($pky=='7%&7fBh{'){ // Graficos, contratos mapa calor tiempo real....
 			array_push($aryRange,date('d-m-Y',$iDateFr));
 		}
 	}
-	$res=file_get_contents($ipServ.'telmex/get/contratos/intervalo/'.$fa.'/'.$fb);
-	if($res!=''){
+//	$res=file_get_contents($ipServ.'telmex/get/contratos/intervalo/'.$fa.'/'.$fb);
+	$cha=curl_init($ipServ.'telmex/get/contratos/intervalo/'.$fa.'/'.$fb);
+	curl_setopt_array($cha,array(
+		CURLOPT_CONNECTTIMEOUT => 15,
+		CURLOPT_TIMEOUT => 20,
+		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE
+	));
+	$res=curl_exec($cha);
+	if($res === FALSE)
+		$obj['Error']='No se logro obtener respuesta del servicio que devuelve la información para graficar en tiempo real.';
+	else{
 		$res=json_decode($res);
 		foreach($res->apiResponse[0] as $k=>$v){
 			if(in_array($v->idCampaign,$p) || $p[0]=='todas')
@@ -1821,7 +2380,6 @@ else if($pky=='7%&7fBh{'){ // Graficos, contratos mapa calor tiempo real....
 				);
 		}
 	}
-	else $obj['Error']='No se logro obtener respuesta del servicio que devuelve la información para graficar en tiempo real.';
 	echo json_encode($obj);
 }
 else if($pky=='wGhj/&i:'){
@@ -1830,6 +2388,8 @@ else if($pky=='wGhj/&i:'){
 	curl_setopt_array($ch, array(
 		CURLOPT_CUSTOMREQUEST => "PUT",
 		CURLOPT_RETURNTRANSFER => TRUE,
+		CURLOPT_SSL_VERIFYPEER => FALSE,
+		CURLOPT_SSL_VERIFYHOST => FALSE,
 		CURLOPT_HTTPHEADER => array(
 			'Content-Type: application/json'
 		)

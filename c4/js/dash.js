@@ -61,12 +61,12 @@ Highcharts.theme={
 	plotOptions:{series:{dataLabels:{color:'#333',style:{fontSize:'15px',fontWeight:'300',textShadow:false}}}}
 };Highcharts.setOptions(Highcharts.theme);
 function connect(){
-	var socket=new SockJS('http://187.217.179.35:8080/messaging');
-// Quitar punto cuando no hay usuarios en tablas, (de colores)
-// Quitar punto en tabla de campañas, mostrar mejor color de campaña
-// Dar estilo a administracion de usuarios
+//	var socket=new SockJS('https://10.105.116.187:8080/messaging');
+	var socket=new SockJS('https://187.217.179.35:8080/messaging');
+//	var socket=new SockJS('http://10.105.116.207:8080/messaging');
+//	var socket=new SockJS('http://10.105.116.52:8080/messaging');
 	stompClient=Stomp.over(socket);
-	stompClient.debug=null
+//	stompClient.debug=null;
 	stompClient.connect({},function(frame){
 		clearInterval(reintento);
 		stompClient.subscribe('/user/'+idBoss+'/topic/mensaje', function(greeting){
@@ -114,11 +114,11 @@ function creaMapa(s,t){
 			center:{lat:19.3907336,lng:-99.1436126},
 			styles:estilo
 		});
-		map.data.addListener('click',function(e){
+/*		map.data.addListener('click',function(e){
 			var bounds=new google.maps.LatLngBounds();
 			procesaPoints(e.feature.getGeometry(),bounds.extend,bounds);
 			map.fitBounds(bounds);
-		});
+		}); */
 	}
 	$.when(estilos()).done(function(x){
 		if(viendo=='Divisiones')creaDivsAreas('Si','','.principal');
@@ -352,7 +352,7 @@ function muestraUsuarios(){
 									 areg.push(al);
 								});
 							}
-							var cdc='<a data=\'{"x":"Eliminar","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'"}\' title="Eliminar a '+a.nombre+'"><i class="fa fa-trash"></i></a>',
+							var cdc='<a data=\'{"x":"Eliminar","rol":"'+a.role+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'"}\' title="Eliminar a '+a.nombre+'"><i class="fa fa-trash"></i></a>',
 								adc='<a data=\'{"x":"Sacar","idUser":"'+a.idUsuario+'"}\' title="Cerrar sesión de '+a.nombre+'"><i class="fa fa-unlock-alt"></i></a>',
 								msj='<a data=\'{"x":"Mensaje","regid":"'+a.gcm+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'"}\' title="Enviar mensaje a '+a.nombre+'"><i class="fa fa-comment"></i></a>',
 								use='<a data=\'{"x":"MuestraUsers","rol":"'+a.role+'","regs":"'+areg+'","idUser":'+a.idUsuario+',"nombre":"'+a.nombre+'","creg":"'+reg+'"}\' title="Mostrar usuarios de '+a.nombre+'"><i class="fa fa-users"></i></a>',
@@ -800,12 +800,14 @@ function muestraCalendario(){
 		eventResize:function(event,delta,revertFunc){},
 		eventClick:function(calEvent,jsEvent,view){
 			if(Rol=='Lider Promotor'){
-				var data;
-				$.when(
-					data={x:"AddFieldersC",id:calEvent.idActividad,"region":calEvent.region,"titulo":calEvent.titulo}
-				).done(function(){
-					AddFieldersC(data);
-				});
+				if(calEvent.caducidad!='Caduca'){
+					var data;
+					$.when(
+						data={x:"AddFieldersC",id:calEvent.idActividad,"region":calEvent.region,"titulo":calEvent.titulo}
+					).done(function(){
+						AddFieldersC(data);
+					});
+				}
 			}
 			else{
 				var data={x:"EditarCamp",id:calEvent.idActividad};
@@ -833,7 +835,8 @@ function muestraCalendario(){
 						allDay:true,
 						backgroundColor:'#'+v.color,
 						borderColor:'#f3f3f3',
-						idActividad:v.id_C
+						idActividad:v.id_C,
+						caducidad:v.caducidad
 					},
 					true
 				);
@@ -935,19 +938,22 @@ function muestraCampanas(){
 	}
 	function GetCampasMias(){
 		$.when(promesas.GetCRdCam(misRegiones)).done(function(x){
-			x=jQuery.parseJSON(x);
+			x=jQuery.parseJSON(x),conteo=0;
 			if(x.Error!='') creanotificacion('Error 404:',x.Error,'','','error');
 			else if(x.Sin!='') creanotificacion('Sin regiones',x.Sin,'','','advertencia');
 			else $.each(x.Regiones,function(i,a){
-				var colo=' style="color:#'+a.color+';"';
-				$('#tablaFielders tbody').append('<tr><td class="nu"><span'+colo+'></span>'+
-					a.titulo+'</td><td>'+
-					a.tcode+'<br />'+
-					a.campaigncode+'<br />'+
-					a.offercode+'</td><td>'+
-					a.meta+'</td><td>'+
-					'<a data=\'{"x":"AddFieldersC","id":'+a.id_C+',"region":"'+a.region+'","titulo":"'+a.titulo+'"}\' title="Añadir Fielders a campaña '+a.titulo+'"><i class="fa fa-users"></i></a>'+
-					'</td></tr>');
+				if(a.caducidad!='Caduca'){
+					var colo=' style="color:#'+a.color+';"';
+					$('#tablaFielders tbody').append('<tr><td class="nu"><span'+colo+'></span>'+
+						a.titulo+'</td><td>'+
+						a.tcode+'<br />'+
+						a.campaigncode+'<br />'+
+						a.offercode+'</td><td>'+
+						a.meta+'</td><td>'+
+						'<a data=\'{"x":"AddFieldersC","id":'+a.id_C+',"region":"'+a.region+'","titulo":"'+a.titulo+'"}\' title="Añadir Fielders a campaña '+a.titulo+'"><i class="fa fa-users"></i></a>'+
+						'</td></tr>');
+					conteo++;
+				}
 			});
 			creaTablaYa(3,0);
 		});
@@ -961,8 +967,11 @@ function muestraCampanas(){
 				creanotificacion('Error','<b>'+x.errorMessage,'','','error');
 			else{
 				$.each(x,function(i,a){
-					var colo=' style="color:#'+a.color+';"';
-					$('#tablaFielders tbody').append('<tr><td class="nu"><span'+colo+'></span>'+
+					var colo=' style="color:#'+a.color+';"',
+						cad='';
+					if(a.caducidad=='Caduca')
+						cad=' class="caduca"';
+					$('#tablaFielders tbody').append('<tr'+cad+'><td class="nu"><span'+colo+'></span>'+
 						a.titulo+'</td><td>'+
 						a.tcode+'<br />'+
 						a.campaigncode+'<br />'+
@@ -1002,10 +1011,12 @@ function buscaFielders(){
 				var st_Con='';
 				if(a[9]!=false && a[9]!='false' && a[9]!=0)
 					st_Con=' data="con"';
+				console.log(a);
+				console.log(a[11]);
 				var ase='<a data=\'{"x":"Mensaje","regid":"'+a[11]+'","idUser":'+a[0]+',"nombre":"'+a[2]+'"}\' title="Enviar mensaje a '+a[2]+'"><i class="fa fa-comment"></i></a>'+
 					'<a data=\'{"x":"Editar","y":2,"idUser":'+a[0]+',"GCM":"'+a[11]+'"}\' title="Editar regiones de '+a[2]+'"><i class="fa fa-pencil-square"></i></a>'+
 					'<a data=\'{"x":"Sacar","idUser":'+a[0]+'}\' title="Cerrar la sesión de '+a[2]+'"><i class="fa fa-unlock-alt"></i></a>'+
-					'<a data=\'{"x":"Eliminar","idUser":'+a[0]+',"nombre":"'+a[2]+'"}\' title="Eliminar cuenta de '+a[2]+'"><i class="fa fa-trash"></i></a>';
+					'<a data=\'{"x":"Eliminar","rol":'+a[1]+',"idUser":'+a[0]+',"nombre":"'+a[2]+'"}\' title="Eliminar cuenta de '+a[2]+'"><i class="fa fa-trash"></i></a>';
 				IdsFielders.push(a[0]); if(misRegiones[0]=='Todas las campañas') ase='';
 				$('#tablaFielders tbody').append('<tr><td'+st_Con+'>'+a[2]+'</td><td>'+a[5]+'</td><td>'+ase+'</td></tr>');
 				li++;
@@ -1218,7 +1229,7 @@ function mensajeUnico(i,r,n){
 			});
 		});
 	}
-	if(i!='' && r!='' && n!=''){
+	if(i!='' && typeof i!=="undefined" && i!='undefined' && i!=null){ // && r!='' && typeof r!=="undefined" && r!='undefined' && r!=null && n!=''
 		$.when(dialogos('<form class="msjU" title="Enviar mensaje a '+n+'">'+
 			'<fieldset>'+
 				'<div class="histMsg"></div>'+
@@ -1661,7 +1672,7 @@ function selectDivisiones(c){
 	var P=getPromesa({pky:'46%6&fyR'});
 	P.done(function(x){
 		x=jQuery.parseJSON(x);
-		if(x.errorMessage!=''){
+		if(x.errorMessage!='' && typeof x.errorMessage!=='undefined' && x.errorMessage!==null){
 			creanotificacion('Error:',x.errorMessage,'','','error');
 			$(c+" .divisiones").append('<option value="0" selected>ERROR</option>');
 			$(c+" .divisiones").prop("disabled",true);
@@ -1908,7 +1919,7 @@ $(document).on("click","#tablaFielders tbody tr td a",function(event){event.prev
 	else if(data.x=='Eliminar')
 		$.when(
 			dialogos('<div id="quest" title="Eliminar usuario">'+
-			'<h4>¿Estas seguro de querer eliminar a este usuario?</h4><span><a class="Y" data-h="eliminoUsuario" data-id="'+data.idUser+
+			'<h4>¿Estas seguro de querer eliminar a este usuario?</h4><span><a class="Y" data-h="eliminoUsuario" data-rol="'+data.rol+'" data-id="'+data.idUser+
 			'">Si</a><a class="N">No</a></span></div>',340)
 		).done(function(x){$("#loading").hide();});
 	else if(data.x=='MuestraUsers')
@@ -2045,6 +2056,8 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 		$('#loading').show();
 		if(n!='' && u!='' && r!='' && s!='' && i!='ZZ' && p==q){
 			$.when(promesas.UpdateUse(n,i,e,u,p,r,s)).done(function(x){
+				console.log(x);
+				console.log(s);
 				if(y==1)muestraUsuarios();
 				if(x==0){
 					b.removeClass('guardando').addClass('ok');
@@ -2123,28 +2136,33 @@ $(document).on("click",".edUS .datos",function(event){event.preventDefault();
 			if(paso==1){
 				$.when(promesas.AddingUse(n,e,u,p,r,s,reg)).done(function(x){
 					x=jQuery.parseJSON(x);
-					if(x.Error!=''){
+					if(x.Error=='Ya existe el usuario que fué ingresado'){
 						creanotificacion('Error',x.Error,'','','error');
+						$('fieldset .usuario').addClass('repetido');
 						b.removeClass('guardando').addClass('bad');
 					}
 					else{
+						if(x.Error!=''){
+							creanotificacion('Error',x.Error,'','','error');
+							b.removeClass('guardando').addClass('bad');
+						}
 						b.removeClass('guardando').addClass('ok');
-					}
 						var contenido='<p>Ha sido creada tu cuenta para usar la aplicación de Operaciones Terrestres,'+
-							' deberás ingresar a la dirección XXX para descargar la aplicación, después de instalarla '+
-							'en tu dispositivo, podrás ingresar con los siguientes datos:</p>'+
+							' te llegará un nuevo correo con los pasos para descargar la aplicación, después de instalarla '+
+							'en tu dispositivo, podrás ingresar con los siguientes datos a la aplicación de OT:</p>'+
 							'<p><b>Usuario:</b> '+u+'<br /><b>Contraseña:</b> '+p+'</p>';
 						if(r!=7 && r!='7'){
 							contenido='<p>Ha sido creada tu cuenta para usar el Dashboard de Operaciones Terrestres,'+
 							' deberás ingresar a la dirección http://187.217.179.35/c4/ con los siguientes datos:</p>'+
 							'<p><b>Usuario:</b> '+u+'<br /><b>Contraseña:</b> '+p+'</p>';
-							sendMail('Nueva cuenta de OT',s,contenido);
-						} console.log(contenido);
-					setTimeout(function(){
-						b.removeClass('bad').removeClass('ok');
-						$(".ui-dialog-content").dialog("close");
-						$('#loading').hide();
-					},500);
+						}
+						sendMail('Nueva cuenta de OT',s,contenido);
+						setTimeout(function(){
+							b.removeClass('bad').removeClass('ok');
+							$(".ui-dialog-content").dialog("close");
+							$('#loading').hide();
+						},500);
+					}
 					if(y==1)muestraUsuarios();
 				});
 			}
@@ -2256,11 +2274,13 @@ $(document).on("click","#quest span a",function(event){event.preventDefault();
 				muestraCalendario();
 				$(".ui-dialog-content").dialog("close");
 			});
-		else if(h=='eliminoUsuario')
-			$.when(promesas.DeleteUse(id)).done(function(x){
+		else if(h=='eliminoUsuario'){
+			var r=$(this).attr('data-rol');
+			$.when(promesas.DeleteUse(id,r)).done(function(x){
 				muestraUsuarios();
 				$('#quest').dialog("close");
 			});
+		}
 		else if(h=='sacoSesion')
 			$.when(promesas.CierraSec(id)).done(function(x){
 				$('#quest').dialog("close");
