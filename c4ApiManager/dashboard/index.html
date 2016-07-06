@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+	<title>Telmex C4-OT Dashboard</title>
+	<link href='../css/style.css' rel='stylesheet' type='text/css'>
+	<link href='../css/fullcalendar.print.css' rel='stylesheet' media='print'>
+	<link rel="icon" href="favicon.ico">
+	<script charset="UTF-8">var Ñ="../bak/functions.php";</script>
+</head>
+<body>
+	<div class="container">
+		<ul id="gn-menu" class="gn-menu-main">
+			<li class="gn-trigger">
+				<a class="gn-icon gn-icon-menu" alt="Abrir/Cerrar menú" title="Abrir/Cerrar menú"><span>Menu</span></a>
+				<nav class="gn-menu-wrapper gn-open-part">
+					<div class="gn-scroller">
+						<ul class="gn-menu">
+							<li>
+								<div id="midatos">
+									<div class="contenedor">
+										<div class="ui"></div>
+										<div class="data">
+											<span class="r"></span>
+											<span class="n"></span>
+											<!-- span class="id"></span -->
+											<span class="u"></span>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<a class="gn-icon gn-icon-home" title="Regresar a vista de inicio" ng-click="T='Home'">Home</a>
+							</li>
+							<li>
+								<a class="gn-icon gn-icon-campana" title="Administrar campañas" ng-click="T='Administración de campañas'">Campañas</a>
+								<ul class="gn-submenu">
+									<li><a class="gn-icon gn-icon-ncampana" title="Añadir una nueva campaña" ng-click="T='Administración de campañas'">Nueva Campaña</a></li>
+								</ul>
+							</li>
+							<li>
+								<a href="#" id="losUsers" class="gn-icon gn-icon-usuarios" title="Administrar usuarios del dashboard" ng-click="T='Administración de usuarios'">Usuarios</a>
+								<ul class="gn-submenu">
+									<li><a class="gn-icon gn-icon-nuser" title="Añadir un nuevo usuario al dashboard" ng-click="T='Administración de usuarios'">Nuevo usuario</a></li>
+								</ul>
+							</li>
+							<li><a class="gn-icon gn-icon-calendar" title="Calendario de actividades de los fielders" ng-click="T='Calendario'">Calendario</a></li>
+							<li><a class="gn-icon gn-icon-reportes" title="Datos estadísticos de las actividades de los fielders" ng-click="T='Estadísticos'">Estadísticos</a></li>
+							<li class="last">
+								<a class="gn-icon gn-icon-mapa" title="RMostrar mapa de ubicación y mensajería de fielders" ng-click="T='Mapa'">Mapa</a>
+								<ul class="gn-submenu pri">
+									<li class="principal">
+										<select class="divisiones" title="Selecciona una división" alt="Selecciona una división"></select>
+										<select class="areas" title="Selecciona un área" alt="Selecciona un área" disabled="disabled">
+											<option> --- </option>
+											<option value="2">Todas las areas</option>
+										</select>
+										<select class="distritos" title="Selecciona una opción" alt="Selecciona una opción" disabled="disabled">
+											<option value="0"> --- </option>
+											<option value="1">Distritos</option>
+											<option value="2">Todos los distritos</option>
+											<!-- option value="3">Colonias</option -->
+										</select>
+										<input type="text" class="ui-autocomplete-input" autocomplete="off" name="ui-autocomplete-input" value="" placeholder="Buscar" />
+										<button class="busca" id="ELBPRin" title="Ver resultados" alt="Ver resultados">Buscar</button>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</li>
+			<li class="titulo"><img src="../img/logo.png" alt="Telmex" title="Telmex" /></li>
+			<li class="veo"><h1 ng-init="T='Home'">{{T}}</h1></li>
+			<li class="sal"><a class="gn-icon gn-icon-salir" title="Cerrar la sesión del dashboard" href="#"><span>Salir</span></a></li>
+		</ul>
+		<div id="wraper">
+			<div id="top">
+				<div id="mapa">
+					<div id="colorMapa"><i class="gn-icon gn-icon-colormap"></i>
+						<select class="ChangeColorMapa" alt="Cambiar color del mapa" title="Cambiar color del mapa">
+							<option selected="selected" value="">Default</option>
+							<option value="Aquamarina">Aquamarina</option>
+							<option value="Blanco">Blanco</option>
+							<option value="Blue">Blue</option>
+							<option value="Green">Green</option>
+							<option value="Night Blue">Night Blue</option>
+							<option value="Night Cop">Night Cop</option>
+						</select>
+					</div><div id="gmap"></div>
+				</div>
+				<div id="hArea"></div>
+			</div>
+			<div id="generico">
+				<div class="contenedor">
+					<div id="ctable">
+						<h2>Título</h2>
+						<table id="tablaFielders" class="display" cellspacing="0" width="100%">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Nombre</th>
+									<th>Expediente</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+					<div id="calendar"></div>
+					<div id="reportes">
+						<div id="reales">
+							<div id="calor"></div>
+							<div id="area"></div>
+						</div>
+						<div class="camps">
+							<span>Filtro de campañas</span>
+							<label class="todas"><input type="checkbox" value="todas" checked="checked" /><span>Todas</span></label>
+						</div>
+						<div id="fechas"></div>
+						<div id="todos_graficos">
+							<div class="titulos">
+								<a class="xls" target="_blank"></a>
+								<h3 class="sub">Mostrando estadísticos de rango seleccionado</h3>
+							</div>
+							<div id="barras"></div>
+							<div id="fielders"></div>
+							<div id="pie"></div>
+							<div id="metas"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer><img src="../img/estacontigo.png" alt="Telmex C4 está contigo" /></footer>
+	</div>
+	<div id="notificaciones"></div>
+	<div id="loading">
+		<ul class="bokeh">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+	</div>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization" charset="UTF-8"></script>
+	<script src="../js/jquery.js" charset="UTF-8"></script>
+	<script src="../js/angular.js" charset="UTF-8"></script>
+	<script src="../js/plugs.js" charset="UTF-8"></script>
+	<script src="../js/global.js" charset="UTF-8"></script>
+	<script src="../js/dash.js" charset="UTF-8"></script>
+</body>
+</html>

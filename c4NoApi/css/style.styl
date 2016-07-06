@@ -1,0 +1,1310 @@
+@import 'nib'
+@import 'nib/gradients'
+@import "https://fonts.googleapis.com/css?family=Lato:400,300,700|Raleway:400,700&subset=latin,latin-ext"
+@import "thothers.css"
+
+AzulTelmex=#2196f3
+
+html
+	body *:not(input)
+		user-select none
+	body
+		color #333
+		background #fff
+		button,input,optgroup,select,textarea
+			color #00bbfa
+			font inherit
+			margin 0
+			background #fff
+			border 0
+		button,select
+			text-transform none
+		h1,h2,h3,h4,h5,h6
+			font-weight 700
+			font-family 'Raleway'
+		h1.intro
+			margin-top 50px
+			text-align center
+			font-weight 400
+			font-size 1.8em
+			line-height 20px
+			span
+				font-weight 700
+		#loading
+			position fixed
+			top 0
+			left 0
+			width 100%
+			height 100%
+			overflow hidden
+			margin 0
+			padding 0
+			background #00bbfa
+			z-index 999999
+			.bokeh
+				font-size 100px
+				width 1em
+				height 1em
+				position absolute
+				left 50%
+				top 50%
+				transform translate(-50%,-50%)
+				margin 0
+				border-radius 50%
+				border 0
+				list-style none
+				li
+					position absolute
+					width .2em
+					height .2em
+					border-radius 50%
+				li:nth-child(1)
+					left 50%
+					top 0
+					margin 0 0 0 -.1em
+					background #fff
+					transform-origin 50% 250%
+					animation rota 1.13s linear infinite,opa 3.67s ease-in-out infinite alternate
+				li:nth-child(2)
+					top 50%
+					right 0
+					margin -.1em 0 0 0
+					background #fff
+					transform-origin -150% 50%
+					animation rota 1.86s linear infinite,opa 4.29s ease-in-out infinite alternate
+				li:nth-child(3)
+					left 50%
+					bottom 0
+					margin 0 0 0 -.1em
+					background #fff
+					transform-origin 50% -150%
+					animation rota 1.45s linear infinite,opa 5.12s ease-in-out infinite alternate
+				li:nth-child(4)
+					top 50%
+					left 0
+					margin -.1em 0 0 0
+					background #fff
+					transform-origin 250% 50%
+					animation rota 1.72s linear infinite,opa 5.25s ease-in-out infinite alternate
+		#loading.opaco
+			background rgba(0,0,0,0.5)
+			.bokeh
+				li
+					background #00bbfa !important
+		.ui-dialog
+			form
+				position relative
+				overflow hidden
+				fieldset
+					border 0
+					position relative
+					overflow hidden
+					h3
+						font-size 1.5em
+						margin 10px 0
+						span
+							color #ddd
+					h4
+						color #444
+					.histMsg
+						max-height 200px
+						overflow-y auto
+						overflow-x hidden
+						padding 0
+						margin 0 0 10px 0
+						border 1px solid #eee
+						p
+							padding 6px 30px 6px 6px
+							margin 0
+							span
+								color #888
+								font-size 10px
+								display block
+						p:nth-child(odd)
+							background #ECECEC
+						p
+							&:after
+								display block
+								font-family 'FontAwesome'
+								color #ccc
+								content '\f00c\f00c'
+								float right
+								margin -12px -25px 0 0
+								font-size 12px
+						p.read:after
+							color #00BBFA
+					textarea
+						border 1px solid #bbb
+						width 100%
+						height 200px
+						overflow auto
+						color #444
+					button
+						padding 10px 25px
+						display block
+						margin 10px 0 0 20%
+						background #fcc30d
+						border 0
+						color #444
+						&:after
+							font-family 'FontAwesome'
+							display inline-block
+							margin-left 10px
+							content "\f1d9"
+					button.addFieldersCalendarAct
+						background #00BBFA
+						margin-bottom 40px
+						&:after
+							content "\f234" !important
+					button.delCalendarAct
+						float right
+						&:after
+							content "\f1f8" !important
+					button.guardando
+						&:after
+							font-family 'FontAwesome'
+							display inline-block
+							margin-left 10px
+							content "\f110" !important
+							animation fa-spin 2s infinite linear
+					button.ok
+						&:after
+							font-family 'FontAwesome'
+							display inline-block
+							margin-left 10px
+							content "\f00c" !important
+					button.bad
+						&:after
+							font-family 'FontAwesome'
+							display inline-block
+							margin-left 10px
+							content "\f00d" !important
+					label
+						color #888
+						input,select
+							background #fff
+							border 1px solid #bbb
+							padding 3px
+							color #00bbfa
+						.LV_validation_message.LV_valid
+							display none
+						.LV_validation_message
+							font-family 'Lato',Calibri,Arial,sans-serif
+							color red
+							width 100%
+							display block
+							text-align right
+							clear both
+					.busca
+						display none !important
+					.busca.c
+						display block !important
+			form.msjA,form.msjU
+				fieldset
+					button
+						margin 10px auto
+			form.edUS
+				h3
+					color #333
+					font-size 1.5em
+					margin 10px 0 10px 10px
+					span
+						color #888
+				fieldset
+					select.ids_crs
+						width 100%
+						border 1px solid #eee
+						display block
+						clear both
+					label
+						padding 6px 6px 6px 0
+						display block
+						min-width 270px
+						width 100%
+						overflow hidden
+						text-align right
+						margin 0
+						input,select,.sp-replacer
+							float right
+							width 80%
+							margin-left 10px
+						input.repetido
+							border 2px solid red
+					label.dentro,label.fuera
+						display inline-block
+						min-width 10px
+						width 47%
+						margin 20px 0
+						padding 0
+						text-align left
+						text-transform uppercase
+						select
+							text-transform none
+							width 100%
+							height 350px
+							margin 10px 0
+							border 1px solid #bbb
+							float none
+						a
+							color #333
+							text-align center
+							margin 10px 0
+							display block
+							cursor pointer
+							cursor:hand;
+							&:hover
+								color #00BBFA
+							&:after
+								font-family 'FontAwesome'
+								display inline-block
+								margin-left 10px
+								content "\f112"
+					label.fuera
+						margin-right 6%
+						a
+							&:after
+								content ''
+								display none
+							&:before
+								font-family 'FontAwesome'
+								display inline-block
+								margin-right 10px
+								content "\f064"
+					img
+						max-width 80%
+						max-height 200px
+						height auto
+						margin-left 20%
+					button
+						&:after
+							content "\f277"
+					h5
+						margin 0
+						padding 0
+						text-align center
+						color #bbb
+						display none
+						a
+							cursor pointer
+							cursor:hand;
+							color #0084FF
+							&:hover
+								color red
+					.asignadas
+						margin 40px 10px
+						border 1px solid #bbb
+						padding 20px
+						overflow hidden
+						a
+							display inline-block
+							margin 3px 10px
+							font-size 1.1em
+							cursor:hand;
+							cursor pointer
+							&:hover
+								color red
+							&:hover:after
+								top -10px
+								font-size .8em
+								display block
+								width 17px
+								height 17px
+								position absolute
+								background #f00
+								color #fff
+								font-family 'FontAwesome'
+								content "\f00d"
+								right -15px
+								border-radius 50%
+								text-align center
+								line-height 17px
+						a.eliminando
+							text-decoration underline
+							color #44BB3C
+					.asignadas.disabled
+						background #eee
+						a
+							color #ccc
+							cursor not-allowed
+							&:hover
+								color #ccc
+							&:hover:after
+								display none
+								content ''
+				fieldset:nth-child(1)
+					button
+						&:after
+							content "\f0b1"
+			form.edUS[data='FieldersCampanas'],form.FielderCalTarea
+				fieldset
+					min-height 430px
+			form.edUS.arc
+				fieldset:nth-child(1)
+					display none
+				fieldset:nth-child(2)
+						margin 10px auto
+			form.FielderCalTarea
+				fieldset
+					label.dentro,label.fuera
+						display inline-block
+						min-width 10px
+						width 47%
+						margin 20px 0
+						padding 0
+						text-align left
+						text-transform uppercase
+						select
+							text-transform none
+							width 100%
+							height 350px
+							margin 10px 0
+							border 1px solid #bbb
+							float none
+						a
+							color #333
+							text-align center
+							margin 10px 0
+							display block
+							cursor pointer
+							cursor:hand;
+							&:hover
+								color #00BBFA
+							&:after
+								font-family 'FontAwesome'
+								display inline-block
+								margin-left 10px
+								content "\f112"
+					label.fuera
+						margin-right 6%
+						a
+							&:after
+								content ''
+								display none
+							&:before
+								font-family 'FontAwesome'
+								display inline-block
+								margin-right 10px
+								content "\f064"
+		#notificaciones
+			position fixed
+			top 0
+			right 0
+			z-index 9999
+			width 38%
+			min-width 260px
+			margin 0
+			padding 10px
+			overflow hidden
+			div.tn
+				background #4DBCE9
+				border 1px solid #26ADE4
+				border-radius 8px
+				margin 5px
+				padding 15px
+				box-shadow 0 1px 1px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.6)
+				opacity 0
+				animation fadeOut 5s linear forwards
+				h2,p
+					color #fff
+					margin 0
+					padding 0
+					line-height 1
+					text-shadow 0 1px 1px rgba(0,0,0,0.6)
+				h2
+					font-size 1.5em
+				.tn-progress
+					width 0
+					height 4px
+					background rgba(255,255,255,0.2)
+					position absolute
+					bottom 5px
+					left 2%
+					border-radius 3px
+					box-shadow inset 0 1px 1px rgba(0,0,0,0.05),0 -1px 0 rgba(255,255,255,0.6)
+					animation runProgress 4s linear forwards 0.5s
+			div.tn.error
+				background #E53935
+			div.tn.advertencia
+				background #CFBE27
+		#loginContenedor
+			position absolute
+			max-width 300px
+			margin 0
+			padding 20px
+			top 50%
+			left 50%
+			transform translate(-50%,-50%)
+			*,*:after,*:before
+				box-sizing border-box
+				padding 0
+				margin 0
+			form
+				width 300px
+				position relative
+				border-radius 5px
+				box-shadow 0 0 5px rgba(0,0,0,0.1), 0 3px 2px rgba(0,0,0,0.1)
+				&:after
+					content ""
+					display table
+					clear both
+				p
+					width 70%
+					float left
+					border-radius 5px 0 0 5px
+					border 1px solid rgba(255,255,255,.6)
+					border-right none
+					padding 0
+					margin 0
+					i
+						opacity .3
+						position absolute
+						top 13px
+						right 5px
+						font-size 1.7em
+					i:last-child
+						top 65px
+						right 7px
+				input[type=text],input[type=password]
+					width auto
+					height 50px
+					padding 0 10px
+					margin 0
+					border none
+					background white
+					background rgba(255,255,255,0.2)
+					box-shadow inset 0 0 10px rgba(255,255,255,0.5)
+					font-weight 300
+					text-indent 10px
+					color #fff
+					text-shadow 0 1px 2px rgba(0,0,0,0.3)
+					font-size 20px
+				input[type=text]
+					border-bottom 1px solid #fff
+					border-bottom 1px solid rgba(255,255,255,0.7)
+					border-radius 5px 0 0 0
+				button
+					width 30%
+					height 100px
+					margin-top 1px
+					float left
+					position relative
+					overflow hidden
+					background #055B9E
+					background radial-gradient(ellipse at center, #00bbfa 0%, #055B9E 150%)
+					border-radius 0 5px 5px 0
+					box-shadow inset 0 0 4px rgba(255, 255, 255, 0.7), inset 0 0 0 1px rgba(0, 0, 0, 0.2)
+					border none
+					border-left 1px solid silver
+					cursor pointer
+					line-height 102px
+					i
+						position absolute
+						width 100%
+						height 100%
+						top 0
+						left -20px
+						font-size 64px
+						line-height 109px
+						color #5B5086
+						opacity 0
+						text-shadow 0 1px 0 rgba(255,255,255,0.4)
+						transition all 0.2s ease-out
+					span
+						display block
+						color #5B5086
+						font-size 20px
+						text-shadow 0 1px 0 rgba(255,255,255,0.4)
+						transform rotate(-90deg)
+						transition all 0.2s linear
+						-webkit-backface-visibility hidden
+					&:hover i,&:focus i
+						opacity 0.5
+						left 0
+						transition-delay 0.2s
+					&:hover span,&:focus span
+						opacity 0
+						transform rotate(-90deg) translateY(-20px)
+		.container
+			min-width 290px
+			#gn-menu
+				min-width 290px
+				z-index 12
+				background #00AEE8
+				box-shadow 0 0 10px #555
+				nav.gn-open-all
+					.gn-scroller
+						.gn-menu
+							li
+								.gn-submenu
+									li
+										height 30px
+								.gn-submenu.pri
+									li.principal
+										height 180px
+				nav
+					background #3a3a3a
+					.gn-scroller
+						.gn-menu
+							background #404040
+							li
+								ul
+									background #404040
+									color #fff
+								.gn-submenu
+									li
+										a
+											font-size 14px
+											color #8ae2ff
+											padding-left 38px
+											line-height 16px
+								.gn-submenu.pri
+									width 270px
+									margin-left 60px
+									background #3a3a3a
+									li.principal
+										select:disabled,input[type="text"]:disabled
+											background #353535
+											color #636363
+										select,input
+											color #8AE2FF
+											background #555
+											padding 4px
+											margin 0 0 6px 0
+											width 100%
+											float none
+											display block
+											line-height 1
+										button
+											text-align left
+											background #00bbfa
+											color #3A3A3A
+											float right
+											width 125px
+											height 30px
+											line-height 30px
+											padding 0
+											&:before
+												font-family 'FontAwesome'
+												display block
+												font-size 14px
+												margin 0 10px 0 20px
+												float left
+												content '\f002'
+										input,button
+											display none
+										input.c,button.c
+											display block
+								a
+									color #fff
+							li.last
+								background #3a3a3a
+							#midatos
+								background #00BBFA
+								.contenedor
+									margin 0
+									padding 0
+									overflow hidden
+									width 280px
+									.ui,.data
+										display inline-block
+									.ui
+										font-family 'FontAwesome'
+										font-size 2.6em
+										color #FFFFFF
+										padding 2px 0 0 0
+										width 50px
+										height 50px
+										text-align center
+										margin 25px 15px 0 15px
+										border 3px solid #11A1D2
+										border-radius 50%
+										overflow hidden
+										&:before
+											content "\f007"
+									.data
+										width 200px
+										overflow hidden
+										margin 20px 0 0 0
+										float right
+										line-height 1
+										span
+											white-space nowrap
+											text-overflow ellipsis
+											width 100%
+											margin 0
+											padding 0
+											display block
+										.n
+											margin 4px 0 0 -2px
+											font-size 22px
+											line-height 22px
+											color #fff
+										.id,.u
+											color #333
+											font-size 13px
+											line-height 15px
+											padding-right 15px
+										.r
+											font-size 14px
+											line-height 14px
+											color #ddd
+										.u
+											i
+												font-style normal
+												&:after
+													content ', '
+											i:last-child
+												&:after
+													content ''
+			#wraper
+				min-width 290px
+				height 100%
+				width auto
+				overflow auto
+				margin 60px 0 0 0
+				padding 0
+				position relative
+				background #efefef
+				#top,#generico
+					transition all .2s linear
+					height 100%
+					position absolute
+					left 0
+					width 100%
+					padding 0
+					margin 0
+				#generico
+					z-index 2
+					top 0
+					left -100%
+					background #EFEFEF
+					.contenedor
+						width auto
+						height 100%
+						padding 15px 2%
+						position relative
+						overflow auto
+						#ctable,#calendar,#reportes
+							display none
+							min-width 280px
+							h2
+								color #bbb
+								font-size 2em
+								text-transform uppercase
+								span
+									color #333
+								span.sub
+									font-size .6em
+									display block
+									margin-bottom 10px
+									i
+										color #61D0F5
+										font-style normal
+										margin-right 5px
+										&:after
+											color #888
+											display inline-block
+											content ','
+									i:last-child:after
+										content ''
+										display none
+								a
+									float right
+									display block
+									color #00bbfa
+									margin-left 15px
+									text-decoration none
+									font-weight normal
+									cursor pointer
+									&:before
+										color #555
+										font-family 'FontAwesome'
+										content '\f0a8'
+										display inline-block
+										margin-right 5px
+								a.newCamps
+									margin 0 10px 15px 0
+									float right
+									color #fff
+									padding 4px 10px
+									background #00AEE8
+									box-shadow -2px 2px 8px #bbb
+									&:before
+										color #fff
+										content '\f055'
+									&:after
+										content ' Nueva'
+									&:hover
+										color #FFCF40
+								a.relCamps
+									margin 0 0 15px 0
+									float right
+									color #fff
+									padding 4px 10px
+									background #00AEE8
+									box-shadow -2px 2px 8px #bbb
+									&:before
+										color #fff
+										content '\f1da'
+									&:after
+										content ' Actualizar'
+									&:hover
+										color #FFCF40
+								a.newUser
+									margin 0 0 15px 20px
+									float right
+									color #fff
+									padding 4px 10px
+									background #00AEE8
+									box-shadow -2px 2px 8px #bbb
+									&:before
+										color #fff
+										content '\f234'
+									&:after
+										content ' Nuevo'
+									&:hover
+										color #FFCF40
+							h2.campin
+								overflow hidden
+								text-transform none
+								&:after
+									margin-bottom 10px
+									clear both
+									display block
+									content ''
+									border 1px solid #E4E4E4
+							.broadcast
+								display block
+								text-align center
+								background #fcc30d
+								padding 6px 13px
+								color #222
+								float right
+								font-size .7em
+								&:before
+									display inline-block
+									font-family 'FontAwesome'
+									content '\f285'
+									margin-right 10px
+									font-weight normal
+									color #fff
+							.dataTables_wrapper
+								table
+									border-spacing 1px
+									table-layout fixed
+									thead,tbody
+										tr
+											th,td
+												overflow hidden
+												white-space nowrap
+												text-overflow ellipsis
+											td:last-child
+												white-space normal
+									tbody
+										tr
+											td:not(:last-child)
+												i
+													font-style normal
+													display block
+													white-space nowrap
+													text-overflow ellipsis
+													width 100%
+													overflow hidden
+											td:first-child:not(.nu)
+												&:before
+													color #D80606
+													margin-right 10px
+													font-family 'FontAwesome'
+													display inline-block
+													content '\f111'
+											td:first-child:not(.nu)[data='con']
+												&:before
+													color #87C573
+											td.nu
+												span
+													&:before
+														display inline-block
+														margin-right 10px
+														font-family 'FontAwesome'
+														display inline-block
+														content '\f111'
+								table.NiUsers tbody tr td:first-child:before
+									display none
+						#ctable.s,#calendar.s,#reportes.s
+							display block
+						#reportes
+							.camps
+								padding 20px
+								margin-top 40px
+								background #e8e8e8
+								overflow hidden
+								span
+									margin-bottom 30px
+									display block
+									font-weight 700
+									font-size 24px
+									color #00AEE8
+								label
+									float right
+									display block
+									overflow hidden
+									text-overflow ellipsis
+									white-space nowrap
+									margin 10px 15px 0 0
+									font-size 16px
+									line-height 16px
+									height 18px
+									width 46%
+									span
+										overflow hidden
+										text-overflow ellipsis
+										white-space nowrap
+										cursor pointer
+										cursor:hand;
+										padding 0 0 0 30px
+										font-weight 300
+										font-size 17px
+										display block
+										border 0
+										color #444
+										height 18px
+										&:after,&:before
+											position absolute
+											left 0
+											top 1px
+										&:before
+											font-size 20px
+											font-weight normal
+											display inline-block
+											font-family 'FontAwesome'
+											content '\f096'
+											width 21px
+											height 16px
+											padding-left 1px
+											z-index 1
+										&:after
+											display block
+											content ' '
+											overflow visible
+											width 1px
+											height 1px
+											border-radius 50%
+											background rgba(0,174,232,.1)
+											z-index 0
+											top 50%
+											left 5%
+											transform translate(-50%,-50%)
+											transition all .2s ease
+									input[type="checkbox"]:checked+span
+										&:before
+											font-family 'FontAwesome'
+											content '\f046'
+									input[type="checkbox"]
+										display none
+								label:nth-child(2n)
+									float left
+								label:active,label:focus
+									span
+										&:after
+											width 60px
+											height 60px
+											background rgba(0,174,232,.3)
+											transition all .2s ease
+							#reales
+								overflow hidden
+								clear both
+								margin 0
+								padding 0 0 10px 0
+								#calor,#area
+									float left
+									height 300px
+									width 50%
+									margin 0
+									padding 0
+								&:before
+									content 'Mapa de calor y Contratos en tiempo real, datos de 30 días a hoy'
+									display block
+									clear both
+									margin 0 0 15px 0
+									font-size 24px
+									color #bbb
+									font-weight 700
+									text-align center
+							#todos_graficos
+								overflow hidden
+								.titulos
+									overflow hidden
+									clear both
+									h3.sub
+										font-size 24px
+										color #bbb
+										margin 54px 0 0 0
+										text-align center
+									a.xls
+										z-index 999
+										color #FFBF00
+										width 35px
+										font-size 40px
+										display block
+										height 40px
+										float right
+										margin 40px 3px 15px 0
+										cursor pointer
+										cursor:hand;
+										&:before
+											text-shadow 1px 1px 0 #555
+											left 0
+											font-family 'FontAwesome'
+											content "\f1c3"
+											display block
+											position absolute
+								#barras,#pie,#metas
+									width 100%
+									margin-top 50px
+								#metas
+									.mets
+										float left
+										height 380px;
+										width 25%
+										margin 0
+										padding 0
+							#fechas
+								margin 0
+								padding 20px
+								background #e8e8e8
+								color #333
+								font-size 1.5em
+								text-align center
+								clear both
+								label:nth-child(2)
+									margin-left 20px
+								button
+									cursor pointer
+									cursor hand
+									padding 10px 25px
+									font-weight 700
+									display inline-block
+									margin 0 0 0 20px
+									background #fcc30d
+									border 0
+									color #333
+				#top
+					top 0
+					#mapa
+						margin 0
+						padding 0
+						width 100%
+						height 50%
+						#gmap
+							top 0
+							left 0
+							width 100%
+							height 100%
+							margin 0
+							padding 0
+							position absolute
+						#colorMapa
+							z-index 9
+							background #fff
+							position absolute
+							overflow hidden
+							top 10px
+							right 10px
+							.gn-icon::before
+								color #00bbfa
+								width 24px
+							select
+								color #666
+					#hArea
+						width 100%
+						height 50%
+						background linear-gradient(to top,#555555 0%,#555555 45px,#fff 45px,#fff 100%)
+						svg
+							display block
+							overflow hidden
+							tspan
+								text-shadow none
+							text.highcharts-title
+								display none
+								tspan
+									display none
+							g.highcharts-axis
+								text.highcharts-yaxis-title
+									font-size 26px
+									text-transform uppercase
+							g.highcharts-legend
+								g
+									g
+										text
+											color #fff !important
+											fill #fff !important
+				#top.open
+					position relative
+					height 40%
+					top auto
+					#hArea
+						left -100%
+					#mapa
+						height 100%
+				#generico.open
+					left 0
+					top auto
+					position relative
+					height auto
+				#generico.openB
+					top 0
+					position fixed
+					padding-top 60px
+					z-index 9
+					height 100%
+			footer
+				position fixed
+				bottom 0
+				left 0
+				width 100%
+				margin 0
+				padding 0
+				border-top 1px solid #ccc
+				height 49px
+				text-align center
+				img
+					height 30px
+					width auto
+					margin-top 10px
+	body.login
+		color #fff
+		background #00bbfa
+		background linear-gradient(to left,#055B9E,#00bbfa)
+@keyframes fadeOut
+	0%
+		opacity 0
+	10%
+		opacity 1
+	90%
+		opacity 1
+		transform translateY(0px)
+	99%
+		opacity 0
+		transform translateY(-40px)
+	100%
+		opacity 0
+@keyframes runProgress
+	0%
+		width 0%
+		background rgba(255,255,255,0.2)
+	100%
+		width 85%
+		background rgba(255,255,255,1)
+@-webkit-keyframes rota
+	from{ }
+	to
+		transform rotate(360deg)
+@keyframes rota
+	from{ }
+	to
+		transform rotate(360deg)
+
+@-webkit-keyframes opa
+	0% { }
+	12.0%
+		opacity 0.80
+	19.5%
+		opacity 0.88
+	37.2%
+		opacity 0.64
+	40.5%
+		opacity 0.52
+	52.7%
+		opacity 0.69
+	60.2%
+		opacity 0.60
+	66.6%
+		opacity 0.52
+	70.0%
+		opacity 0.63
+	79.9%
+		opacity 0.60
+	84.2%
+		opacity 0.75
+	91.0%
+		opacity 0.87
+@keyframes opa
+	0% { }
+	12.0%
+		opacity 0.80
+	19.5%
+		opacity 0.88
+	37.2%
+		opacity 0.64
+	40.5%
+		opacity 0.52
+	52.7%
+		opacity 0.69
+	60.2%
+		opacity 0.60
+	66.6%
+		opacity 0.52
+	70.0%
+		opacity 0.63
+	79.9%
+		opacity 0.60
+	84.2%
+		opacity 0.75
+	91.0%
+		opacity 0.87
+@media screen and (max-width:900px)
+	html
+		body
+			.container
+				.gn-menu-wrapper.gn-open-all
+					width 276px
+					.gn-scroller
+						width 296px
+					.gn-menu
+						li
+							.gn-submenu.pri
+								width 206px !important
+				#wraper
+					#generico
+						.contenedor
+							.dataTables_wrapper
+								table
+									border-spacing 1px
+									thead,tbody
+										tr
+											th,td
+												padding 4px
+									tbody
+										tr
+											td,th
+												font-size 13px
+							#reportes
+								margin-bottom 20px
+								#reales #calor,#reales #area
+									float none
+									width 100%
+									margin-bottom 10px
+								#fechas
+									font-size 1.2em
+									overflow hidden
+									label
+										text-align left
+										display block
+										margin 0
+									label:nth-child(2)
+										margin 10px 0
+									button
+										float right
+								#todos_graficos
+									.titulos
+										h3.sub
+											font-size 16px
+											margin-top 15px
+											text-align left
+										a.xls
+											margin 20px 0 0 0
+			.ui-datepicker
+				margin-top -200px
+				table
+					font-size .7em
+			.ui-autocomplete
+				max-height 150px
+@media screen and (max-width:740px)
+	html
+		body
+			#loginContenedor
+				padding 0
+			.gn-menu-main > li.titulo
+				display none
+			.gn-menu-main > li > a.gn-icon.gn-icon-salir
+				padding 0 10px
+				&:before
+					font-size 20px
+				span
+					display none
+			.gn-menu-main > li.veo h1
+				font-size 18px
+			.container
+				#wraper
+					#generico .contenedor
+						#reportes
+							#reales:before
+								font-size 1.2em
+								text-align left
+							.camps
+								margin-top 10px
+								span
+									margin-bottom 10px
+								label
+									width 100%
+									float none
+									span
+										font-size 16px
+										margin 0
+										padding-left 26px
+										&:before
+											font-size 20px
+											height 21px
+								label:nth-child(2n)
+									float none
+						#ctable h2,#calendar h2,#reportes h2
+							font-size 18px
+						.dataTables_wrapper
+							.dataTables_length
+								label
+									display inline-block
+									text-indent -4000px
+									select
+										float right
+							table
+								border-spacing 1px
+								thead,tbody
+									tr
+										th,td
+											padding 4px
+								tbody
+									tr
+										td,th
+											font-size 11px
+										td:last-child
+											font-size 16px
+			.ui-dialog
+				form fieldset
+					padding 8px
+					button
+						margin 10px auto
+				form.edUS fieldset
+					label
+						min-width 200px
+						text-align left
+						input,select
+							float none
+							width 95%
+							margin 0
+					label.dentro select,label.fuera select
+						height 260px
+@media screen and (max-width:600px)
+	html
+		body
+			.container
+				#wraper
+					#generico .contenedor
+						.dataTables_wrapper
+							table
+								thead,tbody
+									tr
+										th:last-child,td:last-child
+											max-width 22px
+											width 22px
+											text-align center
+											a
+												display none
+												margin 3px 0
+								tbody
+									tr:hover,tr:focus
+										td
+											word-wrap break-word
+											white-space pre-line !important
+										th:last-child,td:last-child
+											a
+												display inline-block
